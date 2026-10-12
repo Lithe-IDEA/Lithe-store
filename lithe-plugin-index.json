@@ -7,9 +7,9 @@
       "author": "Lithe Community",
       "repository": "https://github.com/Lithe-IDEA/lithe-plugin-lua",
       "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-lua#readme",
-      "description": "Lua code intelligence through your installed lua-language-server, plus running the current file with lua. Requires lua and lua-language-server (brew install lua lua-language-server).",
+      "description": "Lua code intelligence through the bundled lua-language-server (LuaLS), plus running the current file with your own lua. Nothing else to install for completion, navigation, and diagnostics; running files needs lua (brew install lua).",
       "localizedDescriptions": {
-        "zh-Hans": "通过本机安装的 lua-language-server 提供 Lua 代码智能，并用 lua 运行当前文件。需要先安装 lua 和 lua-language-server（brew install lua lua-language-server）。"
+        "zh-Hans": "内置 lua-language-server（LuaLS）提供 Lua 补全、跳转定义和错误提示，无需另外安装；“运行当前文件”使用你自己的 lua（brew install lua）。"
       },
       "tags": ["language", "lua"],
       "license": "Apache-2.0",
