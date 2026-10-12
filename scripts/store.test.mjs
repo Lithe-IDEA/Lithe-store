@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { addVersion, platformsForAsset } from "./track-releases.mjs";
-import { inspectArchive, validateEntry, validateIndex } from "./validate-index.mjs";
+import { formatIndex, inspectArchive, validateEntry, validateIndex } from "./validate-index.mjs";
 
 // Fixtures are copied from Lithe-IDEA shared/contracts/plugins/v1/fixtures/marketplace
 // so this validator reports the same code as Lithe's Rust Core for each case.
@@ -46,6 +46,19 @@ for (const { name, edits, expectedCode } of invalidCases) {
 test("the published index is valid", () => {
   const index = JSON.parse(readFileSync(new URL("../lithe-plugin-index.json", import.meta.url)));
   assert.deepEqual(validateIndex(index), []);
+});
+
+test("the published index is canonically formatted", () => {
+  const text = readFileSync(new URL("../lithe-plugin-index.json", import.meta.url), "utf8");
+  assert.equal(text, formatIndex(JSON.parse(text)));
+});
+
+test("formatting keeps plain arrays inline and round-trips", () => {
+  const text = formatIndex(fixtureIndex);
+  assert.deepEqual(JSON.parse(text), fixtureIndex);
+  assert.match(text, /"platforms": \["darwin-arm64"\]/);
+  assert.match(text, /"tags": \["Language", "zig"\]/);
+  assert.equal(formatIndex({ schemaVersion: 1, plugins: [] }), '{\n  "schemaVersion": 1,\n  "plugins": []\n}\n');
 });
 
 test("duplicate ids and unsorted plugins fail the store policy", () => {

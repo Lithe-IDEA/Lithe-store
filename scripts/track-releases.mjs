@@ -18,7 +18,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { checkManifest, readPackageManifests, validateIndex } from "./validate-index.mjs";
+import { checkManifest, formatIndex, readPackageManifests, validateIndex } from "./validate-index.mjs";
 
 export const KNOWN_ARCHITECTURES = { darwin: ["arm64", "x64"], windows: ["x64", "arm64"], linux: ["x64", "arm64"] };
 const ASSET_PLATFORM = /-(darwin|windows|linux)(?:-(arm64|x64))?\.zip$/;
@@ -165,7 +165,7 @@ async function main(argv) {
     for (const problem of problems) console.error(`✗ ${problem}`);
     return 1;
   }
-  if (!dryRun && added.length > 0) writeFileSync(indexPath, `${JSON.stringify(index, null, 2)}\n`);
+  if (!dryRun && added.length > 0) writeFileSync(indexPath, formatIndex(index));
   if (process.env.GITHUB_OUTPUT) {
     const summary = added.join(", ");
     writeFileSync(process.env.GITHUB_OUTPUT, `added=${added.length}\nsummary=${summary}\n`, { flag: "a" });

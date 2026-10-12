@@ -96,9 +96,10 @@ shasum -a 256 zig-support-2.0.0-darwin-arm64.zip
    字段说明见 [schema/plugin-index.schema.json](../schema/plugin-index.schema.json)。`homepage`、
    `localizedDescriptions`、`tags`、`icon` 可选；`icon` 只能是同一仓库的 raw 文件。
 
-2. 本地校验：
+2. 统一格式并本地校验（CI 要求索引使用统一格式：两格缩进，纯值列表写在一行）：
 
    ```bash
+   node scripts/validate-index.mjs --write-format
    node scripts/validate-index.mjs --verify-archives
    ```
 

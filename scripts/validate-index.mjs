@@ -8,6 +8,7 @@
 //
 // Usage:
 //   node scripts/validate-index.mjs [index.json]
+//   node scripts/validate-index.mjs [index.json] --write-format
 //   node scripts/validate-index.mjs [index.json] --verify-archives [--base <old-index.json>]
 //
 // --verify-archives downloads every archive (or, with --base, only archives
@@ -163,6 +164,32 @@ export function validateEntry(entry) {
   }
 }
 
+/**
+ * Canonical index text: two-space indentation, arrays of plain values kept on
+ * one line. The tracker writes this form and CI requires it, so bot and
+ * hand-written pull requests produce the same minimal diffs.
+ */
+export function formatIndex(index) {
+  const format = (value, indent) => {
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "[]";
+      if (value.every((item) => item === null || typeof item !== "object")) {
+        return `[${value.map((item) => JSON.stringify(item)).join(", ")}]`;
+      }
+      const inner = `${indent}  `;
+      return `[\n${value.map((item) => inner + format(item, inner)).join(",\n")}\n${indent}]`;
+    }
+    if (value !== null && typeof value === "object") {
+      const keys = Object.keys(value);
+      if (keys.length === 0) return "{}";
+      const inner = `${indent}  `;
+      return `{\n${keys.map((key) => `${inner}${JSON.stringify(key)}: ${format(value[key], inner)}`).join(",\n")}\n${indent}}`;
+    }
+    return JSON.stringify(value);
+  };
+  return `${format(index, "")}\n`;
+}
+
 /** Returns a list of problems; an empty list means the index is publishable. */
 export function validateIndex(index) {
   if (!isObject(index)) return ["index root must be an object"];
@@ -298,6 +325,11 @@ async function main(argv) {
     return 1;
   }
   const problems = validateIndex(index);
+  if (args.includes("--write-format")) {
+    writeFileSync(indexPath, formatIndex(index));
+  } else if (readFileSync(indexPath, "utf8") !== formatIndex(index)) {
+    problems.push(`store policy: ${indexPath} is not canonically formatted; run node scripts/validate-index.mjs --write-format`);
+  }
   if (problems.length === 0 && verify) {
     let baseIndex;
     if (basePath) {
