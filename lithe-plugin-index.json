@@ -15,6 +15,18 @@
       "license": "Apache-2.0",
       "versions": [
         {
+          "version": "0.2.0",
+          "pluginAPIVersion": 1,
+          "releaseDate": "2026-10-12",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-lua/releases/download/v0.2.0/lua-support-0.2.0-darwin.zip",
+              "sha256": "9d9def8e72e225d9c76121d16641ad87f5b02a220178a06f8cf06dd895d15a14"
+            }
+          ]
+        },
+        {
           "version": "0.1.0",
           "pluginAPIVersion": 1,
           "releaseDate": "2026-10-12",
