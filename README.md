@@ -10,9 +10,14 @@ Lithe 的**社区插件市场索引**。这个仓库只存放一份索引文件
 
 ## 在 Lithe 中使用
 
+需要 Lithe 0.6.1 或更新版本（目前插件市场只在 macOS 提供）。Lithe 已预置本仓库作为社区插件源，
+打开 **设置 → 插件 → 插件市场** 即可浏览、安装社区插件，不需要额外配置。
+
+如果你之前移除了 Lithe Store，可以重新添加：
+
 1. 打开 **设置 → 插件 → ⚙ → 管理插件仓库…**
 2. 添加 `https://github.com/Lithe-IDEA/Lithe-store`
-3. 回到 **插件市场** 标签即可浏览、安装社区插件
+3. 回到 **插件市场** 标签
 
 Lithe 会把仓库地址解析为
 `https://raw.githubusercontent.com/Lithe-IDEA/Lithe-store/HEAD/lithe-plugin-index.json`，
@@ -22,7 +27,7 @@ Lithe 会把仓库地址解析为
 
 | | 官方插件 | 社区插件（本仓库） |
 | --- | --- | --- |
-| 索引位置 | Lithe 主仓库 `Plugins/marketplace/index.json`，随应用附带 | 本仓库，用户手动添加为插件源 |
+| 索引位置 | Lithe 主仓库 `Plugins/marketplace/index.json`，随应用附带 | 本仓库，Lithe 预置为社区插件源（用户可停用或移除） |
 | ID 命名空间 | `dev.lithe.*` | 不得使用 `dev.lithe.*`，Lithe 会直接拒绝 |
 | 完整性 | Lithe 发布者 Ed25519 签名 | 索引固定每个包的 SHA-256，安装后记录内容摘要并在每次加载时复查 |
 | 安装前 | 直接安装 | 弹窗列出权限、要运行的程序和来源仓库，用户确认后安装 |
