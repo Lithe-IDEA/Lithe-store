@@ -16,6 +16,21 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/88a86cae73403d715d1385e447d8e4a9273e8f2f/io.github.lithe-idea.gradle-build/icons/gradle.svg",
       "versions": [
         {
+          "version": "0.1.1",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "buildSystems": 1
+          },
+          "releaseDate": "2026-10-18",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v0.1.1/gradle-build-0.1.1-darwin.zip",
+              "sha256": "6d0c49d4c95d9a03afff372d4cad40017a97120bd7b43d903b7dc2d8e82a841f"
+            }
+          ]
+        },
+        {
           "version": "0.1.0",
           "pluginAPIVersion": 3,
           "requires": {
