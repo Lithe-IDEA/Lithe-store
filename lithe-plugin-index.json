@@ -147,6 +147,23 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/177ee4e9b12b9fe06a07498eb316539f7472d5d8/io.github.lithe-idea.maven-build/icons/maven.svg",
       "versions": [
         {
+          "version": "0.1.1",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "buildProviders": 1,
+            "buildSystems": 1,
+            "serverProcess": 1
+          },
+          "releaseDate": "2026-10-20",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.1.1/maven-build-0.1.1-darwin.zip",
+              "sha256": "5887e3fc661e5c493170510a23f0e349e3d1d3cfb6f0d60960e29eea05cb41fd"
+            }
+          ]
+        },
+        {
           "version": "0.1.0",
           "pluginAPIVersion": 3,
           "requires": {
