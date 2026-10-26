@@ -13,7 +13,7 @@
 - 一个 PR 只改一个插件，便于审查和回退。
 - `plugins` 按 `id` 字母序排列；每个插件的 `versions` 新版本在前。
 - 不修改已发布版本的 `downloadURL` 与 `sha256`；不删除历史版本（撤回问题版本除外）。
-- README 的插件总览由 `scripts/render-readme.mjs` 根据索引生成，合并到 main 后由 `Sync README` 工作流自动提交，PR 中不需要手动更新。
+- README 的插件总览由 `scripts/render-readme.mjs` 根据索引生成，合并到 main 后由 `Sync README` 工作流开一个 `bot/sync-readme` PR 同步（`main` 受保护，不能直接推送），PR 中不需要手动更新。
 - 插件图标填在条目的 `icon` 字段，指向插件仓库内固定到提交的 SVG/PNG（`raw.githubusercontent.com/<owner>/<repo>/<commit>/…`）；没有填写时 README 使用默认图标。
 - 插件的 bug 与功能请求请提到插件自己的仓库，本仓库只处理收录相关事务。
 
@@ -61,7 +61,7 @@ scripts/track-releases.mjs      # 追踪已收录插件的新 Release 并生成�
 scripts/render-readme.mjs       # 根据索引生成 README 的插件总览
 scripts/store.test.mjs          # 校验脚本的测试（fixtures 复制自插件契约）
 assets/                         # README 用到的图片（无图标插件的默认图标）
-.github/workflows/              # validate（PR/推送/每周）、track-releases（每 6 小时）、sync-readme（main 更新后同步 README）
+.github/workflows/              # validate（PR/推送/每周）、track-releases（每 6 小时）、sync-readme（main 更新后开 PR 同步 README）
 ```
 
 ## 本地校验

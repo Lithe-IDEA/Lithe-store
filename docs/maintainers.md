@@ -31,6 +31,17 @@ CI（`Validate index`）已经自动保证：
    `Validate index`；工作流已在开 PR 前完成同样的校验，但合并前需要手动运行一次检查才能满足分支保护。
 3. 分支保护：`main` 要求 `Validate index / validate` 通过，要求 CODEOWNERS 审查。
 
+## 自动同步 README 总览
+
+README 的插件总览由 `scripts/render-readme.mjs` 根据索引生成。`main` 上的索引、渲染脚本或图片更新后，
+`Sync README` 工作流重新生成它；`main` 受保护，工作流不能直接推送，所以和追踪新版本一样，
+把结果提交到 `bot/sync-readme` 分支并开一个 PR，下一次运行会覆盖这个分支并更新描述。
+合并这个 PR 后工作流会再运行一次，发现总览已经一致就结束。总览已经一致时，上一轮没人合并的同步 PR 会被自动关闭。
+
+仓库设置与追踪新版本相同（“Allow GitHub Actions to create and approve pull requests”，
+可选的 `STORE_BOT_TOKEN`）。没有配置 `STORE_BOT_TOKEN` 时，这个 PR 也不会触发 `Validate index`，
+需要手动运行一次检查才能满足分支保护。同步 PR 只应该包含 `README.md`；如果还改了别的文件，不要合并。
+
 ## 下架与撤回
 
 | 情况 | 处理 |

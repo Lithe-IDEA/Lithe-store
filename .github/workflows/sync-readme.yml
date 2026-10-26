@@ -2,8 +2,11 @@ name: Sync README
 
 # Regenerates the plugin overview in README.md from lithe-plugin-index.json
 # after every change lands on main, so contributors and the release bot only
-# edit the index. Commits made with GITHUB_TOKEN do not trigger workflows,
-# so the sync commit cannot loop.
+# edit the index. `main` is protected (owners merge), so the workflow cannot
+# push to it: it commits to the bot/sync-readme branch and opens or updates one
+# pull request, like Track plugin releases does. Merging that pull request
+# re-runs this workflow, finds README.md already in sync and stops, so it
+# cannot loop.
 on:
   push:
     branches: [main]
@@ -16,6 +19,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: sync-readme
@@ -23,25 +27,46 @@ concurrency:
 
 jobs:
   sync:
+    # The overview must be rendered from main, never from a feature branch.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      BRANCH: bot/sync-readme
+      # A PR opened with GITHUB_TOKEN does not trigger other workflows. Set the
+      # STORE_BOT_TOKEN secret (fine-grained PAT: contents + pull requests) so
+      # `Validate index` runs on the bot PR as well.
+      GH_TOKEN: ${{ secrets.STORE_BOT_TOKEN || github.token }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.STORE_BOT_TOKEN || github.token }}
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-
       - name: Render the plugin overview
         run: node scripts/render-readme.mjs
-
-      - name: Commit when README changed
+      - name: Open or update the pull request when README changed
         run: |
           if git diff --quiet -- README.md; then
             echo "README.md is already in sync."
+            # An earlier sync pull request that nobody merged is now obsolete.
+            if gh pr view "$BRANCH" --json state -q .state 2>/dev/null | grep -q OPEN; then
+              gh pr close "$BRANCH" --delete-branch \
+                --comment "main 上的 README 总览已经与索引一致，这个同步 PR 不再需要。"
+            fi
             exit 0
           fi
           git config user.name "lithe-store-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
           git add README.md
           git commit -m "docs(readme): 同步插件总览"
-          git push origin HEAD:main
+          git push --force origin "$BRANCH"
+          title="docs(readme): 同步插件总览"
+          body="README 的插件总览由 \`scripts/render-readme.mjs\` 根据 \`lithe-plugin-index.json\` 生成。main 上的索引或渲染脚本有更新，这个 PR 只包含重新生成的 \`README.md\`，合并即可。"
+          if gh pr view "$BRANCH" --json state -q .state 2>/dev/null | grep -q OPEN; then
+            gh pr edit "$BRANCH" --title "$title" --body "$body"
+          else
+            gh pr create --base main --head "$BRANCH" --title "$title" --body "$body"
+          fi
