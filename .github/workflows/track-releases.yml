@@ -62,10 +62,13 @@ jobs:
           git config user.name "lithe-store-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -C "$BRANCH"
-          git add lithe-plugin-index.json
+          # main is protected, so Sync README could only follow up with a second
+          # pull request. Render the overview here so one merge covers both.
+          node scripts/render-readme.mjs
+          git add lithe-plugin-index.json README.md
           git commit -m "chore(index): track new plugin releases" -m "$SUMMARY"
           git push --force origin "$BRANCH"
-          body=$(printf '自动追踪到新的插件版本：\n\n%s\n\n已校验 SHA-256 与包内 plugin.json（id、version、pluginAPIVersion、signatureRequirement）。维护者请按 docs/maintainers.md 的清单审查后合并。' "$(echo "$SUMMARY" | tr ',' '\n' | sed 's/^ */- /')")
+          body=$(printf '自动追踪到新的插件版本：\n\n%s\n\n已校验 SHA-256 与包内 plugin.json（id、version、pluginAPIVersion、signatureRequirement），README 总览已一并重新生成。维护者请按 docs/maintainers.md 的清单审查后合并。' "$(echo "$SUMMARY" | tr ',' '\n' | sed 's/^ */- /')")
           if gh pr view "$BRANCH" --json state -q .state 2>/dev/null | grep -q OPEN; then
             gh pr edit "$BRANCH" --body "$body"
           else

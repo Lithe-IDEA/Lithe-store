@@ -20,7 +20,7 @@ CI（`Validate index`）已经自动保证：
 ## 自动追踪新版本
 
 `Track plugin releases` 每 6 小时运行一次，也可在 Actions 中手动运行（可只指定一个插件 ID）。
-它把结果统一提交到 `bot/track-releases` 分支并开一个 PR；新的扫描会覆盖这个分支并更新 PR 描述。
+它把结果统一提交到 `bot/track-releases` 分支并开一个 PR，PR 里同时包含索引和重新生成的 README 总览（合并后不需要再等 `Sync README`）；新的扫描会覆盖这个分支并更新 PR 描述。
 
 需要的仓库设置：
 
