@@ -80,7 +80,7 @@ function validateVersionRequirements(version) {
   if (version.pluginAPIVersion === 3 && !present) {
     throw invalid("pluginAPIVersion 3 must list its capabilities in `requires`");
   }
-  // Core permits future API levels without requires, but validates it when supplied.
+  // Core permits API levels above 3 without requires, but validates it when supplied.
   if (!present) return;
   if (!isObject(version.requires) || Object.keys(version.requires).length === 0) {
     throw invalid("`requires` must be a non-empty capability object");
