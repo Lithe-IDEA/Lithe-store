@@ -39,7 +39,7 @@
 <p><code>build</code> <code>cargo</code> <code>rust</code> <code>testing</code></p>
 </td>
 <td width="50%" valign="top">
-<h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-database">Database</a></h3>
+<h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-database/bf531b5a40495c404d857aab5fd6a55d3a116921/assets/database.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-database">Database</a></h3>
 <p><sub>Lithe Community · v0.1.1 · API 3（需 backend、serverProcess、ui）</sub></p>
 <p>数据库工具窗口：连接 MySQL、MariaDB、PostgreSQL、SQLite、SQL Server、MongoDB、Redis 和 Nacos，提供 SQL 控制台、表数据与结构编辑、CSV/JSON/SQL 导…</p>
 <p>🏷️ 工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-database?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
@@ -71,7 +71,7 @@
 <p><code>http</code> <code>rest</code> <code>tool</code></p>
 </td>
 <td width="50%" valign="top">
-<h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-lldb">LLDB Debugger</a></h3>
+<h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-lldb/24ac947b5db12dc49414c1933a7af6057d4b1051/assets/lldb.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-lldb">LLDB Debugger</a></h3>
 <p><sub>Lithe Community · v0.1.0 · API 4（需 debugAdapters、languages、serverProcess、settings）</sub></p>
 <p>预发布 LLDB 调试器：通过你电脑上的 lldb-dap 调试 C、C++、Objective-C、Swift 和 Rust，支持断点、单步、变量，以及带补全的 lldb 控制台。需要支持插件 API 4 的 Lith…</p>
 <p>🏷️ 工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-lldb?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
