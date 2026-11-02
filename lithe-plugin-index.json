@@ -267,14 +267,31 @@
       "author": "Lithe Community",
       "repository": "https://github.com/Lithe-IDEA/lithe-plugin-http-client",
       "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-http-client#readme",
-      "description": "Preview HTTP workbench with collapsible highlighted headers, configurable 48/256/512 KiB body previews (512 KiB default), send/cancel, JSON formatting and a dedicated tool-window icon. Uses OpenIDEA ide-http. macOS only; updated native UI acceptance pending.",
+      "description": "Preview HTTP workbench with request-file loading, syntax highlighting, session history, resizable panes, readable headers, raw response exports and HTML editor previews. Body previews default to 128 KiB, adjustable in 1 KiB steps. macOS only; full native file-dialog and editor-preview acceptance remains pending.",
       "localizedDescriptions": {
-        "zh-Hans": "HTTP 请求工具预览版：响应头键值高亮、长值折叠，正文预览可选 48/256/512 KiB（默认 512 KiB），支持发送/取消、JSON 格式化和专属工具窗口图标。复用 OpenIDEA ide-http。仅支持 macOS；新版原生界面验收待完成。"
+        "zh-Hans": "HTTP 请求工具预览版：支持打开请求文件、语法高亮、会话历史、可调整分栏、响应头阅读、原始响应保存和编辑区 HTML 预览。正文预览默认 128 KiB，可按 1 KiB 调整。仅支持 macOS；原生文件对话框和编辑区预览的完整验收仍待完成。"
       },
       "tags": ["http", "rest", "tool"],
       "license": "Apache-2.0",
-      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/159d65f8ce26d5d51ea92b76e7c2a1b2da345b68/assets/http.svg",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/e3cead6da09ecd07fa6964e66ca903219b374634/assets/http.svg",
       "versions": [
+        {
+          "version": "0.1.2",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 2,
+            "serverProcess": 1,
+            "ui": 2
+          },
+          "releaseDate": "2026-11-02",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-http-client/releases/download/v0.1.2/http-client-0.1.2-darwin.zip",
+              "sha256": "1a4aecbb8901c3243c213643fd2fc6e4e65655c170173eda005c8f0794e9ad9f"
+            }
+          ]
+        },
         {
           "version": "0.1.1",
           "pluginAPIVersion": 3,
