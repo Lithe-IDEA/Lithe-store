@@ -103,6 +103,39 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.docker",
+      "name": "Docker",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-docker",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-docker#readme",
+      "description": "Manage local Docker containers, images, volumes and networks in a tool window, with Compose groups and configuration paths, searchable logs and JSON highlighting, live CPU/memory/network/disk charts with adjustable sampling, and regular-file upload/download. Requires a macOS Lithe host with backend 2, Web UI 2, file dialogs and browser.open. Container file browsing needs /bin/sh and stat -c; transfers are limited to regular files up to 256 MiB. Native file-dialog and Finder drag-in acceptance is pending; macOS only.",
+      "localizedDescriptions": {
+        "zh-Hans": "在工具窗口中管理本机 Docker 容器、镜像、卷和网络，支持 Compose 分组及配置路径、日志搜索与 JSON 高亮、可调采样间隔的 CPU/内存/网络/磁盘实时图，以及普通文件上传下载。需要支持 backend 2、Web UI 2、文件对话框和 browser.open 的 macOS Lithe 宿主。容器文件浏览需要 /bin/sh 和 stat -c；单文件传输上限 256 MiB。原生文件对话框与 Finder 拖入验收待完成，仅支持 macOS。"
+      },
+      "tags": ["tool", "docker", "containers", "compose", "logs", "monitoring"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-docker/fb0e6eed5be851e282eb4d38236554f615deab92/icons/docker.svg",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 2,
+            "serverProcess": 1,
+            "ui": 2
+          },
+          "releaseDate": "2026-11-02",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-docker/releases/download/v0.1.0/docker-0.1.0-darwin.zip",
+              "sha256": "ba56adf2caf4899b2c368a683da682a638e8539cfb574facd4b85cc54068d6c9"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.go-support",
       "name": "Go Support",
       "author": "Lithe Community",
