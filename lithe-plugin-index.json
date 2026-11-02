@@ -64,6 +64,7 @@
       },
       "tags": ["tool", "database", "sql", "mysql", "postgresql", "redis"],
       "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-database/bf531b5a40495c404d857aab5fd6a55d3a116921/assets/database.svg",
       "versions": [
         {
           "version": "0.1.1",
