@@ -71,7 +71,7 @@
 <p><code>build</code> <code>gradle</code> <code>java</code> <code>testing</code></p>
 </td>
 <td width="50%" valign="top">
-<h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/a4a106d9317d68d3265670dd0e99cf321f590438/assets/http.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-http-client">HTTP Client</a></h3>
+<h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/159d65f8ce26d5d51ea92b76e7c2a1b2da345b68/assets/http.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-http-client">HTTP Client</a></h3>
 <p><sub>Lithe Community · v0.1.1 · API 3（需 backend、serverProcess、ui）</sub></p>
 <p>HTTP 请求工具预览版：响应头键值高亮、长值折叠，正文预览可选 48/256/512 KiB（默认 512 KiB），支持发送/取消、JSON 格式化和专属工具窗口图标。复用 OpenIDEA ide-http。仅支持…</p>
 <p>🏷️ 工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-http-client?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
