@@ -221,7 +221,7 @@
       },
       "tags": ["http", "rest", "tool"],
       "license": "Apache-2.0",
-      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/a4a106d9317d68d3265670dd0e99cf321f590438/assets/http.svg",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/159d65f8ce26d5d51ea92b76e7c2a1b2da345b68/assets/http.svg",
       "versions": [
         {
           "version": "0.1.1",
