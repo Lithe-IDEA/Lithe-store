@@ -176,6 +176,39 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.http-client",
+      "name": "HTTP Client",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-http-client",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-http-client#readme",
+      "description": "Preview HTTP workbench: paste .http requests, send/cancel, inspect body and headers, format JSON, and view status, time and size. Uses OpenIDEA ide-http. Native install/window acceptance is pending; macOS only.",
+      "localizedDescriptions": {
+        "zh-Hans": "HTTP 请求工具预览版：粘贴 .http 文本，发送与取消请求，查看正文、响应头、JSON、状态码、耗时和大小。复用 OpenIDEA ide-http。原生安装与窗口验收待完成，仅支持 macOS。"
+      },
+      "tags": ["http", "rest", "tool"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/a4a106d9317d68d3265670dd0e99cf321f590438/assets/http.svg",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 1,
+            "serverProcess": 1,
+            "ui": 2
+          },
+          "releaseDate": "2026-11-02",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-http-client/releases/download/v0.1.0/http-client-0.1.0-darwin.zip",
+              "sha256": "699d04a4ddc69e46c27d79ac6063f214eef6af2ee81edf0b30db7595e9657b74"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.lldb-debug",
       "name": "LLDB Debugger",
       "author": "Lithe Community",
