@@ -49,8 +49,8 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-docker/fb0e6eed5be851e282eb4d38236554f615deab92/icons/docker.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-docker">Docker</a></h3>
-<p><sub>Lithe Community · v0.1.0 · API 3（需 backend、serverProcess、ui）</sub></p>
-<p>在工具窗口中管理本机 Docker 容器、镜像、卷和网络，支持 Compose 分组及配置路径、日志搜索与 JSON 高亮、可调采样间隔的 CPU/内存/网络/磁盘实时图，以及普通文件上传下载。需要支持 backend…</p>
+<p><sub>Lithe Community · v0.1.1 · API 3（需 backend、serverProcess、ui）</sub></p>
+<p>在工具窗口中管理本机 Docker 容器、镜像、卷和网络，支持容器原生终端、Compose 分组及配置路径、日志搜索与 JSON 高亮、可调采样间隔的 CPU/内存/网络/磁盘实时图，以及普通文件上传下载。需要支持 ba…</p>
 <p>🏷️ 工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-docker?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>tool</code> <code>docker</code> <code>containers</code> <code>compose</code> <code>logs</code> <code>monitoring</code></p>
 </td>
