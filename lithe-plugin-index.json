@@ -257,7 +257,8 @@
             }
           ]
         }
-      ]
+      ],
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-lldb/24ac947b5db12dc49414c1933a7af6057d4b1051/assets/lldb.svg"
     },
     {
       "id": "io.github.lithe-idea.lua-support",
