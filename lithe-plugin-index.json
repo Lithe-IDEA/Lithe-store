@@ -2,6 +2,58 @@
   "schemaVersion": 1,
   "plugins": [
     {
+      "id": "io.github.fxrayhughes.mise",
+      "name": "mise",
+      "author": "FxRayHughes",
+      "repository": "https://github.com/FxRayHughes/lithe-plugin-mise",
+      "homepage": "https://github.com/FxRayHughes/lithe-plugin-mise#readme",
+      "description": "Preview toolchain provider: tells Lithe which JDK, Node.js, Maven, Gradle, Go, Python and pnpm mise installed, and which versions a project's mise.toml or .tool-versions and your global mise config request, so no paths are added by hand. Its backend only runs read-only mise commands (mise ls, mise bin-paths) offline; it never installs or trusts anything. Requires a Lithe preview build with the toolchainProviders capability and mise on your PATH; macOS only.",
+      "localizedDescriptions": {
+        "zh-Hans": "预发布工具链提供方：告诉 Lithe mise 装了哪些 JDK、Node.js、Maven、Gradle、Go、Python 和 pnpm，以及项目的 mise.toml / .tool-versions 和全局 mise 配置要求哪个版本，无需手动添加路径。后端只以离线方式运行只读的 mise 命令（mise ls、mise bin-paths），不会安装或信任任何东西。需要支持 toolchainProviders 能力的 Lithe preview 开发版，以及 PATH 中可用的 mise，仅支持 macOS。"
+      },
+      "tags": ["tool", "toolchain", "mise", "java", "node"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/FxRayHughes/lithe-plugin-mise/ced89b3dd0a5fe11f9d5e6da73dfaa3e65a350e9/io.github.fxrayhughes.mise/icons/mise.svg",
+      "versions": [
+        {
+          "version": "0.2.1",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 2,
+            "serverProcess": 1,
+            "settings": 2,
+            "toolchainProviders": 1
+          },
+          "releaseDate": "2026-11-02",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/FxRayHughes/lithe-plugin-mise/releases/download/v0.2.1/mise-0.2.1-darwin.zip",
+              "sha256": "635366955e73f64ef6a821e3af9bee043c8c1ac871e6a44ddc3d43aae4823755"
+            }
+          ]
+        },
+        {
+          "version": "0.2.0",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 2,
+            "serverProcess": 1,
+            "settings": 2,
+            "toolchainProviders": 1
+          },
+          "releaseDate": "2026-11-02",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/FxRayHughes/lithe-plugin-mise/releases/download/v0.2.0/mise-0.2.0-darwin.zip",
+              "sha256": "2b088c02aec5707b78e3da4de82ad45a8d22e8c8010a8a01afa26947b8561f82"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.cargo-build",
       "name": "Cargo",
       "author": "Lithe Community",
