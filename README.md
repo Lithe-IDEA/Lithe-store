@@ -71,9 +71,9 @@
 <p><code>build</code> <code>gradle</code> <code>java</code> <code>testing</code></p>
 </td>
 <td width="50%" valign="top">
-<h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/159d65f8ce26d5d51ea92b76e7c2a1b2da345b68/assets/http.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-http-client">HTTP Client</a></h3>
-<p><sub>Lithe Community · v0.1.1 · API 3（需 backend、serverProcess、ui）</sub></p>
-<p>HTTP 请求工具预览版：响应头键值高亮、长值折叠，正文预览可选 48/256/512 KiB（默认 512 KiB），支持发送/取消、JSON 格式化和专属工具窗口图标。复用 OpenIDEA ide-http。仅支持…</p>
+<h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/e3cead6da09ecd07fa6964e66ca903219b374634/assets/http.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-http-client">HTTP Client</a></h3>
+<p><sub>Lithe Community · v0.1.2 · API 3（需 backend、serverProcess、ui）</sub></p>
+<p>HTTP 请求工具预览版：支持打开请求文件、语法高亮、会话历史、可调整分栏、响应头阅读、原始响应保存和编辑区 HTML 预览。正文预览默认 128 KiB，可按 1 KiB 调整。仅支持 macOS；原生文件对话框和编辑…</p>
 <p>🏷️ 工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-http-client?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>http</code> <code>rest</code> <code>tool</code></p>
 </td>
