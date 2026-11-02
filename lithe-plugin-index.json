@@ -181,14 +181,31 @@
       "author": "Lithe Community",
       "repository": "https://github.com/Lithe-IDEA/lithe-plugin-http-client",
       "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-http-client#readme",
-      "description": "Preview HTTP workbench: paste .http requests, send/cancel, inspect body and headers, format JSON, and view status, time and size. Uses OpenIDEA ide-http. Native install/window acceptance is pending; macOS only.",
+      "description": "Preview HTTP workbench with collapsible highlighted headers, configurable 48/256/512 KiB body previews (512 KiB default), send/cancel, JSON formatting and a dedicated tool-window icon. Uses OpenIDEA ide-http. macOS only; updated native UI acceptance pending.",
       "localizedDescriptions": {
-        "zh-Hans": "HTTP 请求工具预览版：粘贴 .http 文本，发送与取消请求，查看正文、响应头、JSON、状态码、耗时和大小。复用 OpenIDEA ide-http。原生安装与窗口验收待完成，仅支持 macOS。"
+        "zh-Hans": "HTTP 请求工具预览版：响应头键值高亮、长值折叠，正文预览可选 48/256/512 KiB（默认 512 KiB），支持发送/取消、JSON 格式化和专属工具窗口图标。复用 OpenIDEA ide-http。仅支持 macOS；新版原生界面验收待完成。"
       },
       "tags": ["http", "rest", "tool"],
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-http-client/a4a106d9317d68d3265670dd0e99cf321f590438/assets/http.svg",
       "versions": [
+        {
+          "version": "0.1.1",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 1,
+            "serverProcess": 1,
+            "ui": 2
+          },
+          "releaseDate": "2026-11-02",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-http-client/releases/download/v0.1.1/http-client-0.1.1-darwin.zip",
+              "sha256": "7eab10168660a9dd49423916ed3303559fae53e1668f1f32fa61e6ad992cc24c"
+            }
+          ]
+        },
         {
           "version": "0.1.0",
           "pluginAPIVersion": 3,
