@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Finds GitHub Releases of listed plugins that are not in the index yet and
 // adds them as new versions. The scheduled `track-releases` workflow runs this
-// and opens a pull request; maintainers review it like any other index change.
+// once per scope and opens one pull request per scope: `organization` covers
+// plugins whose repository belongs to the Lithe-IDEA organization and is merged
+// by the workflow after the archives are verified; `external` covers every other
+// plugin and waits for a maintainer review.
 //
 // Public repositories of the Lithe-IDEA organization whose names start with
 // `lithe-plugin-` are tracked before they are listed: once such a repository
@@ -16,8 +19,9 @@
 //     for one archive that serves every architecture of that OS;
 //   - every archive agrees on plugin.json `version`, `pluginAPIVersion`, and `requires`.
 //
-// Usage: node scripts/track-releases.mjs [index.json] [--plugin <id>] [--dry-run]
-// `--plugin` accepts the ID of a listed plugin or of an unlisted organization plugin.
+// Usage: node scripts/track-releases.mjs [index.json] [--scope organization|external] [--plugin <id>] [--dry-run]
+// Without `--scope` every plugin is tracked. `--plugin` accepts the ID of a
+// listed plugin or of an unlisted organization plugin.
 // GITHUB_TOKEN is used for API requests when set.
 
 import { createHash } from "node:crypto";
@@ -29,6 +33,7 @@ export const DISCOVERY_OWNER = "Lithe-IDEA";
 export const DISCOVERY_PREFIX = "lithe-plugin-";
 // Organization repositories that carry the prefix but do not publish a plugin.
 export const DISCOVERY_EXCLUDED = new Set(["lithe-plugin-docs"]);
+export const SCOPES = ["organization", "external"];
 
 export const KNOWN_ARCHITECTURES = { darwin: ["arm64", "x64"], windows: ["x64", "arm64"], linux: ["x64", "arm64"] };
 const ASSET_PLATFORM = /-(darwin|windows|linux)(?:-(arm64|x64))?\.zip$/;
@@ -60,6 +65,18 @@ export function addVersion(entry, version) {
 function repositoryPath(repository) {
   const [, owner, repo] = /^https:\/\/github\.com\/([^/]+)\/([^/]+?)\/?$/.exec(repository);
   return `${owner}/${repo}`;
+}
+
+/** True when the plugin's repository belongs to the Lithe-IDEA organization. */
+export function isOrganizationEntry(entry) {
+  const [owner] = repositoryPath(entry.repository).split("/");
+  return owner.toLowerCase() === DISCOVERY_OWNER.toLowerCase();
+}
+
+/** Whether a run limited to `scope` tracks the entry. A run without a scope tracks every entry. */
+export function inScope(entry, scope) {
+  if (scope === undefined) return true;
+  return isOrganizationEntry(entry) === (scope === "organization");
 }
 
 async function github(path) {
@@ -286,32 +303,54 @@ export async function discoverPlugins(index, {
   return { added, skipped, newPlugins };
 }
 
-async function main(argv) {
-  const pluginFlag = argv.indexOf("--plugin");
-  const onlyPlugin = pluginFlag >= 0 ? argv[pluginFlag + 1] : undefined;
-  const dryRun = argv.includes("--dry-run");
-  const indexPath = argv.find((arg, position) => !arg.startsWith("--") && argv[position - 1] !== "--plugin")
-    ?? "lithe-plugin-index.json";
-  const index = JSON.parse(readFileSync(indexPath, "utf8"));
-
+/**
+ * Tracks the listed plugins of `scope` and, unless the scope is `external`,
+ * discovers unlisted organization plugins. Discovered repositories belong to
+ * the Lithe-IDEA organization, so they always fall in the `organization` scope.
+ */
+export async function trackIndex(index, {
+  scope, onlyPlugin, request = github, downloadArchive, readManifests,
+} = {}) {
   const added = [];
   const skipped = [];
   for (const entry of index.plugins) {
-    if (onlyPlugin && entry.id !== onlyPlugin) continue;
+    if (!inScope(entry, scope) || (onlyPlugin && entry.id !== onlyPlugin)) continue;
     let releases;
     try {
-      releases = await github(`repos/${repositoryPath(entry.repository)}/releases?per_page=20`);
+      releases = await request(`repos/${repositoryPath(entry.repository)}/releases?per_page=20`);
     } catch (error) {
       skipped.push(`${entry.id}: ${error.message}`);
       continue;
     }
-    const result = await trackEntry(entry, releases);
+    const result = await trackEntry(entry, releases, { downloadArchive, readManifests });
     added.push(...result.added);
     skipped.push(...result.skipped);
   }
-  const discovered = await discoverPlugins(index, { onlyPlugin });
-  added.push(...discovered.added);
-  skipped.push(...discovered.skipped);
+  if (scope === "external") return { added, skipped, newPlugins: [] };
+
+  const discovered = await discoverPlugins(index, { onlyPlugin, request, downloadArchive, readManifests });
+  return { added: [...added, ...discovered.added], skipped: [...skipped, ...discovered.skipped], newPlugins: discovered.newPlugins };
+}
+
+function flagValue(argv, flag) {
+  const position = argv.indexOf(flag);
+  return position >= 0 ? argv[position + 1] : undefined;
+}
+
+async function main(argv) {
+  const onlyPlugin = flagValue(argv, "--plugin");
+  const scope = flagValue(argv, "--scope");
+  if (scope !== undefined && !SCOPES.includes(scope)) {
+    console.error(`--scope must be one of: ${SCOPES.join(", ")}`);
+    return 2;
+  }
+  const dryRun = argv.includes("--dry-run");
+  const valueFlags = new Set(["--plugin", "--scope"]);
+  const indexPath = argv.find((arg, position) => !arg.startsWith("--") && !valueFlags.has(argv[position - 1]))
+    ?? "lithe-plugin-index.json";
+  const index = JSON.parse(readFileSync(indexPath, "utf8"));
+
+  const { added, skipped, newPlugins } = await trackIndex(index, { scope, onlyPlugin });
 
   const problems = validateIndex(index);
   for (const line of added) console.log(`+ ${line}`);
@@ -323,7 +362,7 @@ async function main(argv) {
   if (!dryRun && added.length > 0) writeFileSync(indexPath, formatIndex(index));
   if (process.env.GITHUB_OUTPUT) {
     const summary = added.join(", ");
-    const output = `added=${added.length}\nsummary=${summary}\nnew_plugins=${discovered.newPlugins.join(", ")}\n`;
+    const output = `added=${added.length}\nsummary=${summary}\nnew_plugins=${newPlugins.join(", ")}\n`;
     writeFileSync(process.env.GITHUB_OUTPUT, output, { flag: "a" });
   }
   return 0;
