@@ -394,6 +394,23 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-lua/c5f88bf94e9d5616c7770e58febc53a0d520dd50/io.github.lithe-idea.lua-support/icons/lua.svg",
       "versions": [
         {
+          "version": "0.3.1",
+          "pluginAPIVersion": 2,
+          "releaseDate": "2026-11-04",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-lua/releases/download/v0.3.1/lua-support-0.3.1-darwin-arm64.zip",
+              "sha256": "0b9b88f7e02f4190d8ee4d3d982003362f078c94cd4e6690d711b9fe77b12efa"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-lua/releases/download/v0.3.1/lua-support-0.3.1-darwin-x64.zip",
+              "sha256": "a44059ddfa414960c8f05cea9ad25082fafef3298ea0626160b2c25d92a8791b"
+            }
+          ]
+        },
+        {
           "version": "0.3.0",
           "pluginAPIVersion": 1,
           "releaseDate": "2026-10-12",
