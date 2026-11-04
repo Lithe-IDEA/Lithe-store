@@ -2,9 +2,18 @@ name: Track plugin releases
 
 # Scans the GitHub Releases of every listed plugin, and of every unlisted
 # public `lithe-plugin-*` repository in the Lithe-IDEA organization except
-# `lithe-plugin-docs`, then opens one pull request that adds the versions and
-# plugins not yet in the index. Plugin authors only need to publish a release
-# that follows docs/publishing.md.
+# `lithe-plugin-docs`, and adds the versions and plugins not yet in the index.
+# Plugin authors only need to publish a release that follows docs/publishing.md.
+#
+# The scan runs once per scope, and each scope keeps its own pull request:
+#
+# - organization: plugins whose repository belongs to the Lithe-IDEA organization,
+#   including first listings. After the archives are verified, the workflow
+#   merges the pull request itself by fast-forwarding main with the
+#   STORE_BOT_DEPLOY_KEY deploy key, the only bot credential that the
+#   "Only owners merge main" ruleset lets through.
+# - external: every other plugin. The pull request waits for a maintainer
+#   review, and this scope never receives the deploy key.
 on:
   schedule:
     - cron: "41 */6 * * *"
@@ -25,10 +34,29 @@ concurrency:
 
 jobs:
   track:
+    name: track (${{ matrix.scope }})
+    # The workflow writes main's index and may push to main, so it must run the
+    # workflow and scripts from main. A manual run from another branch does nothing.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      # One scope at a time, organization first, so the external branch starts
+      # from the main that the organization scope may have just updated.
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        include:
+          - scope: organization
+            branch: bot/track-organization-releases
+            title: "chore(index): 追踪 Lithe-IDEA 组织插件新版本"
+          - scope: external
+            branch: bot/track-releases
+            title: "chore(index): 追踪组织外插件新版本"
     env:
-      BRANCH: bot/track-releases
+      SCOPE: ${{ matrix.scope }}
+      BRANCH: ${{ matrix.branch }}
+      TITLE: ${{ matrix.title }}
       # A PR opened with GITHUB_TOKEN does not trigger other workflows. Set the
       # STORE_BOT_TOKEN secret (fine-grained PAT: contents + pull requests) so
       # `Validate index` runs on the bot PR as well.
@@ -36,7 +64,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          # The latest main, not the commit that triggered the run: the external
+          # scope must start from the main that the organization scope just updated.
+          ref: main
           token: ${{ secrets.STORE_BOT_TOKEN || github.token }}
+          # Git then pushes over SSH with the deploy key. The external scope
+          # gets an empty key and keeps using the token, which cannot write main.
+          ssh-key: ${{ matrix.scope == 'organization' && secrets.STORE_BOT_DEPLOY_KEY || '' }}
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -48,15 +82,25 @@ jobs:
           PLUGIN: ${{ inputs.plugin }}
         run: |
           cp lithe-plugin-index.json "$RUNNER_TEMP/base-index.json"
-          args=""
-          if [ -n "$PLUGIN" ]; then args="--plugin $PLUGIN"; fi
-          node scripts/track-releases.mjs lithe-plugin-index.json $args
+          args=(--scope "$SCOPE")
+          if [ -n "$PLUGIN" ]; then args+=(--plugin "$PLUGIN"); fi
+          node scripts/track-releases.mjs lithe-plugin-index.json "${args[@]}"
+
+      - name: Close the obsolete pull request
+        if: steps.track.outputs.added == '0' && inputs.plugin == ''
+        run: |
+          number=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')
+          if [ -n "$number" ]; then
+            gh pr close "$number" --delete-branch \
+              --comment "最新一轮追踪在这个范围内没有发现 main 尚未收录的版本，这个 PR 不再需要。"
+          fi
 
       - name: Verify the new archives
         if: steps.track.outputs.added != '0'
         run: node scripts/validate-index.mjs lithe-plugin-index.json --verify-archives --base "$RUNNER_TEMP/base-index.json"
 
       - name: Open or update the pull request
+        id: pr
         if: steps.track.outputs.added != '0'
         env:
           SUMMARY: ${{ steps.track.outputs.summary }}
@@ -69,16 +113,57 @@ jobs:
           # pull request. Render the overview here so one merge covers both.
           node scripts/render-readme.mjs
           git add lithe-plugin-index.json README.md
-          git commit -m "chore(index): track new plugin releases" -m "$SUMMARY"
+          git commit -m "chore(index): track $SCOPE plugin releases" -m "$SUMMARY"
           git push --force origin "$BRANCH"
-          body=$(printf '自动追踪到新的插件版本：\n\n%s\n\n已校验 SHA-256 与包内 plugin.json（id、version、pluginAPIVersion、signatureRequirement），README 总览已一并重新生成。维护者请按 docs/maintainers.md 的清单审查后合并。' "$(echo "$SUMMARY" | tr ',' '\n' | sed 's/^ */- /')")
+
+          list=$(echo "$SUMMARY" | tr ',' '\n' | sed 's/^ */- /')
+          checks="已校验 SHA-256 与包内 plugin.json（id、version、pluginAPIVersion、signatureRequirement），README 总览已一并重新生成。"
+          if [ "$SCOPE" = organization ]; then
+            review="这些插件的仓库属于 Lithe-IDEA 组织，工作流会在校验通过后直接合入 main。如果这个 PR 仍处于打开状态，说明自动合入没有成功（原因见工作流日志），请维护者按 docs/maintainers.md 的清单审查后合并。"
+          else
+            review="这些插件来自 Lithe-IDEA 组织以外的仓库，维护者请按 docs/maintainers.md 的清单审查后合并。"
+          fi
+          body=$(printf '自动追踪到新的插件版本：\n\n%s\n\n%s%s' "$list" "$checks" "$review")
           if [ -n "$NEW_PLUGINS" ]; then
             # The next scan rebuilds this branch from main, so metadata fixes belong in a follow-up PR.
-            body="$body$(printf '\n\n首次收录：%s。条目由插件仓库的简介、许可证、topics 和包内 plugin.json 自动生成，没有图标和中文简介，description 沿用仓库简介的语言。请按 docs/maintainers.md 的首次收录清单审查；合并后另提 PR 补充 icon、localizedDescriptions 和 tags，不要直接改这个分支，下一轮扫描会覆盖它。' "$NEW_PLUGINS")"
+            body="$body$(printf '\n\n首次收录：%s。条目由插件仓库的简介、许可证、topics 和包内 plugin.json 自动生成，没有图标和中文简介，description 沿用仓库简介的语言。合并后请另提 PR 补充 icon、localizedDescriptions 和 tags，不要直接改这个分支，下一轮扫描会覆盖它。' "$NEW_PLUGINS")"
           fi
-          if gh pr view "$BRANCH" --json state -q .state 2>/dev/null | grep -q OPEN; then
-            gh pr edit "$BRANCH" --body "$body"
+
+          number=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$TITLE" --body "$body"
           else
-            gh pr create --base main --head "$BRANCH" --title "chore(index): 追踪插件新版本" --body "$body" --label new-version || \
-              gh pr create --base main --head "$BRANCH" --title "chore(index): 追踪插件新版本" --body "$body"
+            gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$body" --label new-version || \
+              gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$body"
+            number=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')
           fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Merge the organization pull request
+        if: matrix.scope == 'organization' && steps.track.outputs.added != '0'
+        env:
+          NUMBER: ${{ steps.pr.outputs.number }}
+          HAS_DEPLOY_KEY: ${{ secrets.STORE_BOT_DEPLOY_KEY != '' }}
+        run: |
+          if [ "$HAS_DEPLOY_KEY" != true ]; then
+            echo "::warning::STORE_BOT_DEPLOY_KEY is not set, so pull request #$NUMBER stays open for a maintainer to merge."
+            exit 0
+          fi
+          # Fast-forward main to the verified commit. Without --force, git refuses
+          # the push if main moved after the checkout; the next run then rebuilds
+          # the branch from the new main.
+          if ! git push origin "HEAD:main"; then
+            echo "::warning::Could not fast-forward main, so pull request #$NUMBER stays open for a maintainer to merge."
+            exit 0
+          fi
+          # GitHub marks the pull request merged once its head commit is on main.
+          # Delete the branch only after that, or the pull request would show as
+          # closed instead of merged.
+          for _ in $(seq 1 12); do
+            if [ "$(gh pr view "$NUMBER" --json state -q .state)" = MERGED ]; then
+              git push origin --delete "$BRANCH"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::warning::main contains pull request #$NUMBER, but GitHub has not marked it merged after 60 seconds. Delete $BRANCH once it has."
