@@ -2,7 +2,7 @@
 
 | 我想… | 怎么做 |
 | --- | --- |
-| 收录自己的插件 | 读 [docs/publishing.md](docs/publishing.md)，提 PR 或开“插件收录申请” issue |
+| 收录自己的插件 | 读 [docs/publishing.md](docs/publishing.md)，提 PR 或开“插件收录申请” issue；Lithe-IDEA 组织的 `lithe-plugin-*` 仓库由 bot 自动收录（见 [首次收录](docs/publishing.md#3-首次收录)） |
 | 发布插件新版本 | 在自己仓库发布 Release 即可，bot 会自动开 PR（见 [发布新版本](docs/publishing.md#4-发布新版本)） |
 | 修改插件信息 | 提 PR 修改 `lithe-plugin-index.json` 中自己的条目（含 `icon`） |
 | 报告有问题的插件 | 开“报告插件问题” issue；安全问题请勾选“安全问题”，维护者会优先处理 |
@@ -57,7 +57,7 @@ Lithe 会把仓库地址 `https://github.com/Lithe-IDEA/Lithe-store` 解析为
 ```text
 lithe-plugin-index.json         # 唯一的数据文件，Lithe 客户端读取它
 scripts/validate-index.mjs      # 与 Lithe Rust Core 同规则的校验 + 下载包校验
-scripts/track-releases.mjs      # 追踪已收录插件的新 Release 并生成版本条目
+scripts/track-releases.mjs      # 追踪已收录插件和 Lithe-IDEA 组织 lithe-plugin-* 仓库的新 Release，生成索引条目
 scripts/render-readme.mjs       # 根据索引生成 README 的插件总览
 scripts/store.test.mjs          # 校验脚本的测试（fixtures 复制自插件契约）
 assets/                         # README 用到的图片（无图标插件的默认图标）

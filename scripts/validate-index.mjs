@@ -258,7 +258,11 @@ export function listZipEntries(archive) {
     .filter(Boolean);
 }
 
-/** Returns every plugin.json in the archive whose id equals `pluginID`. */
+/**
+ * Returns every plugin.json in the archive whose id equals `pluginID`. Without
+ * `pluginID` (a plugin that is not listed yet) it returns every plugin.json that
+ * declares a string id.
+ */
 export function readPackageManifests(archive, pluginID) {
   const names = listZipEntries(archive);
   const unsafe = names.filter((name) => name.startsWith("/") || name.includes("\\") || name.split("/").includes(".."));
@@ -266,7 +270,8 @@ export function readPackageManifests(archive, pluginID) {
   for (const name of names.filter((name) => name === "plugin.json" || name.endsWith("/plugin.json"))) {
     try {
       const manifest = JSON.parse(execFileSync("unzip", ["-p", archive, name], { encoding: "utf8" }));
-      if (manifest?.id === pluginID) manifests.push(manifest);
+      const matches = pluginID === undefined ? typeof manifest?.id === "string" : manifest?.id === pluginID;
+      if (matches) manifests.push(manifest);
     } catch {
       // Not a JSON manifest; Lithe ignores it the same way.
     }

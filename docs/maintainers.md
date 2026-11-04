@@ -15,11 +15,18 @@ CI（`Validate index`）已经自动保证：
 - [ ] 首次收录：`author` 与仓库所有者对应，名称不冒充其他项目或 Lithe 官方；
 - [ ] 插件声明要运行的程序与描述相符（看包内 `plugin.json` 的 `languageServers` 与 `executionProviders`）；
 - [ ] 描述、标签、图标没有误导内容；
-- [ ] 新版本 PR（bot 或作者提交）：版本号递增，没有删除旧版本。
+- [ ] 新版本 PR（bot 或作者提交）：版本号递增，没有删除旧版本；
+- [ ] bot 首次收录的插件（PR 描述里的“首次收录”）：仓库简介适合作为 `description`，仓库 topics 适合作为 `tags`。
+  合并后另提 PR 补充 `icon`、`localizedDescriptions`，必要时修改 `description`、`tags`；
+  不要直接改 `bot/track-releases`，下一轮扫描会从 main 重建这个分支。
 
 ## 自动追踪新版本
 
 `Track plugin releases` 每 6 小时运行一次，也可在 Actions 中手动运行（可只指定一个插件 ID）。
+它扫描已收录插件的 Release，以及 Lithe-IDEA 组织下尚未收录的公开 `lithe-plugin-*` 仓库
+（`lithe-plugin-docs` 不发布插件，固定排除），只收录正式 Release；新插件的条目生成规则见
+[发布社区插件的首次收录](publishing.md#3-首次收录)。手动运行时指定的插件 ID 可以是已收录插件，
+也可以是组织中尚未收录的插件。
 它把结果统一提交到 `bot/track-releases` 分支并开一个 PR，PR 里同时包含索引和重新生成的 README 总览（合并后不需要再等 `Sync README`）；新的扫描会覆盖这个分支并更新 PR 描述。
 
 需要的仓库设置：
