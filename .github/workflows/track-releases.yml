@@ -9,11 +9,10 @@ name: Track plugin releases
 #
 # - organization: plugins whose repository belongs to the Lithe-IDEA organization,
 #   including first listings. After the archives are verified, the workflow
-#   merges the pull request itself by fast-forwarding main with the
-#   STORE_BOT_DEPLOY_KEY deploy key, the only bot credential that the
-#   "Only owners merge main" ruleset lets through.
+#   merges the pull request itself with a token of the Lithe Store Bot GitHub
+#   App, the only bot that the "Only owners merge main" ruleset lets through.
 # - external: every other plugin. The pull request waits for a maintainer
-#   review, and this scope never receives the deploy key.
+#   review, and this scope never receives the app token.
 on:
   schedule:
     - cron: "41 */6 * * *"
@@ -57,20 +56,27 @@ jobs:
       SCOPE: ${{ matrix.scope }}
       BRANCH: ${{ matrix.branch }}
       TITLE: ${{ matrix.title }}
-      # A PR opened with GITHUB_TOKEN does not trigger other workflows. Set the
-      # STORE_BOT_TOKEN secret (fine-grained PAT: contents + pull requests) so
-      # `Validate index` runs on the bot PR as well.
-      GH_TOKEN: ${{ secrets.STORE_BOT_TOKEN || github.token }}
     steps:
+      # Only the organization scope may merge into main, so only it asks for the
+      # app token. Without the app, both scopes fall back to the tokens below.
+      - name: Create the Lithe Store Bot token
+        id: bot
+        if: matrix.scope == 'organization' && vars.STORE_BOT_APP_CLIENT_ID != ''
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.STORE_BOT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.STORE_BOT_APP_PRIVATE_KEY }}
+
+      # Every step below that pushes or calls gh uses the same token, chosen in
+      # this order: the app token, then the optional STORE_BOT_TOKEN secret
+      # (fine-grained PAT: contents + pull requests), then GITHUB_TOKEN. A pull
+      # request opened with GITHUB_TOKEN does not trigger `Validate index`.
       - uses: actions/checkout@v7
         with:
           # The latest main, not the commit that triggered the run: the external
           # scope must start from the main that the organization scope just updated.
           ref: main
-          token: ${{ secrets.STORE_BOT_TOKEN || github.token }}
-          # Git then pushes over SSH with the deploy key. The external scope
-          # gets an empty key and keeps using the token, which cannot write main.
-          ssh-key: ${{ matrix.scope == 'organization' && secrets.STORE_BOT_DEPLOY_KEY || '' }}
+          token: ${{ steps.bot.outputs.token || secrets.STORE_BOT_TOKEN || github.token }}
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -88,6 +94,8 @@ jobs:
 
       - name: Close the obsolete pull request
         if: steps.track.outputs.added == '0' && inputs.plugin == ''
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token || secrets.STORE_BOT_TOKEN || github.token }}
         run: |
           number=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')
           if [ -n "$number" ]; then
@@ -103,6 +111,7 @@ jobs:
         id: pr
         if: steps.track.outputs.added != '0'
         env:
+          GH_TOKEN: ${{ steps.bot.outputs.token || secrets.STORE_BOT_TOKEN || github.token }}
           SUMMARY: ${{ steps.track.outputs.summary }}
           NEW_PLUGINS: ${{ steps.track.outputs.new_plugins }}
         run: |
@@ -142,28 +151,18 @@ jobs:
       - name: Merge the organization pull request
         if: matrix.scope == 'organization' && steps.track.outputs.added != '0'
         env:
+          # Only the app can pass the ruleset, so this step never falls back to another token.
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
           NUMBER: ${{ steps.pr.outputs.number }}
-          HAS_DEPLOY_KEY: ${{ secrets.STORE_BOT_DEPLOY_KEY != '' }}
         run: |
-          if [ "$HAS_DEPLOY_KEY" != true ]; then
-            echo "::warning::STORE_BOT_DEPLOY_KEY is not set, so pull request #$NUMBER stays open for a maintainer to merge."
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning::The Lithe Store Bot app is not configured (STORE_BOT_APP_CLIENT_ID, STORE_BOT_APP_PRIVATE_KEY), so pull request #$NUMBER stays open for a maintainer to merge."
             exit 0
           fi
-          # Fast-forward main to the verified commit. Without --force, git refuses
-          # the push if main moved after the checkout; the next run then rebuilds
-          # the branch from the new main.
-          if ! git push origin "HEAD:main"; then
-            echo "::warning::Could not fast-forward main, so pull request #$NUMBER stays open for a maintainer to merge."
+          # --match-head-commit makes GitHub refuse the merge if the branch no
+          # longer points at the commit that this run verified.
+          if ! gh pr merge "$NUMBER" --squash --match-head-commit "$(git rev-parse HEAD)"; then
+            echo "::warning::Could not merge pull request #$NUMBER, so it stays open for a maintainer to merge."
             exit 0
           fi
-          # GitHub marks the pull request merged once its head commit is on main.
-          # Delete the branch only after that, or the pull request would show as
-          # closed instead of merged.
-          for _ in $(seq 1 12); do
-            if [ "$(gh pr view "$NUMBER" --json state -q .state)" = MERGED ]; then
-              git push origin --delete "$BRANCH"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "::warning::main contains pull request #$NUMBER, but GitHub has not marked it merged after 60 seconds. Delete $BRANCH once it has."
+          git push origin --delete "$BRANCH"
