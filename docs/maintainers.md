@@ -45,30 +45,35 @@ bot 首次收录的组织插件（组织 PR 描述里的“首次收录”）合
 组织插件的自动合入分三步：
 
 1. 开 PR 之前运行 `validate-index.mjs --verify-archives`，与 `Validate index` 对新增归档的检查相同；
-2. 用 `STORE_BOT_DEPLOY_KEY` 把 main 快进到 PR 的提交，GitHub 据此把 PR 标为已合并；
-3. PR 标为已合并后删除分支。
+2. 用 Lithe Store Bot 的 token 推送分支、开 PR，再 squash 合并。合并时指定本轮校验过的提交
+   （`gh pr merge --match-head-commit`），分支在校验之后被改动过，GitHub 就拒绝合并；
+3. 合并后删除分支。
 
-main 在扫描期间被别人更新时快进会失败；没有配置 `STORE_BOT_DEPLOY_KEY` 时工作流不尝试合入。
-这两种情况都只在工作流里给出警告，PR 保持打开，由维护者按审查清单审查后合并，下一轮扫描也会基于新的 main 重建它。
-删除 deploy key 或 secret 即可停止自动合入。
+没有配置 Lithe Store Bot，或者合并失败（例如 main 在扫描期间被更新并与 PR 冲突）时，工作流只给出警告，
+PR 保持打开，由维护者按审查清单审查后合并，下一轮扫描也会基于新的 main 重建它。
+删除仓库变量 `STORE_BOT_APP_CLIENT_ID`，或者卸载 Lithe Store Bot，即可停止自动合入。
 
 信任边界：在任一 Lithe-IDEA 组织插件仓库能发布 Release 的人，以及能在组织里创建公开
-`lithe-plugin-*` 仓库的人，都可以不经 Store 维护者审查把插件发布到 Lithe Store。
+`lithe-plugin-*` 仓库的人，都可以不经 Store 维护者审查把插件发布到 Lithe Store。组织允许成员创建公开仓库时
+（Organization settings → Member privileges → Repository creation），每个组织成员都在这个范围内。
 授予组织成员身份或插件仓库写权限时按这个标准判断。
 
 需要的仓库设置：
 
 1. **Settings → Actions → General → Workflow permissions**：勾选
    “Allow GitHub Actions to create and approve pull requests”。
-2. **Settings → Deploy keys**：一把允许写入的 deploy key
-   （`lithe-store-bot (track organization releases)`），私钥保存为 `STORE_BOT_DEPLOY_KEY` secret。
-   只有组织插件那一轮的 checkout 会拿到这把 key，组织外那一轮仍用 `GITHUB_TOKEN`，写不了 main。
+2. **Lithe Store Bot**：Lithe-IDEA 组织拥有的私有 GitHub App，只有 Contents 与 Pull requests 读写权限，
+   不接收 webhook，只安装在本仓库。仓库变量 `STORE_BOT_APP_CLIENT_ID` 保存它的 Client ID，
+   secret `STORE_BOT_APP_PRIVATE_KEY` 保存它的私钥。只有组织插件那一轮会生成 app token；
+   组织外那一轮用 `STORE_BOT_TOKEN` 或 `GITHUB_TOKEN`，写不了 main。用 app token 开的 PR 会触发
+   `Validate index`，合并到 main 也会触发 main 上的 `Validate index` 和 `Sync README`（总览已在 PR 里生成，不会再开同步 PR）。
 3. **Settings → Rules → Rulesets**：规则集 “Only owners merge main” 限制 `main` 的更新、删除和强制推送，
-   只有组织管理员和 deploy key 可以绕过。GitHub 不允许把 GitHub Actions 加入仓库规则集的绕过名单，
-   所以工作流用 deploy key 写 main。这项绕过对仓库的所有 deploy key 生效，新增其他 deploy key 前先评估。
-4. 可选：创建 `STORE_BOT_TOKEN` secret（fine-grained PAT，仅本仓库，Contents 与 Pull requests 读写）。
-   使用默认 `GITHUB_TOKEN` 开的 PR 不会触发 `Validate index`；工作流已在开 PR 前完成同样的校验。
-   deploy key 推送到 main 会正常触发 main 上的 `Validate index` 和 `Sync README`。
+   只有组织管理员和 Lithe Store Bot 可以绕过。GitHub 不允许把 GitHub Actions（`GITHUB_TOKEN`）加入仓库规则集的
+   绕过名单，Lithe-IDEA 组织也禁用了 deploy key，所以工作流用组织自己的 GitHub App 写 main。
+   绕过名单按 App 指定，不会放行其他 App 或 deploy key。
+4. 可选：创建 `STORE_BOT_TOKEN` secret（fine-grained PAT，仅本仓库，Contents 与 Pull requests 读写），
+   让组织外 PR 和 README 同步 PR 也触发 `Validate index`。使用默认 `GITHUB_TOKEN` 开的 PR 不会触发它；
+   工作流已在开 PR 前完成同样的校验。
 
 ## 自动同步 README 总览
 
@@ -78,7 +83,7 @@ README 的插件总览由 `scripts/render-readme.mjs` 根据索引生成。`main
 合并这个 PR 后工作流会再运行一次，发现总览已经一致就结束。总览已经一致时，上一轮没人合并的同步 PR 会被自动关闭。
 
 仓库设置与追踪新版本相同（“Allow GitHub Actions to create and approve pull requests”，
-可选的 `STORE_BOT_TOKEN`），同步 PR 不使用 deploy key，始终由维护者合并。没有配置 `STORE_BOT_TOKEN` 时，
+可选的 `STORE_BOT_TOKEN`），同步 PR 不使用 Lithe Store Bot，始终由维护者合并。没有配置 `STORE_BOT_TOKEN` 时，
 这个 PR 也不会触发 `Validate index`。同步 PR 只应该包含 `README.md`；如果还改了别的文件，不要合并。
 
 ## 下架与撤回
