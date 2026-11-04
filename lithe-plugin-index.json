@@ -50,6 +50,21 @@
               "sha256": "2b088c02aec5707b78e3da4de82ad45a8d22e8c8010a8a01afa26947b8561f82"
             }
           ]
+        },
+        {
+          "version": "0.1.0",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "toolchainSources": 1
+          },
+          "releaseDate": "2026-10-29",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/FxRayHughes/lithe-plugin-mise/releases/download/v0.1.0/mise-0.1.0-darwin.zip",
+              "sha256": "e8020787ee45264159c0026717b694d6b64976a5afc951eba20e153128527a1e"
+            }
+          ]
         }
       ]
     },
