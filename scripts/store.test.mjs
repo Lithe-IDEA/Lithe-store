@@ -7,7 +7,8 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { END, START, categoryOf, renderOverview, renderReadme, systemsOf, truncate } from "./render-readme.mjs";
 import {
-  addVersion, discoverPlugins, platformsForAsset, unlistedPluginRepositories, versionFromRelease,
+  addVersion, discoverPlugins, isOrganizationEntry, platformsForAsset, trackIndex, unlistedPluginRepositories,
+  versionFromRelease,
 } from "./track-releases.mjs";
 import {
   checkManifest, formatIndex, inspectArchive, readPackageManifests, validateEntry, validateIndex, verifyArchives,
@@ -382,6 +383,63 @@ test("organization discovery skips repositories that cannot be listed yet", { ti
   assert.match(log, /dev\.lithe\.official.*officialNamespace/);
   // Metadata problems are found before any archive is downloaded.
   assert.deepEqual(fixture.downloads, [copyRelease, anonymousRelease, officialRelease].map((release) => release.assets[0].browser_download_url));
+});
+
+test("plugins whose repository belongs to Lithe-IDEA are organization plugins, in any letter case", () => {
+  assert.equal(isOrganizationEntry({ repository: "https://github.com/lithe-idea/lithe-plugin-zig" }), true);
+  assert.equal(isOrganizationEntry({ repository: "https://github.com/Lithe-IDEA/lithe-plugin-zig/" }), true);
+  assert.equal(isOrganizationEntry(validEntry()), false);
+});
+
+// A listed organization plugin and the external fixture plugin, each with one new release.
+function scopedTracking() {
+  const zigRepository = organizationRepository("lithe-plugin-zig");
+  const organizationPluginRelease = organizationRelease(zigRepository, "1.1.0");
+  const externalRelease = organizationRelease({ html_url: "https://github.com/example/lithe-zig" }, "9.0.0");
+  const organizationEntry = {
+    id: ZIG_ID,
+    name: "Zig Support",
+    author: "Lithe Community",
+    repository: zigRepository.html_url,
+    description: "Zig language support for Lithe",
+    license: "Apache-2.0",
+    versions: [],
+  };
+  const index = { schemaVersion: 1, plugins: [validEntry(), organizationEntry] };
+  const fixture = organizationFixture({
+    [REPOSITORIES_PATH]: [zigRepository],
+    "repos/Lithe-IDEA/lithe-plugin-zig/releases?per_page=20": [organizationPluginRelease],
+    "repos/example/lithe-zig/releases?per_page=20": [externalRelease],
+  }, {
+    [organizationPluginRelease.assets[0].browser_download_url]: zigManifest("1.1.0"),
+    [externalRelease.assets[0].browser_download_url]: { ...zigManifest("9.0.0"), id: "io.example.zig-support" },
+  });
+  const requests = [];
+  const request = (path) => {
+    requests.push(path);
+    return fixture.request(path);
+  };
+  return { index, archiveIO: { ...fixture, request }, requests };
+}
+
+test("scoped tracking separates organization plugins from external plugins", { timeout: 5_000 }, async () => {
+  const organization = scopedTracking();
+  const organizationRun = await trackIndex(organization.index, { ...organization.archiveIO, scope: "organization" });
+  assert.deepEqual(organizationRun.skipped, []);
+  assert.deepEqual(organizationRun.added, [`${ZIG_ID}@1.1.0 (v1.1.0)`]);
+  assert.deepEqual(organization.requests, ["repos/Lithe-IDEA/lithe-plugin-zig/releases?per_page=20", REPOSITORIES_PATH]);
+
+  const external = scopedTracking();
+  const externalRun = await trackIndex(external.index, { ...external.archiveIO, scope: "external" });
+  assert.deepEqual(externalRun.skipped, []);
+  assert.deepEqual(externalRun.added, ["io.example.zig-support@9.0.0 (v9.0.0)"]);
+  assert.deepEqual(externalRun.newPlugins, []);
+  // The external pass never scans the organization, so it cannot list a plugin for the first time.
+  assert.deepEqual(external.requests, ["repos/example/lithe-zig/releases?per_page=20"]);
+
+  const unscoped = scopedTracking();
+  const unscopedRun = await trackIndex(unscoped.index, unscoped.archiveIO);
+  assert.deepEqual(unscopedRun.added, ["io.example.zig-support@9.0.0 (v9.0.0)", `${ZIG_ID}@1.1.0 (v1.1.0)`]);
 });
 
 test("archive verification rechecks changed manifest expectations for the same URL and hash", { timeout: 5_000 }, async () => {

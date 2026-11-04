@@ -9,34 +9,66 @@ CI（`Validate index`）已经自动保证：
 - 包内恰好一个匹配的 `plugin.json`，`version`、`pluginAPIVersion` 与索引一致，
   `vendor.signatureRequirement` 为 `"none"`，没有不安全的路径。
 
-维护者人工确认：
+维护者人工确认（Lithe-IDEA 组织插件的 bot PR 由工作流自动合入，不走这份清单，见[自动追踪新版本](#自动追踪新版本)）：
 
 - [ ] `repository` 是公开仓库，有 README、许可证，看得出是该作者在维护；
 - [ ] 首次收录：`author` 与仓库所有者对应，名称不冒充其他项目或 Lithe 官方；
 - [ ] 插件声明要运行的程序与描述相符（看包内 `plugin.json` 的 `languageServers` 与 `executionProviders`）；
 - [ ] 描述、标签、图标没有误导内容；
-- [ ] 新版本 PR（bot 或作者提交）：版本号递增，没有删除旧版本；
-- [ ] bot 首次收录的插件（PR 描述里的“首次收录”）：仓库简介适合作为 `description`，仓库 topics 适合作为 `tags`。
-  合并后另提 PR 补充 `icon`、`localizedDescriptions`，必要时修改 `description`、`tags`；
-  不要直接改 `bot/track-releases`，下一轮扫描会从 main 重建这个分支。
+- [ ] 新版本 PR（bot 或作者提交）：版本号递增，没有删除旧版本。
+
+bot 首次收录的组织插件（组织 PR 描述里的“首次收录”）合入后，维护者补做两件事：
+
+- 检查仓库简介是否适合作为 `description`，仓库 topics 是否适合作为 `tags`，不合适就另提 PR 修改；
+- 另提 PR 补充 `icon`、`localizedDescriptions`。不要直接改 `bot/track-organization-releases`，下一轮扫描会从 main 重建这个分支。
 
 ## 自动追踪新版本
 
-`Track plugin releases` 每 6 小时运行一次，也可在 Actions 中手动运行（可只指定一个插件 ID）。
+`Track plugin releases` 每 6 小时运行一次，也可在 Actions 中对 `main` 手动运行（可只指定一个插件 ID；从其他分支启动不会执行）。
 它扫描已收录插件的 Release，以及 Lithe-IDEA 组织下尚未收录的公开 `lithe-plugin-*` 仓库
 （`lithe-plugin-docs` 不发布插件，固定排除），只收录正式 Release；新插件的条目生成规则见
 [发布社区插件的首次收录](publishing.md#3-首次收录)。手动运行时指定的插件 ID 可以是已收录插件，
 也可以是组织中尚未收录的插件。
-它把结果统一提交到 `bot/track-releases` 分支并开一个 PR，PR 里同时包含索引和重新生成的 README 总览（合并后不需要再等 `Sync README`）；新的扫描会覆盖这个分支并更新 PR 描述。
+
+扫描按插件仓库的所有者分两轮，先组织插件、后组织外插件，每轮维护一个 bot PR：
+
+| | Lithe-IDEA 组织插件 | 组织外插件 |
+| --- | --- | --- |
+| 范围 | `repository` 属于 Lithe-IDEA 组织的已收录插件，以及新发现的组织 `lithe-plugin-*` 仓库 | 其他已收录插件；不会被自动首次收录 |
+| 分支 | `bot/track-organization-releases` | `bot/track-releases` |
+| 合入 | 校验通过后由工作流直接合入 main，不经人工审查 | 维护者按[审查清单](#审查清单)审查后合并 |
+
+两个 PR 都同时包含索引和重新生成的 README 总览，合入后不需要再等 `Sync README`。每轮扫描从 main 重建
+对应分支并更新 PR；某一轮没有发现 main 尚未收录的版本时，这一轮遗留的 PR 会被自动关闭
+（只指定一个插件的手动运行不会关闭 PR）。
+
+组织插件的自动合入分三步：
+
+1. 开 PR 之前运行 `validate-index.mjs --verify-archives`，与 `Validate index` 对新增归档的检查相同；
+2. 用 `STORE_BOT_DEPLOY_KEY` 把 main 快进到 PR 的提交，GitHub 据此把 PR 标为已合并；
+3. PR 标为已合并后删除分支。
+
+main 在扫描期间被别人更新时快进会失败；没有配置 `STORE_BOT_DEPLOY_KEY` 时工作流不尝试合入。
+这两种情况都只在工作流里给出警告，PR 保持打开，由维护者按审查清单审查后合并，下一轮扫描也会基于新的 main 重建它。
+删除 deploy key 或 secret 即可停止自动合入。
+
+信任边界：在任一 Lithe-IDEA 组织插件仓库能发布 Release 的人，以及能在组织里创建公开
+`lithe-plugin-*` 仓库的人，都可以不经 Store 维护者审查把插件发布到 Lithe Store。
+授予组织成员身份或插件仓库写权限时按这个标准判断。
 
 需要的仓库设置：
 
 1. **Settings → Actions → General → Workflow permissions**：勾选
    “Allow GitHub Actions to create and approve pull requests”。
-2. 可选但推荐：创建 `STORE_BOT_TOKEN` secret（fine-grained PAT，仅本仓库，
-   Contents 与 Pull requests 读写）。使用默认 `GITHUB_TOKEN` 开的 PR 不会触发
-   `Validate index`；工作流已在开 PR 前完成同样的校验，但合并前需要手动运行一次检查才能满足分支保护。
-3. 分支保护：`main` 要求 `Validate index / validate` 通过，要求 CODEOWNERS 审查。
+2. **Settings → Deploy keys**：一把允许写入的 deploy key
+   （`lithe-store-bot (track organization releases)`），私钥保存为 `STORE_BOT_DEPLOY_KEY` secret。
+   只有组织插件那一轮的 checkout 会拿到这把 key，组织外那一轮仍用 `GITHUB_TOKEN`，写不了 main。
+3. **Settings → Rules → Rulesets**：规则集 “Only owners merge main” 限制 `main` 的更新、删除和强制推送，
+   只有组织管理员和 deploy key 可以绕过。GitHub 不允许把 GitHub Actions 加入仓库规则集的绕过名单，
+   所以工作流用 deploy key 写 main。这项绕过对仓库的所有 deploy key 生效，新增其他 deploy key 前先评估。
+4. 可选：创建 `STORE_BOT_TOKEN` secret（fine-grained PAT，仅本仓库，Contents 与 Pull requests 读写）。
+   使用默认 `GITHUB_TOKEN` 开的 PR 不会触发 `Validate index`；工作流已在开 PR 前完成同样的校验。
+   deploy key 推送到 main 会正常触发 main 上的 `Validate index` 和 `Sync README`。
 
 ## 自动同步 README 总览
 
@@ -46,8 +78,8 @@ README 的插件总览由 `scripts/render-readme.mjs` 根据索引生成。`main
 合并这个 PR 后工作流会再运行一次，发现总览已经一致就结束。总览已经一致时，上一轮没人合并的同步 PR 会被自动关闭。
 
 仓库设置与追踪新版本相同（“Allow GitHub Actions to create and approve pull requests”，
-可选的 `STORE_BOT_TOKEN`）。没有配置 `STORE_BOT_TOKEN` 时，这个 PR 也不会触发 `Validate index`，
-需要手动运行一次检查才能满足分支保护。同步 PR 只应该包含 `README.md`；如果还改了别的文件，不要合并。
+可选的 `STORE_BOT_TOKEN`），同步 PR 不使用 deploy key，始终由维护者合并。没有配置 `STORE_BOT_TOKEN` 时，
+这个 PR 也不会触发 `Validate index`。同步 PR 只应该包含 `README.md`；如果还改了别的文件，不要合并。
 
 ## 下架与撤回
 
