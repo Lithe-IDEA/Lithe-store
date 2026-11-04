@@ -88,7 +88,7 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-lua/c5f88bf94e9d5616c7770e58febc53a0d520dd50/io.github.lithe-idea.lua-support/icons/lua.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-lua">Lua Support</a></h3>
-<p><sub>Lithe Community · v0.3.0 · API 1</sub></p>
+<p><sub>Lithe Community · v0.3.1 · API 2</sub></p>
 <p>内置 lua-language-server（LuaLS）提供 Lua 补全、跳转定义和错误提示，无需另外安装；“运行当前文件”使用你自己的 lua（brew install lua）。</p>
 <p>🏷️ 语言支持 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-lua?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>language</code> <code>lua</code></p>
