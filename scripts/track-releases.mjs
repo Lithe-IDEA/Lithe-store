@@ -3,6 +3,12 @@
 // adds them as new versions. The scheduled `track-releases` workflow runs this
 // and opens a pull request; maintainers review it like any other index change.
 //
+// Public repositories of the Lithe-IDEA organization whose names start with
+// `lithe-plugin-` are tracked before they are listed: once such a repository
+// publishes a stable release, the tracker adds a new entry for it, drafted from
+// the repository's metadata and the package's plugin.json. `lithe-plugin-docs`
+// carries the prefix but is not a plugin, so it is excluded.
+//
 // Release convention (see docs/publishing.md):
 //   - a published, non-prerelease GitHub Release in the plugin's `repository`;
 //   - one `.zip` asset per platform named `<anything>-<os>-<arch>.zip`
@@ -11,12 +17,18 @@
 //   - every archive agrees on plugin.json `version`, `pluginAPIVersion`, and `requires`.
 //
 // Usage: node scripts/track-releases.mjs [index.json] [--plugin <id>] [--dry-run]
+// `--plugin` accepts the ID of a listed plugin or of an unlisted organization plugin.
 // GITHUB_TOKEN is used for API requests when set.
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { checkManifest, formatIndex, readArchiveBytes, requirementsKey, validateIndex } from "./validate-index.mjs";
+
+export const DISCOVERY_OWNER = "Lithe-IDEA";
+export const DISCOVERY_PREFIX = "lithe-plugin-";
+// Organization repositories that carry the prefix but do not publish a plugin.
+export const DISCOVERY_EXCLUDED = new Set(["lithe-plugin-docs"]);
 
 export const KNOWN_ARCHITECTURES = { darwin: ["arm64", "x64"], windows: ["x64", "arm64"], linux: ["x64", "arm64"] };
 const ASSET_PLATFORM = /-(darwin|windows|linux)(?:-(arm64|x64))?\.zip$/;
@@ -120,6 +132,160 @@ export async function versionFromRelease(entry, release, {
   return versionProblems.length > 0 ? { problems: versionProblems } : { version };
 }
 
+/**
+ * Adds every stable release that the entry does not list yet, newest first.
+ * Returns the added versions and, with their reasons, the releases it refused.
+ */
+export async function trackEntry(entry, releases, archiveIO = {}) {
+  const added = [];
+  const skipped = [];
+  const listed = new Set(entry.versions.map((version) => version.version));
+  const listedURLs = new Set(entry.versions.flatMap((version) => version.downloads.map((d) => d.downloadURL)));
+  for (const release of releases) {
+    if (release.draft || release.prerelease) continue;
+    if ((release.assets ?? []).some((asset) => listedURLs.has(asset.browser_download_url))) continue;
+    const result = await versionFromRelease(entry, release, archiveIO);
+    if (result.problems) {
+      skipped.push(`${entry.id} ${release.tag_name}: ${result.problems.join("; ")}`);
+      continue;
+    }
+    if (listed.has(result.version.version)) {
+      skipped.push(`${entry.id} ${release.tag_name}: version ${result.version.version} is already listed with other archives`);
+      continue;
+    }
+    addVersion(entry, result.version);
+    listed.add(result.version.version);
+    added.push(`${entry.id}@${result.version.version} (${release.tag_name})`);
+  }
+  return { added, skipped };
+}
+
+/** Selects the organization repositories that should be listed but are not yet. */
+export function unlistedPluginRepositories(repositories, index) {
+  const listed = new Set(index.plugins.map((entry) => repositoryPath(entry.repository).toLowerCase()));
+  return repositories.filter((repository) =>
+    repository.name.startsWith(DISCOVERY_PREFIX)
+    && !DISCOVERY_EXCLUDED.has(repository.name)
+    && !repository.private && !repository.archived && !repository.fork
+    && !listed.has(repository.full_name.toLowerCase()));
+}
+
+/**
+ * Drafts the index entry of an unlisted repository from its newest stable
+ * release. plugin.json supplies the ID, name and author; the repository
+ * supplies the description, license and topics as tags. The draft has no
+ * versions: trackEntry adds them, so an entry is only listed with a valid release.
+ */
+export async function entryFromRepository(repository, releases, {
+  downloadArchive = download, readManifests = readArchiveBytes,
+} = {}) {
+  const release = releases.find((candidate) => !candidate.draft && !candidate.prerelease
+    && (candidate.assets ?? []).some((asset) => platformsForAsset(asset.name)));
+  if (!release) return { problems: ["no stable release with a plugin archive yet"] };
+
+  const license = repository.license?.spdx_id;
+  const problems = [];
+  if (!repository.description?.trim()) problems.push("the repository has no description");
+  if (!license || license === "NOASSERTION") problems.push("GitHub detects no license in the repository");
+  if (problems.length > 0) return { problems };
+
+  const asset = release.assets.find((candidate) => platformsForAsset(candidate.name));
+  let manifests;
+  try {
+    ({ manifests } = readManifests(await downloadArchive(asset.browser_download_url)));
+  } catch (error) {
+    return { problems: [`${release.tag_name} ${asset.name}: ${error.message}`] };
+  }
+  if (manifests.length !== 1) {
+    return { problems: [`${release.tag_name} ${asset.name}: archive must contain exactly one plugin.json (found ${manifests.length})`] };
+  }
+  const [manifest] = manifests;
+  // Field order follows the index schema, so the formatted diff reads like a hand-written entry.
+  const entry = {
+    id: manifest.id,
+    name: manifest.displayName,
+    author: manifest.vendor?.displayName,
+    repository: repository.html_url,
+    homepage: `${repository.html_url}#readme`,
+    description: repository.description.trim(),
+    ...(repository.topics?.length > 0 ? { tags: [...repository.topics] } : {}),
+    license,
+    versions: [],
+  };
+  return { entry };
+}
+
+/** Inserts an entry and keeps `plugins` sorted by id, as the store policy requires. */
+export function insertEntry(index, entry) {
+  index.plugins = [...index.plugins, entry].sort((left, right) => (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
+}
+
+/** Reads each URL once: drafting an entry and tracking its release use the same archive. */
+function downloadOnce(downloadArchive) {
+  const archives = new Map();
+  return (url) => {
+    if (!archives.has(url)) archives.set(url, downloadArchive(url));
+    return archives.get(url);
+  };
+}
+
+async function organizationRepositories(owner, request) {
+  const repositories = [];
+  for (let page = 1; ; page += 1) {
+    const batch = await request(`orgs/${owner}/repos?type=public&per_page=100&page=${page}`);
+    repositories.push(...batch);
+    if (batch.length < 100) return repositories;
+  }
+}
+
+/**
+ * Lists the stable releases of organization plugin repositories that the index
+ * does not hold yet. `onlyPlugin` keeps just the plugin with that ID. GitHub
+ * and archive I/O are injectable so tests run without the network.
+ */
+export async function discoverPlugins(index, {
+  onlyPlugin, request = github, downloadArchive = download, readManifests = readArchiveBytes,
+} = {}) {
+  const added = [];
+  const skipped = [];
+  const newPlugins = [];
+  let repositories;
+  try {
+    repositories = await organizationRepositories(DISCOVERY_OWNER, request);
+  } catch (error) {
+    return { added, skipped: [`${DISCOVERY_OWNER} repositories: ${error.message}`], newPlugins };
+  }
+  for (const repository of unlistedPluginRepositories(repositories, index)) {
+    let releases;
+    try {
+      releases = await request(`repos/${repository.full_name}/releases?per_page=20`);
+    } catch (error) {
+      skipped.push(`${repository.full_name}: ${error.message}`);
+      continue;
+    }
+    const archiveIO = { downloadArchive: downloadOnce(downloadArchive), readManifests };
+    const draft = await entryFromRepository(repository, releases, archiveIO);
+    if (draft.problems) {
+      skipped.push(`${repository.full_name}: ${draft.problems.join("; ")}`);
+      continue;
+    }
+    const { entry } = draft;
+    if (onlyPlugin && entry.id !== onlyPlugin) continue;
+    const owner = index.plugins.find((listed) => listed.id === entry.id);
+    if (owner) {
+      skipped.push(`${repository.full_name}: ${entry.id} is already listed for ${owner.repository}`);
+      continue;
+    }
+    const result = await trackEntry(entry, releases, archiveIO);
+    skipped.push(...result.skipped);
+    if (entry.versions.length === 0) continue;
+    insertEntry(index, entry);
+    added.push(...result.added.map((line) => `${line} [new plugin]`));
+    newPlugins.push(entry.id);
+  }
+  return { added, skipped, newPlugins };
+}
+
 async function main(argv) {
   const pluginFlag = argv.indexOf("--plugin");
   const onlyPlugin = pluginFlag >= 0 ? argv[pluginFlag + 1] : undefined;
@@ -132,8 +298,6 @@ async function main(argv) {
   const skipped = [];
   for (const entry of index.plugins) {
     if (onlyPlugin && entry.id !== onlyPlugin) continue;
-    const listed = new Set(entry.versions.map((version) => version.version));
-    const listedURLs = new Set(entry.versions.flatMap((version) => version.downloads.map((d) => d.downloadURL)));
     let releases;
     try {
       releases = await github(`repos/${repositoryPath(entry.repository)}/releases?per_page=20`);
@@ -141,23 +305,13 @@ async function main(argv) {
       skipped.push(`${entry.id}: ${error.message}`);
       continue;
     }
-    for (const release of releases) {
-      if (release.draft || release.prerelease) continue;
-      if ((release.assets ?? []).some((asset) => listedURLs.has(asset.browser_download_url))) continue;
-      const result = await versionFromRelease(entry, release);
-      if (result.problems) {
-        skipped.push(`${entry.id} ${release.tag_name}: ${result.problems.join("; ")}`);
-        continue;
-      }
-      if (listed.has(result.version.version)) {
-        skipped.push(`${entry.id} ${release.tag_name}: version ${result.version.version} is already listed with other archives`);
-        continue;
-      }
-      addVersion(entry, result.version);
-      listed.add(result.version.version);
-      added.push(`${entry.id}@${result.version.version} (${release.tag_name})`);
-    }
+    const result = await trackEntry(entry, releases);
+    added.push(...result.added);
+    skipped.push(...result.skipped);
   }
+  const discovered = await discoverPlugins(index, { onlyPlugin });
+  added.push(...discovered.added);
+  skipped.push(...discovered.skipped);
 
   const problems = validateIndex(index);
   for (const line of added) console.log(`+ ${line}`);
@@ -169,7 +323,8 @@ async function main(argv) {
   if (!dryRun && added.length > 0) writeFileSync(indexPath, formatIndex(index));
   if (process.env.GITHUB_OUTPUT) {
     const summary = added.join(", ");
-    writeFileSync(process.env.GITHUB_OUTPUT, `added=${added.length}\nsummary=${summary}\n`, { flag: "a" });
+    const output = `added=${added.length}\nsummary=${summary}\nnew_plugins=${discovered.newPlugins.join(", ")}\n`;
+    writeFileSync(process.env.GITHUB_OUTPUT, output, { flag: "a" });
   }
   return 0;
 }

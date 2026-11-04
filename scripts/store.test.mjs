@@ -6,8 +6,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { END, START, categoryOf, renderOverview, renderReadme, systemsOf, truncate } from "./render-readme.mjs";
-import { addVersion, platformsForAsset, versionFromRelease } from "./track-releases.mjs";
-import { checkManifest, formatIndex, inspectArchive, validateEntry, validateIndex, verifyArchives } from "./validate-index.mjs";
+import {
+  addVersion, discoverPlugins, platformsForAsset, unlistedPluginRepositories, versionFromRelease,
+} from "./track-releases.mjs";
+import {
+  checkManifest, formatIndex, inspectArchive, readPackageManifests, validateEntry, validateIndex, verifyArchives,
+} from "./validate-index.mjs";
 
 // Fixtures are copied from the plugin contract (lithe-plugin-docs contract/v1/fixtures/marketplace)
 // so this validator reports the same code as Lithe's Rust Core for each case.
@@ -207,6 +211,179 @@ test("release tracking preserves API 1/2 releases without adding requires", { ti
   }
 });
 
+// Organization discovery fixtures: GitHub responses are plain objects, and each
+// archive's bytes are its plugin.json text, so no test touches the network or unzip.
+const REPOSITORIES_PATH = "orgs/Lithe-IDEA/repos?type=public&per_page=100&page=1";
+const ZIG_ID = "io.github.lithe-idea.zig-support";
+
+function organizationRepository(name, overrides = {}) {
+  return {
+    name,
+    full_name: `Lithe-IDEA/${name}`,
+    html_url: `https://github.com/Lithe-IDEA/${name}`,
+    private: false,
+    archived: false,
+    fork: false,
+    description: "Zig language support for Lithe",
+    license: { spdx_id: "Apache-2.0" },
+    topics: ["language", "zig"],
+    ...overrides,
+  };
+}
+
+function organizationRelease(repository, version, overrides = {}) {
+  const name = `zig-support-${version}-darwin.zip`;
+  return {
+    tag_name: `v${version}`,
+    draft: false,
+    prerelease: false,
+    published_at: "2026-11-01T00:00:00Z",
+    assets: [{ name, browser_download_url: `${repository.html_url}/releases/download/v${version}/${name}` }],
+    ...overrides,
+  };
+}
+
+function zigManifest(version) {
+  return {
+    schemaVersion: 2,
+    id: ZIG_ID,
+    displayName: "Zig Support",
+    version,
+    pluginAPIVersion: 2,
+    vendor: { displayName: "Lithe Community", signatureRequirement: "none" },
+  };
+}
+
+function organizationFixture(responses, manifestsByURL) {
+  const downloads = [];
+  return {
+    downloads,
+    request: async (path) => {
+      assert.ok(Object.hasOwn(responses, path), `unexpected GitHub request: ${path}`);
+      return structuredClone(responses[path]);
+    },
+    downloadArchive: async (url) => {
+      assert.ok(Object.hasOwn(manifestsByURL, url), `unexpected download: ${url}`);
+      downloads.push(url);
+      return Buffer.from(JSON.stringify(manifestsByURL[url]));
+    },
+    readManifests: (bytes, pluginID) => {
+      const manifest = JSON.parse(bytes.toString());
+      return { manifests: pluginID === undefined || manifest.id === pluginID ? [manifest] : [], unsafe: [] };
+    },
+  };
+}
+
+function zigOrganization() {
+  const repository = organizationRepository("lithe-plugin-zig");
+  const releases = [
+    organizationRelease(repository, "1.2.0", { prerelease: true }),
+    organizationRelease(repository, "1.1.0"),
+    organizationRelease(repository, "1.0.0"),
+  ];
+  const manifestsByURL = Object.fromEntries(releases.map((release) =>
+    [release.assets[0].browser_download_url, zigManifest(release.tag_name.slice(1))]));
+  const fixture = organizationFixture({
+    [REPOSITORIES_PATH]: [repository, organizationRepository("lithe-plugin-docs")],
+    "repos/Lithe-IDEA/lithe-plugin-zig/releases?per_page=20": releases,
+  }, manifestsByURL);
+  return { releases, fixture };
+}
+
+test("organization discovery considers only active, unlisted lithe-plugin- repositories", () => {
+  const index = { schemaVersion: 1, plugins: [{ ...validEntry(), repository: "https://github.com/Lithe-IDEA/Lithe-Plugin-Listed" }] };
+  const names = unlistedPluginRepositories([
+    organizationRepository("lithe-plugin-zig"),
+    organizationRepository("lithe-plugin-docs"),
+    organizationRepository("lithe-plugin-listed"),
+    organizationRepository("lithe-plugin-old", { archived: true }),
+    organizationRepository("lithe-plugin-copy", { fork: true }),
+    organizationRepository("lithe-plugin-secret", { private: true }),
+    organizationRepository("Lithe-store"),
+  ], index).map((repository) => repository.name);
+  assert.deepEqual(names, ["lithe-plugin-zig"]);
+});
+
+test("organization discovery lists a new plugin with its stable releases", { timeout: 5_000 }, async () => {
+  const { releases, fixture } = zigOrganization();
+  const index = { schemaVersion: 1, plugins: [validEntry(), { ...validEntry(), id: "org.example.zig-tools" }] };
+  const result = await discoverPlugins(index, fixture);
+
+  assert.deepEqual(result.skipped, []);
+  assert.deepEqual(result.newPlugins, [ZIG_ID]);
+  assert.deepEqual(result.added, [`${ZIG_ID}@1.1.0 (v1.1.0) [new plugin]`, `${ZIG_ID}@1.0.0 (v1.0.0) [new plugin]`]);
+  assert.deepEqual(index.plugins.map((entry) => entry.id), ["io.example.zig-support", ZIG_ID, "org.example.zig-tools"]);
+  const { versions, ...metadata } = index.plugins[1];
+  assert.deepEqual(metadata, {
+    id: ZIG_ID,
+    name: "Zig Support",
+    author: "Lithe Community",
+    repository: "https://github.com/Lithe-IDEA/lithe-plugin-zig",
+    homepage: "https://github.com/Lithe-IDEA/lithe-plugin-zig#readme",
+    description: "Zig language support for Lithe",
+    tags: ["language", "zig"],
+    license: "Apache-2.0",
+  });
+  assert.deepEqual(versions.map((version) => version.version), ["1.1.0", "1.0.0"]);
+  assert.deepEqual(validateIndex(index), []);
+  // The draft and its first version share one download; the pre-release is never fetched.
+  assert.deepEqual(fixture.downloads, [releases[1], releases[2]].map((release) => release.assets[0].browser_download_url));
+});
+
+test("organization discovery keeps only the plugin named by --plugin", { timeout: 5_000 }, async () => {
+  const other = zigOrganization();
+  const otherIndex = { schemaVersion: 1, plugins: [validEntry()] };
+  const skippedRun = await discoverPlugins(otherIndex, { ...other.fixture, onlyPlugin: "io.example.other" });
+  assert.deepEqual(skippedRun.added, []);
+  assert.equal(otherIndex.plugins.length, 1);
+
+  const named = zigOrganization();
+  const namedIndex = { schemaVersion: 1, plugins: [validEntry()] };
+  const namedRun = await discoverPlugins(namedIndex, { ...named.fixture, onlyPlugin: ZIG_ID });
+  assert.deepEqual(namedRun.newPlugins, [ZIG_ID]);
+});
+
+test("organization discovery skips repositories that cannot be listed yet", { timeout: 5_000 }, async () => {
+  const preview = organizationRepository("lithe-plugin-preview");
+  const unlicensed = organizationRepository("lithe-plugin-unlicensed", { license: { spdx_id: "NOASSERTION" } });
+  const undescribed = organizationRepository("lithe-plugin-undescribed", { description: null });
+  const copy = organizationRepository("lithe-plugin-copy");
+  const copyRelease = organizationRelease(copy, "1.0.0");
+  const anonymous = organizationRepository("lithe-plugin-anonymous");
+  const anonymousRelease = organizationRelease(anonymous, "1.0.0");
+  const official = organizationRepository("lithe-plugin-official");
+  const officialRelease = organizationRelease(official, "1.0.0");
+  const fixture = organizationFixture({
+    [REPOSITORIES_PATH]: [preview, unlicensed, undescribed, copy, anonymous, official],
+    "repos/Lithe-IDEA/lithe-plugin-preview/releases?per_page=20": [organizationRelease(preview, "0.1.0", { prerelease: true })],
+    "repos/Lithe-IDEA/lithe-plugin-unlicensed/releases?per_page=20": [organizationRelease(unlicensed, "1.0.0")],
+    "repos/Lithe-IDEA/lithe-plugin-undescribed/releases?per_page=20": [organizationRelease(undescribed, "1.0.0")],
+    "repos/Lithe-IDEA/lithe-plugin-copy/releases?per_page=20": [copyRelease],
+    "repos/Lithe-IDEA/lithe-plugin-anonymous/releases?per_page=20": [anonymousRelease],
+    "repos/Lithe-IDEA/lithe-plugin-official/releases?per_page=20": [officialRelease],
+  }, {
+    [copyRelease.assets[0].browser_download_url]: { ...zigManifest("1.0.0"), id: "io.example.zig-support" },
+    [anonymousRelease.assets[0].browser_download_url]: { ...zigManifest("1.0.0"), id: "io.github.lithe-idea.anonymous", vendor: { signatureRequirement: "none" } },
+    [officialRelease.assets[0].browser_download_url]: { ...zigManifest("1.0.0"), id: "dev.lithe.official" },
+  });
+  const index = { schemaVersion: 1, plugins: [validEntry()] };
+  const result = await discoverPlugins(index, fixture);
+
+  assert.deepEqual(result.added, []);
+  assert.deepEqual(result.newPlugins, []);
+  assert.equal(index.plugins.length, 1);
+  const log = result.skipped.join("\n");
+  assert.match(log, /lithe-plugin-preview: no stable release/);
+  assert.match(log, /lithe-plugin-unlicensed: GitHub detects no license/);
+  assert.match(log, /lithe-plugin-undescribed: the repository has no description/);
+  assert.match(log, /lithe-plugin-copy: io\.example\.zig-support is already listed for https:\/\/github\.com\/example\/lithe-zig/);
+  // A drafted entry that the index would reject never gains a version, so it is not listed.
+  assert.match(log, /io\.github\.lithe-idea\.anonymous.*author/);
+  assert.match(log, /dev\.lithe\.official.*officialNamespace/);
+  // Metadata problems are found before any archive is downloaded.
+  assert.deepEqual(fixture.downloads, [copyRelease, anonymousRelease, officialRelease].map((release) => release.assets[0].browser_download_url));
+});
+
 test("archive verification rechecks changed manifest expectations for the same URL and hash", { timeout: 5_000 }, async () => {
   const entry = capabilityEntry();
   const manifest = manifestFor(entry);
@@ -322,6 +499,9 @@ test("archives must hold one matching community plugin.json", () => {
       /signatureRequirement/,
     );
     assert.match(inspectArchive(build({ ...manifest, id: "io.other" }), entry, version).join(), /exactly one plugin\.json/);
+    // Without an ID (an unlisted plugin) every manifest that declares one is returned.
+    assert.deepEqual(readPackageManifests(build({ ...manifest, id: "io.other" })).manifests.map((found) => found.id), ["io.other"]);
+    assert.deepEqual(readPackageManifests(build({ version: "1.0.0" })).manifests, []);
   } finally {
     rmSync(workDir, { recursive: true, force: true });
   }

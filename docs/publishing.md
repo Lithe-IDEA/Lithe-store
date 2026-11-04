@@ -77,6 +77,25 @@ shasum -a 256 zig-support-2.0.0-darwin-arm64.zip
 
 ## 3. 首次收录
 
+Lithe-IDEA 组织下名为 `lithe-plugin-*` 的公开仓库（`lithe-plugin-docs` 除外，它不发布插件）
+不需要手工提交首次收录 PR。`Track plugin releases` 发现这类仓库还没收录、并且已经有带插件包的
+正式 Release 时，会把它连同全部正式版本一起放进 bot PR，条目按以下来源生成：
+
+| 字段 | 来源 |
+| --- | --- |
+| `id`、`name`、`author` | 最新正式 Release 的包内 `plugin.json`：`id`、`displayName`、`vendor.displayName` |
+| `repository`、`homepage` | 仓库地址，`homepage` 为 `<仓库地址>#readme` |
+| `description` | GitHub 仓库简介，原样使用 |
+| `license` | GitHub 识别出的许可证（SPDX ID） |
+| `tags` | 仓库 topics；没有 topics 时省略 |
+
+仓库是私有、已归档或 fork，仓库没有简介，GitHub 识别不出许可证，包内 `plugin.json` 缺字段或 ID 不符合索引规则，
+或者 ID 已经被别的条目占用时，自动收录会跳过该仓库，并在工作流日志里写明原因。自动生成的条目
+没有 `icon` 和 `localizedDescriptions`，bot PR 合并后另提 PR 补充。和版本追踪一样，只发布过
+pre-release 的仓库不会被收录。
+
+其他仓库按下面的步骤收录：
+
 1. Fork 本仓库，在 `lithe-plugin-index.json` 的 `plugins` 中**按 `id` 字母序**插入你的条目：
 
    ```json
@@ -145,7 +164,8 @@ shasum -a 256 zig-support-2.0.0-darwin-arm64.zip
 收录后，新版本**不需要你再提 PR**：
 
 1. 在你的仓库递增 `plugin.json` 的 `version`，打包，发布新的正式 Release（资产命名同上）。
-2. `Track plugin releases` 工作流每 6 小时扫描一次已收录插件最近 20 个 Release，
+2. `Track plugin releases` 工作流每 6 小时扫描一次已收录插件最近 20 个 Release
+   （Lithe-IDEA 组织尚未收录的 `lithe-plugin-*` 仓库也一起扫描，见 [首次收录](#3-首次收录)），
    把新版本写进索引（版本号、`pluginAPIVersion`、`requires` 取自包内 `plugin.json`，
    能力表按键排序写入；发布日期取 Release 发布时间，SHA-256 由 CI 计算），
    然后开一个 `chore(index): 追踪插件新版本` PR。
@@ -162,7 +182,8 @@ shasum -a 256 zig-support-2.0.0-darwin-arm64.zip
 稳定版用户安装；稳定版是否支持，以 Lithe 的发行说明为准。支持之前，把 GitHub Release 标为
 预发布，并手工提交索引条目（LLDB Debugger `0.1.0` 就是这样收录的）。稳定版 Lithe 遇到自己
 不支持的 API 等级只会显示“需要更新 Lithe”，不会安装，所以不会装出坏插件。稳定版支持之后，
-把 Release 转为正式发布（或发布新版本），自动追踪就会接手后续版本。调试适配器插件的写法见
+把 Release 转为正式发布（或发布新版本），自动追踪就会接手后续版本；还没收录的 Lithe-IDEA
+组织插件会在这时被自动首次收录。调试适配器插件的写法见
 [编写调试适配器插件](https://github.com/Lithe-IDEA/lithe-plugin-docs/blob/main/guides/debug-adapter-plugin.md)。
 
 自动追踪会在日志中说明归档无法收录的原因：没有符合命名的 zip、包内 `plugin.json`
