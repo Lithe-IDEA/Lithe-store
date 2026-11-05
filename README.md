@@ -97,7 +97,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/177ee4e9b12b9fe06a07498eb316539f7472d5d8/io.github.lithe-idea.maven-build/icons/maven.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-maven">Maven</a></h3>
-<p><sub>Lithe Community · v0.1.2 · API 3（需 buildProviders、buildSystems、serverProcess）</sub></p>
+<p><sub>Lithe Community · v0.1.1 · API 3（需 buildProviders、buildSystems、serverProcess）</sub></p>
 <p>预发布 Maven 集成：反应堆与目标树、Profiles、带 JUnit 报告的筛选测试、编译诊断及依赖树。附带只读 Maven 核心扩展；需要支持 API 3 buildSystems 和原生构建窗口的 Lithe…</p>
 <p>🏷️ 构建工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
