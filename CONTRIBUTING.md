@@ -24,24 +24,35 @@
 
 ## 索引如何工作
 
-这个仓库只存放一份索引文件 [`lithe-plugin-index.json`](lithe-plugin-index.json)，列出社区插件、
+这个仓库只存放一份索引文件 [`lithe-plugin-index.json`](lithe-plugin-index.json)，列出插件、
 它们的版本和每个平台的下载包；插件代码和安装包都留在各自作者的 GitHub 仓库里，通过 GitHub Releases 分发。
 
 Lithe 会把仓库地址 `https://github.com/Lithe-IDEA/Lithe-store` 解析为
 `https://raw.githubusercontent.com/Lithe-IDEA/Lithe-store/HEAD/lithe-plugin-index.json`，
 索引缓存在本机缓存目录，不会写入应用安装包。
 
-## 社区插件与官方插件
+## 插件如何收录
 
-| | 官方插件 | 社区插件（本仓库） |
+Lithe 不再区分官方插件和普通插件：本仓库收录的每个插件都是普通插件，遵守同一套规则：
+
+| | 规则 |
+| --- | --- |
+| ID 命名空间 | 不得使用 `dev.lithe.*`，Lithe 会直接拒绝；Lithe-IDEA 组织的插件使用 `io.github.lithe-idea.*` |
+| 完整性 | 包内 `plugin.json` 声明 `vendor.signatureRequirement: "none"`，不带发布者签名；索引固定每个包的 SHA-256，安装后记录内容摘要并在每次加载时复查 |
+| 安装前 | 弹窗列出权限、要运行的程序和来源仓库，用户确认后安装 |
+
+区别只在收录方式：
+
+| | Lithe-IDEA 组织插件 | 组织外插件 |
 | --- | --- | --- |
-| 索引位置 | Lithe 主仓库 `Plugins/marketplace/index.json`，随应用附带 | 本仓库，Lithe 预置为社区插件源（用户可停用或移除） |
-| ID 命名空间 | `dev.lithe.*` | 不得使用 `dev.lithe.*`，Lithe 会直接拒绝 |
-| 完整性 | Lithe 发布者 Ed25519 签名 | 索引固定每个包的 SHA-256，安装后记录内容摘要并在每次加载时复查 |
-| 安装前 | 直接安装 | 弹窗列出权限、要运行的程序和来源仓库，用户确认后安装 |
+| 范围 | Lithe-IDEA 组织下的公开 `lithe-plugin-*` 仓库（`lithe-plugin-docs` 除外） | 其他公开 GitHub 仓库 |
+| 首次收录 | bot 发现带插件包的正式 Release 后自动收录，不需要提交 PR | 提 PR 或开“插件收录申请” issue，维护者按[审查清单](docs/maintainers.md#审查清单)审核后合并 |
+| 新版本 | bot 开 PR，校验通过后自动合入 | bot 开 PR，维护者审核后合并 |
 
-社区插件**由各自的开发者维护**。本仓库的审查只保证：索引格式正确、下载包与 SHA-256 一致、
+两种插件都**由各自的开发者维护**。本仓库的校验和审查只保证：索引格式正确、下载包与 SHA-256 一致、
 包内 `plugin.json` 与索引条目一致、来源仓库真实存在且公开。它不代表对插件代码的安全审计。
+
+Lithe 主仓库仍内置少量迁移前的 `dev.lithe.*` 插件，它们正在逐个迁出为 Lithe-IDEA 组织插件，迁出后同样由本仓库收录。
 
 ## 文档
 

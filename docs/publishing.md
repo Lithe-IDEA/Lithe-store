@@ -1,4 +1,4 @@
-# 发布社区插件
+# 发布插件
 
 这份文档面向插件作者：从打包到被 Lithe 用户看到的完整流程。
 
@@ -21,11 +21,11 @@
 
 插件包遵守 Lithe 插件契约 v1
 （[`shared/contracts/plugins/v1/README.md`](https://github.com/1lck/Lithe-IDEA/blob/preview/shared/contracts/plugins/v1/README.md)）。
-社区插件额外要求：
+收录到本仓库的插件额外要求：
 
 - `plugin.json` 的 `id` 使用你自己的反向域名，例如 `io.github.<你的用户名>.zig-support`；
   **不能**使用 `dev.lithe` 或 `dev.lithe.*`。
-- `vendor.signatureRequirement` 必须是 `"none"`（社区包不带 Lithe 签名）。
+- `vendor.signatureRequirement` 必须是 `"none"`（插件包不带发布者签名）。
 - `version` 是 `MAJOR.MINOR.PATCH`，每次发布都必须递增，已发布的版本号不能复用。
 - `pluginAPIVersion: 3` 必须有非空 `requires`，逐项声明包实际使用的能力及其契约版本。
   例如只使用声明式构建系统的包为 `"requires": { "buildSystems": 1 }`；不要无故增加
