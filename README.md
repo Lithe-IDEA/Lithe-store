@@ -33,7 +33,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-cargo/8fea6ad38995ce31d657da371420df6b8e8c0e7d/io.github.lithe-idea.cargo-build/icons/cargo.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-cargo">Cargo</a></h3>
-<p><sub>Lithe Community · v0.1.1 · API 3（需 buildProviders、buildSystems、serverProcess、settings）</sub></p>
+<p><sub>Lithe Community · v0.1.3 · API 3（需 buildProviders、buildSystems、executableResolution、serverProcess、settings）</sub></p>
 <p>Cargo 构建预发布插件：原生 workspace/包编译、检查、测试、清理及 binary/example 运行，支持 Release、Features 和 Offline。0.1.1 新增 Cargo 可执行文件路…</p>
 <p>🏷️ 构建工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-cargo?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>cargo</code> <code>rust</code> <code>testing</code></p>
@@ -65,7 +65,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/88a86cae73403d715d1385e447d8e4a9273e8f2f/io.github.lithe-idea.gradle-build/icons/gradle.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-gradle">Gradle</a></h3>
-<p><sub>Lithe Community · v0.1.1 · API 3（需 buildSystems）</sub></p>
+<p><sub>Lithe Community · v0.1.2 · API 3（需 backend、buildSystems、pluginFunctions、projectGenerators、serverProcess）</sub></p>
 <p>预发布 Gradle 集成：项目与任务树、JavaExec 运行入口、筛选测试、编译诊断及依赖树。需要支持 API 3 buildSystems 和原生构建窗口的 Lithe preview 开发版、Gradle 7.6…</p>
 <p>🏷️ 构建工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-gradle?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>gradle</code> <code>java</code> <code>testing</code></p>
@@ -97,7 +97,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/177ee4e9b12b9fe06a07498eb316539f7472d5d8/io.github.lithe-idea.maven-build/icons/maven.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-maven">Maven</a></h3>
-<p><sub>Lithe Community · v0.1.1 · API 3（需 buildProviders、buildSystems、serverProcess）</sub></p>
+<p><sub>Lithe Community · v0.1.3 · API 3（需 backend、buildProviders、buildSystems、pluginFunctions、projectGenerators、serverProcess）</sub></p>
 <p>预发布 Maven 集成：反应堆与目标树、Profiles、带 JUnit 报告的筛选测试、编译诊断及依赖树。附带只读 Maven 核心扩展；需要支持 API 3 buildSystems 和原生构建窗口的 Lithe…</p>
 <p>🏷️ 构建工具 · 💻 macOS · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
