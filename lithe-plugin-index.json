@@ -83,6 +83,25 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-cargo/8fea6ad38995ce31d657da371420df6b8e8c0e7d/io.github.lithe-idea.cargo-build/icons/cargo.svg",
       "versions": [
         {
+          "version": "0.1.3",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "buildProviders": 1,
+            "buildSystems": 1,
+            "executableResolution": 1,
+            "serverProcess": 1,
+            "settings": 2
+          },
+          "releaseDate": "2026-11-10",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-cargo/releases/download/v0.1.3/cargo-build-0.1.3-darwin.zip",
+              "sha256": "54a9df8a3dab75086cbce985d98c418896a5b59a765cb9a914bc8fdfb9539497"
+            }
+          ]
+        },
+        {
           "version": "0.1.1",
           "pluginAPIVersion": 3,
           "requires": {
@@ -261,6 +280,25 @@
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/88a86cae73403d715d1385e447d8e4a9273e8f2f/io.github.lithe-idea.gradle-build/icons/gradle.svg",
       "versions": [
+        {
+          "version": "0.1.2",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 2,
+            "buildSystems": 1,
+            "pluginFunctions": 1,
+            "projectGenerators": 1,
+            "serverProcess": 1
+          },
+          "releaseDate": "2026-11-10",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v0.1.2/gradle-build-0.1.2-darwin.zip",
+              "sha256": "c52e4aed2e41b381813373c97a56af1674e71e51bb164b4766c6209d490c0a1b"
+            }
+          ]
+        },
         {
           "version": "0.1.1",
           "pluginAPIVersion": 3,
@@ -482,6 +520,26 @@
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/177ee4e9b12b9fe06a07498eb316539f7472d5d8/io.github.lithe-idea.maven-build/icons/maven.svg",
       "versions": [
+        {
+          "version": "0.1.3",
+          "pluginAPIVersion": 3,
+          "requires": {
+            "backend": 2,
+            "buildProviders": 1,
+            "buildSystems": 1,
+            "pluginFunctions": 1,
+            "projectGenerators": 1,
+            "serverProcess": 1
+          },
+          "releaseDate": "2026-11-10",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.1.3/maven-build-0.1.3-darwin.zip",
+              "sha256": "a153ae63f590511be3c6793e8f5ab1f1ff644a4a010d060024c98e6de769f6e6"
+            }
+          ]
+        },
         {
           "version": "0.1.1",
           "pluginAPIVersion": 3,
