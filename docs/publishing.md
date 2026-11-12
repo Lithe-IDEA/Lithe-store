@@ -2,10 +2,11 @@
 
 这份文档面向插件作者：从打包到被 Lithe 用户看到的完整流程。
 
-还没有可安装的插件包时，先跟着 lithe-plugin-docs 的
-[LSP 插件完整生命周期教程](https://github.com/Lithe-IDEA/lithe-plugin-docs/blob/main/guides/lsp-plugin-lifecycle.md)
+插件契约、开发指南和 SDK 都在 Rust Core 仓库的 [`shared/plugins/`](https://github.com/Lithe-IDEA/Lithe-core-rust/tree/main/shared/plugins)。
+还没有可安装的插件包时，先跟着
+[LSP 插件完整生命周期教程](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/guides/lsp-plugin-lifecycle.md)
 完成清单、语言服务器构建和运行验收；需要接入命令、测试或构建后端时，阅读
-[构建、运行与测试接入指南](https://github.com/Lithe-IDEA/lithe-plugin-docs/blob/main/guides/build-tool-integration.md)。
+[构建、运行与测试接入指南](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/guides/build-tool-integration.md)。
 
 ```text
 你的插件仓库                          Lithe-store                      Lithe 用户
@@ -19,20 +20,22 @@
 
 ## 1. 插件包要求
 
-插件包遵守 Lithe 插件契约 v1
-（[`shared/contracts/plugins/v1/README.md`](https://github.com/1lck/Lithe-IDEA/blob/preview/shared/contracts/plugins/v1/README.md)）。
-收录到本仓库的插件额外要求：
+插件包遵守 Lithe 插件契约 v0
+（[`shared/plugins/contract/v1/README.md`](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/contract/v1/README.md)；目录名仍是 `v1`，
+其中的格式版本都是 `0`）。只有新版 Lithe 桌面端（`desktop-v*`）能安装 v0 插件，旧版 macOS Lithe
+读不了本仓库的索引。收录到本仓库的插件额外要求：
 
 - `plugin.json` 的 `id` 使用你自己的反向域名，例如 `io.github.<你的用户名>.zig-support`；
   **不能**使用 `dev.lithe` 或 `dev.lithe.*`。
 - `vendor.signatureRequirement` 必须是 `"none"`（插件包不带发布者签名）。
 - `version` 是 `MAJOR.MINOR.PATCH`，每次发布都必须递增，已发布的版本号不能复用。
-- `pluginAPIVersion: 3` 必须有非空 `requires`，逐项声明包实际使用的能力及其契约版本。
-  例如只使用声明式构建系统的包为 `"requires": { "buildSystems": 1 }`；不要无故增加
-  `buildProviders` 等能力。API 1/2 继续使用原有格式，不能带 `requires`。
-  API 4（调试适配器）同样在 `requires` 里逐项声明，例如 `"debugAdapters": 1`。
+- `plugin.json` 的 `schemaVersion` 和 `pluginAPIVersion` 都必须是 `0`，其他值的包不收录。
+- `requires` 必填且不能为空，逐项列出包实际使用的能力，目前每项的版本都是 `0`。
+  例如只使用声明式构建系统和设置的包为 `"requires": { "buildSystems": 0, "settings": 0 }`；
+  不要列出没用到的能力，也不要漏掉用到的能力，Core 会拒绝两者不一致的清单。
 - `requires` 的键是小写字母开头、后接英文字母或数字、最长 64 个字符的能力 ID，
-  值是正整数。索引允许未知能力 ID，由宿主能力表决定可安装性；这不表示当前宿主支持它。
+  值是非负整数。索引允许未知能力 ID 和更高的能力版本，由宿主能力表决定能不能安装；
+  这不表示当前宿主支持它。
 - 包内路径只用 `/`，不能有 `..`、绝对路径或符号链接。
 - 可以附带可执行文件（例如打包好的语言服务器），但它们必须在 `plugin.json` 中声明；
   用户安装前会看到完整的程序列表并确认。版本更新新增了程序时，用户需要重新确认。
@@ -50,7 +53,7 @@ zig-support-2.0.0-darwin-arm64.zip
 ```
 
 同一插件版本的所有平台包必须使用相同的 `version`、`pluginAPIVersion` 和 `requires`。
-能力表按键和值比较，键的书写顺序可以不同。API 3 索引版本项必须逐项复制包清单的
+能力表按键和值比较，键的书写顺序可以不同。索引版本项必须逐项复制包清单的
 `requires`；不同平台需要不同能力时，应使用不同的插件版本，不能共用一个版本项。
 
 Release 资产名必须以平台结尾，自动追踪才能识别：
@@ -77,7 +80,7 @@ shasum -a 256 zig-support-2.0.0-darwin-arm64.zip
 
 ## 3. 首次收录
 
-Lithe-IDEA 组织下名为 `lithe-plugin-*` 的公开仓库（`lithe-plugin-docs` 除外，它不发布插件）
+Lithe-IDEA 组织下名为 `lithe-plugin-*` 的公开仓库（已退役的文档仓库 `lithe-plugin-docs` 除外，它不发布插件）
 不需要手工提交首次收录 PR。`Track plugin releases` 发现这类仓库还没收录、并且已经有带插件包的
 正式 Release 时，会把它连同全部正式版本一起放进组织插件的 bot PR，校验通过后自动合入 main，
 条目按以下来源生成：
@@ -114,7 +117,8 @@ pre-release 的仓库不会被收录。
      "versions": [
        {
          "version": "2.0.0",
-         "pluginAPIVersion": 1,
+         "pluginAPIVersion": 0,
+         "requires": { "languageServers": 0, "languages": 0 },
          "releaseDate": "2026-10-12",
          "downloads": [
            {
@@ -128,19 +132,14 @@ pre-release 的仓库不会被收录。
    }
    ```
 
-   字段说明见 [plugin-index.schema.json](https://github.com/Lithe-IDEA/lithe-plugin-docs/blob/main/contract/v1/plugin-index.schema.json)。`homepage`、
+   字段说明见 [plugin-index.schema.json](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/contract/v1/plugin-index.schema.json)
+   和[插件市场参考](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/reference/domains/marketplace.md)。`homepage`、
    `localizedDescriptions`、`tags`、`icon` 可选；`icon` 只能是同一仓库的 raw 文件。
-   API 3 的版本项还必须在 `pluginAPIVersion` 旁加入与包内相同的能力表，例如：
+   每个版本项的 `pluginAPIVersion` 和 `requires` 都必须与包内 `plugin.json` 相同
+   （自动追踪就是这样写的），宿主不用下载就能据此判断自己是否具备这些能力。
 
-   ```json
-   "pluginAPIVersion": 3,
-   "requires": { "buildSystems": 1 }
-   ```
-
-   提高 API 等级或能力版本时发布新的插件版本，并保留最后一个旧要求的版本项，
-   让旧宿主仍能选择可安装版本。Core 对 API 3 以上的索引项允许省略 `requires`，
-   提供时仍校验能力表；API 4 的版本项应像 API 3 一样逐项复制包内的 `requires`
-   （自动追踪就是这样写的），宿主才能据此判断自己是否具备这些能力。
+   以后改用新的能力版本时发布新的插件版本，并保留最后一个旧要求的版本项，
+   让还没支持新版本的宿主仍能选择可安装版本。
 
 2. 统一格式并本地校验（CI 要求索引使用统一格式：两格缩进，纯值列表写在一行）：
 
@@ -150,8 +149,8 @@ pre-release 的仓库不会被收录。
    ```
 
 3. 提交 PR，按模板填写。CI 会下载每个新增或校验预期发生变化的包，核对 SHA-256、
-   包内 `plugin.json` 的 `id`、`version`、`pluginAPIVersion`、`requires` 和
-   `signatureRequirement`。即使 URL 和 SHA-256 不变，修改 ID、版本、API 等级或能力表
+   包内 `plugin.json` 的 `id`、`version`、`schemaVersion`、`pluginAPIVersion`、`requires` 和
+   `signatureRequirement`。即使 URL 和 SHA-256 不变，修改 ID、版本、插件 API 版本或能力表
    也会重新校验；完整校验不使用基线跳过。维护者审查后合并。
 
 索引与归档检查只覆盖上述发布字段、社区信任声明和现有路径检查，不替代完整的 Core
@@ -177,19 +176,17 @@ pre-release 的仓库不会被收录。
 （保持新版本在前）。
 
 自动追踪只收录正式 Release，继续跳过 draft 和 pre-release；预发布版本需要手工提交
-索引条目并接受相同的校验，不能靠调整追踪策略自动收录。Maven、Gradle 的 `0.1.0`
-预发布收录属于这种手工流程，条目是否存在不代表发布或运行验证已经完成。
+索引条目并接受相同的校验，不能靠调整追踪策略自动收录。条目是否存在不代表发布或运行验证已经完成。
 
-需要新插件 API 的版本（例如调试适配器插件需要 API 4）要等到稳定版 Lithe 支持该 API 才能让
-稳定版用户安装；稳定版是否支持，以 Lithe 的发行说明为准。支持之前，把 GitHub Release 标为
-预发布，并手工提交索引条目（LLDB Debugger `0.1.0` 就是这样收录的）。稳定版 Lithe 遇到自己
-不支持的 API 等级只会显示“需要更新 Lithe”，不会安装，所以不会装出坏插件。稳定版支持之后，
-把 Release 转为正式发布（或发布新版本），自动追踪就会接手后续版本；还没收录的 Lithe-IDEA
-组织插件会在这时被自动首次收录。调试适配器插件的写法见
-[编写调试适配器插件](https://github.com/Lithe-IDEA/lithe-plugin-docs/blob/main/guides/debug-adapter-plugin.md)。
+新版 Lithe 桌面端以 `desktop-v*` 预发布版本发布期间，v0 插件也以 GitHub 预发布版本发布，
+并手工提交索引条目（Go Support、Maven、LLDB Debugger 的 `0.0.1` 就是这样收录的）。
+宿主遇到自己不具备的能力或能力版本只会显示“需要更新 Lithe”，不会安装，所以不会装出坏插件。
+桌面端发布正式版之后，把 Release 转为正式发布（或发布新版本），自动追踪就会接手后续版本；
+还没收录的 Lithe-IDEA 组织插件会在这时被自动首次收录。调试适配器插件的写法见
+[编写调试适配器插件](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/guides/debug-adapter-plugin.md)。
 
 自动追踪会在日志中说明归档无法收录的原因：没有符合命名的 zip、包内 `plugin.json`
-不匹配或缺失/畸形的能力表、多个资产声明了不同的版本号、API 等级或能力表、
+不匹配或缺失/畸形的能力表、多个资产声明了不同的版本号、插件 API 版本或能力表、
 版本号已被别的资产占用。单个发布存在分歧时拒绝整个版本，不只保留其中一个平台包。
 
 ## 5. 修改信息、转移或下架

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Validates lithe-plugin-index.json against the Lithe plugin contract v1
-// (https://github.com/1lck/Lithe-IDEA/tree/preview/shared/contracts/plugins/v1).
+// Validates lithe-plugin-index.json against the Lithe plugin contract v0, published in
+// the Rust Core repository
+// (https://github.com/Lithe-IDEA/Lithe-core-rust/tree/main/shared/plugins/contract/v1).
 //
 // Lithe's Rust Core (`plugins.marketplace.validateIndex`) is the source of truth
 // and silently drops invalid entries. This store is stricter: any entry that
@@ -68,36 +69,34 @@ function isCalendarDate(text) {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === text;
 }
 
-/** Validates the index-level API and capability shape, without deciding host support. */
+/**
+ * Validates the API and capability shape that an index version and a package
+ * manifest share, without deciding host support: `pluginAPIVersion` and every
+ * capability version are non-negative integers, and `requires` is required.
+ */
 function validateVersionRequirements(version) {
-  if (!Number.isInteger(version.pluginAPIVersion) || version.pluginAPIVersion < 1) {
-    throw invalid("`pluginAPIVersion` must be a positive integer");
+  if (!Number.isInteger(version.pluginAPIVersion) || version.pluginAPIVersion < 0) {
+    throw invalid("`pluginAPIVersion` must be a non-negative integer");
   }
-  const present = Object.hasOwn(version, "requires");
-  if (version.pluginAPIVersion < 3 && present) {
-    throw invalid("`requires` is forbidden below pluginAPIVersion 3");
+  if (!Object.hasOwn(version, "requires")) {
+    throw invalid("`requires` must list the capabilities the package uses");
   }
-  if (version.pluginAPIVersion === 3 && !present) {
-    throw invalid("pluginAPIVersion 3 must list its capabilities in `requires`");
-  }
-  // Core permits API levels above 3 without requires, but validates it when supplied.
-  if (!present) return;
   if (!isObject(version.requires) || Object.keys(version.requires).length === 0) {
     throw invalid("`requires` must be a non-empty capability object");
   }
   for (const [id, capabilityVersion] of Object.entries(version.requires)) {
-    if (id.length > 64 || !/^[a-z][A-Za-z0-9]*$/.test(id)) {
+    if (!/^[a-z][A-Za-z0-9]{0,63}$/.test(id)) {
       throw invalid(`malformed capability ID \`${id}\` in requires`);
     }
-    if (!Number.isInteger(capabilityVersion) || capabilityVersion < 1) {
-      throw invalid(`\`requires.${id}\` must be a positive integer`);
+    if (!Number.isInteger(capabilityVersion) || capabilityVersion < 0) {
+      throw invalid(`\`requires.${id}\` must be a non-negative integer`);
     }
   }
 }
 
 /** Stable equality key: capability-map property order has no contract meaning. */
 export function requirementsKey(requires) {
-  if (requires === undefined) return null;
+  if (!isObject(requires)) return null;
   return JSON.stringify(Object.keys(requires).sort().map((id) => [id, requires[id]]));
 }
 
@@ -228,7 +227,7 @@ export function validateIndex(index) {
   for (const key of Object.keys(index)) {
     if (key !== "schemaVersion" && key !== "plugins") problems.push(`unknown root field \`${key}\``);
   }
-  if (index.schemaVersion !== 1) problems.push("`schemaVersion` must be 1");
+  if (index.schemaVersion !== 0) problems.push("plugin.index.schemaUnsupported: `schemaVersion` must be 0");
   if (!Array.isArray(index.plugins)) return [...problems, "`plugins` must be an array"];
 
   const seen = new Set();
@@ -288,6 +287,14 @@ export function checkManifest(manifests, entry, expected) {
   const problems = [];
   if (manifest.id !== entry.id) {
     problems.push(`plugin.package.mismatch: plugin.json id ${manifest.id} != index ${entry.id}`);
+  }
+  // Lithe refuses any other manifest format or plugin API version, so such a
+  // package installs nowhere even though the index may list it as unavailable.
+  if (manifest.schemaVersion !== 0) {
+    problems.push(`plugin.schema.unsupported: plugin.json schemaVersion ${manifest.schemaVersion} != 0`);
+  }
+  if (manifest.pluginAPIVersion !== 0) {
+    problems.push(`plugin.api.unsupported: plugin.json pluginAPIVersion ${manifest.pluginAPIVersion} != 0`);
   }
   try {
     validateVersionRequirements(manifest);

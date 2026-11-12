@@ -4,9 +4,10 @@
 
 CI（`Validate index`）已经自动保证：
 
-- 索引符合 Lithe 契约 v1 与本仓库策略（按 `id` 排序、无重复 ID、无 `dev.lithe.*`）；
+- 索引符合 Lithe 插件契约 v0 与本仓库策略（按 `id` 排序、无重复 ID、无 `dev.lithe.*`）；
 - 每个新增或变更的下载包可下载、SHA-256 一致；
-- 包内恰好一个匹配的 `plugin.json`，`version`、`pluginAPIVersion` 与索引一致，
+- 包内恰好一个匹配的 `plugin.json`，`schemaVersion` 与 `pluginAPIVersion` 为 `0`，
+  `version`、`pluginAPIVersion`、`requires` 与索引一致，
   `vendor.signatureRequirement` 为 `"none"`，没有不安全的路径。
 
 维护者人工确认（Lithe-IDEA 组织插件的 bot PR 由工作流自动合入，不走这份清单，见[自动追踪新版本](#自动追踪新版本)）：
@@ -26,7 +27,7 @@ bot 首次收录的组织插件（组织 PR 描述里的“首次收录”）合
 
 `Track plugin releases` 每 6 小时运行一次，也可在 Actions 中对 `main` 手动运行（可只指定一个插件 ID；从其他分支启动不会执行）。
 它扫描已收录插件的 Release，以及 Lithe-IDEA 组织下尚未收录的公开 `lithe-plugin-*` 仓库
-（`lithe-plugin-docs` 不发布插件，固定排除），只收录正式 Release；新插件的条目生成规则见
+（已退役的文档仓库 `lithe-plugin-docs` 不发布插件，固定排除），只收录正式 Release；新插件的条目生成规则见
 [发布插件的首次收录](publishing.md#3-首次收录)。手动运行时指定的插件 ID 可以是已收录插件，
 也可以是组织中尚未收录的插件。
 
@@ -104,18 +105,31 @@ README 的插件总览由 `scripts/render-readme.mjs` 根据索引生成。`main
 
 ## 跟进插件契约变化
 
+插件契约只在 Rust Core 仓库 [Lithe-IDEA/Lithe-core-rust](https://github.com/Lithe-IDEA/Lithe-core-rust/tree/main/shared/plugins) 的
+`shared/plugins/contract/v1/`（目录名是 `v1`，其中的格式版本都是 `0`），本仓库不保存 Schema 副本。
 `scripts/validate-index.mjs` 实现与 Lithe Core（`rust/lithe-core/src/plugins/marketplace.rs`）
-相同的索引条目规则（本仓库更严格：Lithe 会忽略的无效条目在这里直接让 CI 失败）；
-`scripts/fixtures/` 复制自插件契约的 `fixtures/marketplace/`。插件契约的公开副本在
-[lithe-plugin-docs](https://github.com/Lithe-IDEA/lithe-plugin-docs) 的 `contract/v1/`，本仓库不再保存 Schema 副本。
+相同的索引条目规则（本仓库更严格：Lithe 会忽略的无效条目在这里直接让 CI 失败），归档校验另外按
+契约拒绝 `schemaVersion` 或 `pluginAPIVersion` 不是 `0` 的包；`scripts/fixtures/` 复制自
+契约的 `fixtures/marketplace/`。
 
-`Validate index` 会检查 lithe-plugin-docs 上 `plugin-index.schema.json` 的 SHA-256 是否等于
+`Validate index` 会检查 Core 仓库 `main` 上 `plugin-index.schema.json` 的 SHA-256 是否等于
 工作流里记录的值；不一致说明索引契约变了，CI 失败。此时：
 
-1. 对照 lithe-plugin-docs 的提交记录查看 Schema 和契约 README 改了什么；
+1. 对照 Core 仓库 `shared/plugins/` 的提交记录和
+   [插件协议更新记录](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/reference/protocol-changelog.md) 查看 Schema 和契约 README 改了什么；
 2. 复制新的 `fixtures/marketplace/{index,invalid-index-entries}.json`，按契约 README 更新 `validate-index.mjs`；
 3. 运行 `node --test scripts/store.test.mjs`，所有 fixture 用例必须通过；
 4. 把 `.github/workflows/validate.yml` 里的 `SCHEMA_SHA256` 换成新 Schema 的 SHA-256。
 
-如果契约升级到新的 `schemaVersion`，旧版 Lithe 会拒绝整个索引，需要先与主仓库商定迁移方案
-（例如并行发布新文件名），不要直接改 `lithe-plugin-index.json` 的 `schemaVersion`。
+### 2026-11-12：切换到契约 v0
+
+插件契约在 2026-11-11 把所有格式版本归零（Core PR #17）：索引 `schemaVersion` 为 `0`，
+包清单 `schemaVersion`、`pluginAPIVersion` 都是 `0`，`requires` 必填，每项能力版本是 `0`。
+本仓库在 2026-11-12 整份切到 v0，并撤下了全部按旧契约（索引 `schemaVersion` 1、插件 API 1–4）
+发布的条目：
+
+- 旧版 macOS Lithe 会拒绝整份索引，它的插件市场不再能读取 Lithe Store；这是有意的取舍，
+  旧版 Lithe 已停止更新，新版桌面端只认 v0。
+- 被撤下的组织插件要按 v0 重写清单并发布新版本，才能重新收录；组织外插件请作者同样按 v0 发布后再提 PR。
+- 以后契约再换 `schemaVersion` 时，先与主仓库商定迁移方案（例如并行发布新文件名），
+  不要直接改 `lithe-plugin-index.json` 的 `schemaVersion`。

@@ -56,15 +56,17 @@ jobs:
 
       - name: Check the index contract has not changed
         # validate-index.mjs follows the index rules of the Lithe plugin
-        # contract, published in lithe-plugin-docs. A different schema there
-        # means the rules changed; see docs/maintainers.md.
+        # contract (v0), published in the Rust Core repository under
+        # shared/plugins/contract/v1. A different schema there means the rules
+        # changed; see docs/maintainers.md.
         env:
-          SCHEMA_URL: https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-docs/main/contract/v1/plugin-index.schema.json
-          SCHEMA_SHA256: 6771cb0e8c1ba101e6fc90b436de1b74f057ff0d58cc90f92e669edc9a102fc6
+          SCHEMA_URL: https://raw.githubusercontent.com/Lithe-IDEA/Lithe-core-rust/main/shared/plugins/contract/v1/plugin-index.schema.json
+          SCHEMA_SHA256: 18451ea7969bbf1c28a7df0554718c62599156e1155519059a6a9d16b9f89bea
         run: |
           status=$(curl -sS -o "$RUNNER_TEMP/plugin-index.schema.json" -w '%{http_code}' "$SCHEMA_URL")
           if [ "$status" = "404" ]; then
-            echo "::notice::lithe-plugin-docs does not publish plugin-index.schema.json yet; skipping contract check."
+            echo "::error::Lithe-core-rust no longer publishes shared/plugins/contract/v1/plugin-index.schema.json; find where the contract moved and update SCHEMA_URL; see docs/maintainers.md."
+            exit 1
           elif [ "$status" != "200" ]; then
             echo "::warning::Could not fetch the published schema (HTTP $status)."
           else

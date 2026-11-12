@@ -14,7 +14,8 @@
 
 | 字段 | 作用 |
 | --- | --- |
-| `pluginAPIVersion` | 该版本需要的 Lithe 插件 API 版本 |
+| `pluginAPIVersion` | 该版本的插件 API 版本，契约 v0 中固定为 `0` |
+| `requires` | 该版本使用的能力及每项能力的版本，与包内 `plugin.json` 相同 |
 | `releaseDate` | 发布日期，显示在插件详情中 |
 | `downloads[].platforms` | 该版本提供哪些平台的包；每个平台在一个版本中只能出现一次 |
 
@@ -26,10 +27,11 @@ Windows 用户会被安装 `1.9.0`。
 Lithe 的 Rust Core（`plugins.marketplace.validateIndex`）对每个插件计算 `availability`：
 
 1. 从新到旧遍历 `versions`；
-2. 选第一个**有当前平台的包**且 **`pluginAPIVersion` 不高于当前 Lithe 支持版本**的版本；
+2. 选第一个**有当前平台的包**、`pluginAPIVersion` 为 `0`，且 **`requires` 里每项能力都被当前 Lithe
+   以所写版本支持**的版本；
 3. 找不到时显示原因：
    - 当前平台在任何版本都没有包 → “暂不支持 <平台> 平台”（`plugin.index.platformUnsupported`）；
-   - 有包但都需要更新的插件 API → 提示升级 Lithe（`plugin.index.apiUnsupported`）。
+   - 有包但都需要当前 Lithe 没有的能力或能力版本 → 提示升级 Lithe（`plugin.index.apiUnsupported`）。
 
 所以旧版 Lithe 用户会自动停在最后一个兼容版本，不会被推送无法运行的新版本。
 **这也是不能删除历史版本的原因**：删掉后，旧 Lithe 用户就没有可装的版本了。
@@ -50,6 +52,6 @@ Lithe 的 Rust Core（`plugins.marketplace.validateIndex`）对每个插件计�
 | 想做的事 | 正确做法 |
 | --- | --- |
 | 修复已发布版本的 bug | 发新的 PATCH 版本，不要替换旧 Release 的资产 |
-| 新版本需要更新的 Lithe 插件 API | 在新版本 `plugin.json` 中提高 `pluginAPIVersion`；旧版本保留给旧 Lithe |
+| 新版本要用新的能力或能力版本 | 在新版本 `plugin.json` 的 `requires` 中写上它，索引版本项照抄；旧版本保留给旧 Lithe |
 | 暂时只支持部分平台 | 只上传对应平台的 zip；其他平台用户会继续使用旧版本或看到“不支持” |
 | 某个版本有严重问题 | 发修复版本，并按[维护者文档](maintainers.md#下架与撤回)申请撤回问题版本 |

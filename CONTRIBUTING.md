@@ -17,8 +17,8 @@
 - 插件图标填在条目的 `icon` 字段，指向插件仓库内固定到提交的 SVG/PNG（`raw.githubusercontent.com/<owner>/<repo>/<commit>/…`）；没有填写时 README 使用默认图标。
 - 插件的 bug 与功能请求请提到插件自己的仓库，本仓库只处理收录相关事务。
 
-怎么写插件（开发指南、LSP 与构建工具教程、插件契约和 SDK）见
-[lithe-plugin-docs](https://github.com/Lithe-IDEA/lithe-plugin-docs)；写好以后按[发布文档](docs/publishing.md)提交收录。
+怎么写插件（开发指南、LSP 与构建工具教程、插件契约和 SDK）见 Rust Core 仓库的
+[`shared/plugins/`](https://github.com/Lithe-IDEA/Lithe-core-rust/tree/main/shared/plugins)；写好以后按[发布文档](docs/publishing.md)提交收录。
 
 审查标准见 [docs/maintainers.md](docs/maintainers.md#审查清单)。
 
@@ -45,7 +45,7 @@ Lithe 不再区分官方插件和普通插件：本仓库收录的每个插件�
 
 | | Lithe-IDEA 组织插件 | 组织外插件 |
 | --- | --- | --- |
-| 范围 | Lithe-IDEA 组织下的公开 `lithe-plugin-*` 仓库（`lithe-plugin-docs` 除外） | 其他公开 GitHub 仓库 |
+| 范围 | Lithe-IDEA 组织下的公开 `lithe-plugin-*` 仓库（已退役的文档仓库 `lithe-plugin-docs` 除外） | 其他公开 GitHub 仓库 |
 | 首次收录 | bot 发现带插件包的正式 Release 后自动收录，不需要提交 PR | 提 PR 或开“插件收录申请” issue，维护者按[审查清单](docs/maintainers.md#审查清单)审核后合并 |
 | 新版本 | bot 开 PR，校验通过后自动合入 | bot 开 PR，维护者审核后合并 |
 
@@ -58,7 +58,7 @@ Lithe 主仓库仍内置少量迁移前的 `dev.lithe.*` 插件，它们正在�
 
 | 文档 | 内容 |
 | --- | --- |
-| [lithe-plugin-docs](https://github.com/Lithe-IDEA/lithe-plugin-docs) | 插件开发：开发指南、LSP 与构建工具教程、插件契约与 JSON Schema、SDK 下载 |
+| [Lithe-core-rust `shared/plugins/`](https://github.com/Lithe-IDEA/Lithe-core-rust/tree/main/shared/plugins) | 插件开发：开发指南、LSP 与构建工具教程、插件契约与 JSON Schema、SDK |
 | [docs/publishing.md](docs/publishing.md) | 插件作者：如何打包、发布 Release、提交收录和发布新版本 |
 | [docs/versioning-and-updates.md](docs/versioning-and-updates.md) | 版本号如何追踪、Lithe 如何选择可安装版本、用户如何更新/回退 |
 | [docs/maintainers.md](docs/maintainers.md) | 维护者：审查清单、下架与撤回、跟进插件契约变化 |
@@ -70,7 +70,7 @@ lithe-plugin-index.json         # 唯一的数据文件，Lithe 客户端读取�
 scripts/validate-index.mjs      # 与 Lithe Rust Core 同规则的校验 + 下载包校验
 scripts/track-releases.mjs      # 追踪已收录插件和 Lithe-IDEA 组织 lithe-plugin-* 仓库的新 Release，生成索引条目；--scope 区分组织插件与组织外插件
 scripts/render-readme.mjs       # 根据索引生成 README 的插件总览
-scripts/store.test.mjs          # 校验脚本的测试（fixtures 复制自插件契约）
+scripts/store.test.mjs          # 校验脚本的测试（fixtures 复制自 Core 的插件契约）
 assets/                         # README 用到的图片（无图标插件的默认图标）
 .github/workflows/              # validate（PR/推送/每周）、track-releases（每 6 小时，组织插件自动合入、组织外插件开 PR 审查）、sync-readme（main 更新后开 PR 同步 README）
 ```
