@@ -140,12 +140,12 @@ export async function versionFromRelease(entry, release, {
   const version = {
     version: [...versions][0],
     pluginAPIVersion: [...apiVersions][0],
-    ...(requires === undefined ? {} : { requires: Object.fromEntries(Object.keys(requires).sort().map((id) => [id, requires[id]])) }),
+    requires: Object.fromEntries(Object.keys(requires).sort().map((id) => [id, requires[id]])),
     releaseDate: (release.published_at ?? release.created_at).slice(0, 10),
     downloads: downloads.sort((left, right) => left.platforms[0].localeCompare(right.platforms[0])),
   };
   // Refuse an invalid release before it can affect other plugins' tracked updates.
-  const versionProblems = validateIndex({ schemaVersion: 1, plugins: [{ ...entry, versions: [version] }] });
+  const versionProblems = validateIndex({ schemaVersion: 0, plugins: [{ ...entry, versions: [version] }] });
   return versionProblems.length > 0 ? { problems: versionProblems } : { version };
 }
 

@@ -14,7 +14,7 @@ import {
   checkManifest, formatIndex, inspectArchive, readPackageManifests, validateEntry, validateIndex, verifyArchives,
 } from "./validate-index.mjs";
 
-// Fixtures are copied from the plugin contract (lithe-plugin-docs contract/v1/fixtures/marketplace)
+// Fixtures are copied from the plugin contract (Lithe-core-rust shared/plugins/contract/v1/fixtures/marketplace)
 // so this validator reports the same code as Lithe's Rust Core for each case.
 const fixtureIndex = JSON.parse(readFileSync(new URL("./fixtures/index.json", import.meta.url)));
 const invalidCases = JSON.parse(readFileSync(new URL("./fixtures/invalid-index-entries.json", import.meta.url))).cases;
@@ -53,8 +53,7 @@ for (const { name, edits, expectedCode } of invalidCases) {
 function capabilityEntry() {
   const entry = validEntry();
   entry.versions = [entry.versions[1]];
-  entry.versions[0].pluginAPIVersion = 3;
-  entry.versions[0].requires = { buildSystems: 1 };
+  entry.versions[0].requires = { buildSystems: 0 };
   return entry;
 }
 
@@ -62,11 +61,11 @@ function capabilityEntry() {
 function manifestFor(entry) {
   const version = entry.versions[0];
   return {
-    schemaVersion: 2,
+    schemaVersion: 0,
     id: entry.id,
     version: version.version,
     pluginAPIVersion: version.pluginAPIVersion,
-    ...(Object.hasOwn(version, "requires") ? { requires: structuredClone(version.requires) } : {}),
+    requires: structuredClone(version.requires),
     vendor: { signatureRequirement: "none" },
   };
 }
@@ -92,90 +91,79 @@ function releaseFixture(entry, manifests) {
   };
 }
 
-test("API 3 requires a non-empty capability map and accepts future capability IDs", () => {
+test("requires is a non-empty capability map that accepts future capability IDs and versions", () => {
   const entry = capabilityEntry();
   assert.equal(codeOf(entry), "ok");
   entry.versions[0].requires = { futureFeature: 99 };
   assert.equal(codeOf(entry), "ok");
   delete entry.versions[0].requires;
   assert.equal(codeOf(entry), "plugin.index.invalid");
-  for (const requires of [null, {}, [], "buildSystems", { buildSystems: 0 }, { buildSystems: -1 },
-    { buildSystems: 1.5 }, { buildSystems: "1" }, { buildSystems: true }, { "build-systems": 1 },
-    { BuildSystems: 1 }, { "1buildSystems": 1 }, { ["a".repeat(65)]: 1 }]) {
+  for (const requires of [null, {}, [], "buildSystems", { buildSystems: -1 },
+    { buildSystems: 1.5 }, { buildSystems: "1" }, { buildSystems: true }, { "build-systems": 0 },
+    { BuildSystems: 0 }, { "1buildSystems": 0 }, { ["a".repeat(65)]: 0 }]) {
     entry.versions[0].requires = requires;
     assert.equal(codeOf(entry), "plugin.index.invalid", JSON.stringify(requires));
   }
-  entry.versions[0].requires = { ["a".repeat(64)]: 1 };
+  entry.versions[0].requires = { ["a".repeat(64)]: 0 };
   assert.equal(codeOf(entry), "ok");
 });
 
-test("API 1/2 remain valid without requires and reject it when supplied", () => {
-  for (const api of [1, 2]) {
-    const entry = validEntry();
-    entry.versions[0].pluginAPIVersion = api;
-    assert.equal(codeOf(entry), "ok");
-    for (const requires of [{ buildSystems: 1 }, null]) {
-      entry.versions[0].requires = requires;
-      assert.equal(codeOf(entry), "plugin.index.invalid");
-    }
-  }
-});
-
-test("future API levels may omit requires but validate a supplied map", () => {
+test("an index version may name a plugin API no host runs yet, but not a malformed one", () => {
   const entry = capabilityEntry();
-  entry.versions[0].pluginAPIVersion = 4;
-  delete entry.versions[0].requires;
+  // Core reports such a version as unavailable, not as an invalid entry.
+  entry.versions[0].pluginAPIVersion = 99;
   assert.equal(codeOf(entry), "ok");
-  entry.versions[0].requires = { futureFeature: 1 };
-  assert.equal(codeOf(entry), "ok");
-  entry.versions[0].requires = {};
+  for (const api of [-1, 1.5, "0", null]) {
+    entry.versions[0].pluginAPIVersion = api;
+    assert.equal(codeOf(entry), "plugin.index.invalid", JSON.stringify(api));
+  }
+  delete entry.versions[0].pluginAPIVersion;
   assert.equal(codeOf(entry), "plugin.index.invalid");
 });
 
 test("package and index requirements agree regardless of key order", () => {
   const entry = capabilityEntry();
   const version = entry.versions[0];
-  version.requires = { settings: 1, buildSystems: 1 };
-  const manifest = { ...manifestFor(entry), requires: { buildSystems: 1, settings: 1 } };
+  version.requires = { settings: 0, buildSystems: 0 };
+  const manifest = { ...manifestFor(entry), requires: { buildSystems: 0, settings: 0 } };
   assert.deepEqual(checkManifest([manifest], entry, version), []);
-  for (const requires of [{ buildSystems: 2, settings: 1 }, { buildSystems: 1 },
-    { buildSystems: 1, settings: 1, futureFeature: 1 }]) {
+  for (const requires of [{ buildSystems: 1, settings: 0 }, { buildSystems: 0 },
+    { buildSystems: 0, settings: 0, futureFeature: 0 }]) {
     assert.match(checkManifest([{ ...manifest, requires }], entry, version).join(), /requires != index requires/);
   }
   delete manifest.requires;
-  assert.match(checkManifest([manifest], entry, version).join(), /must list its capabilities/);
+  assert.match(checkManifest([manifest], entry, version).join(), /must list the capabilities/);
 });
 
-test("package checks retain identity, API and community trust checks", () => {
+test("package checks retain identity, format, API and community trust checks", () => {
   const entry = capabilityEntry();
   const version = entry.versions[0];
   const manifest = manifestFor(entry);
+  assert.deepEqual(checkManifest([manifest], entry, version), []);
   for (const [edit, expected] of [
     [{ id: "io.example.other" }, /plugin\.package\.mismatch/],
     [{ version: "9.0.0" }, /plugin\.package\.mismatch/],
-    [{ pluginAPIVersion: 4 }, /pluginAPIVersion/],
+    [{ schemaVersion: 2 }, /plugin\.schema\.unsupported/],
+    [{ pluginAPIVersion: 3 }, /plugin\.api\.unsupported/],
     [{ vendor: { signatureRequirement: "publisherPackage" } }, /signatureRequirement/],
   ]) {
     assert.match(checkManifest([{ ...manifest, ...edit }], entry, version).join(), expected);
   }
-  for (const api of [1, 2]) {
-    const legacyEntry = validEntry();
-    legacyEntry.versions[0].pluginAPIVersion = api;
-    const legacyManifest = manifestFor(legacyEntry);
-    assert.deepEqual(checkManifest([legacyManifest], legacyEntry, legacyEntry.versions[0]), []);
-    assert.match(checkManifest([{ ...legacyManifest, requires: { languages: 1 } }], legacyEntry).join(), /forbidden/);
-  }
+  // A package Lithe refuses is never listed, even when the index entry agrees with it.
+  const future = capabilityEntry();
+  future.versions[0].pluginAPIVersion = 1;
+  assert.match(checkManifest([manifestFor(future)], future, future.versions[0]).join(), /plugin\.api\.unsupported/);
 });
 
-test("release tracking copies API 3 requires and normalizes its key order", { timeout: 5_000 }, async () => {
+test("release tracking copies requires and normalizes its key order", { timeout: 5_000 }, async () => {
   const entry = capabilityEntry();
-  const manifest = { ...manifestFor(entry), requires: { settings: 1, buildSystems: 1 } };
-  const fixture = releaseFixture(entry, [manifest, { ...manifest, requires: { buildSystems: 1, settings: 1 } }]);
+  const manifest = { ...manifestFor(entry), requires: { settings: 0, buildSystems: 0 } };
+  const fixture = releaseFixture(entry, [manifest, { ...manifest, requires: { buildSystems: 0, settings: 0 } }]);
   const result = await versionFromRelease(entry, fixture.release, fixture);
   assert.equal(result.problems, undefined);
-  assert.deepEqual(result.version.requires, { buildSystems: 1, settings: 1 });
+  assert.deepEqual(result.version.requires, { buildSystems: 0, settings: 0 });
   assert.deepEqual(Object.keys(result.version.requires), ["buildSystems", "settings"]);
-  assert.equal(result.version.pluginAPIVersion, 3);
+  assert.equal(result.version.pluginAPIVersion, 0);
   assert.equal(result.version.downloads.length, 2);
   assert.equal(result.version.downloads[0].sha256, createHash("sha256").update(fixture.release.assets[0].bytes).digest("hex"));
 });
@@ -186,29 +174,17 @@ test("release tracking rejects malformed or conflicting requirements across plat
   const missing = { ...manifest };
   delete missing.requires;
   for (const [other, expected] of [
-    [{ ...manifest, requires: { buildSystems: 2 } }, /disagree.*requires/],
-    [{ ...manifest, requires: { buildSystems: 1, settings: 1 } }, /disagree.*requires/],
+    [{ ...manifest, requires: { buildSystems: 1 } }, /disagree.*requires/],
+    [{ ...manifest, requires: { buildSystems: 0, settings: 0 } }, /disagree.*requires/],
     [{ ...manifest, requires: {} }, /non-empty/],
-    [missing, /must list its capabilities/],
+    [missing, /must list the capabilities/],
     [{ ...manifest, version: "3.0.0" }, /disagree.*version/],
-    [{ ...manifest, pluginAPIVersion: 4 }, /disagree.*pluginAPIVersion/],
+    [{ ...manifest, pluginAPIVersion: 1 }, /plugin\.api\.unsupported/],
   ]) {
     const fixture = releaseFixture(entry, [manifest, other]);
     const result = await versionFromRelease(entry, fixture.release, fixture);
     assert.equal(result.version, undefined);
     assert.match(result.problems.join(), expected);
-  }
-});
-
-test("release tracking preserves API 1/2 releases without adding requires", { timeout: 5_000 }, async () => {
-  for (const api of [1, 2]) {
-    const entry = validEntry();
-    entry.versions[0].pluginAPIVersion = api;
-    const fixture = releaseFixture(entry, [manifestFor(entry)]);
-    const result = await versionFromRelease(entry, fixture.release, fixture);
-    assert.equal(result.problems, undefined);
-    assert.equal(result.version.pluginAPIVersion, api);
-    assert.equal(Object.hasOwn(result.version, "requires"), false);
   }
 });
 
@@ -246,11 +222,12 @@ function organizationRelease(repository, version, overrides = {}) {
 
 function zigManifest(version) {
   return {
-    schemaVersion: 2,
+    schemaVersion: 0,
     id: ZIG_ID,
     displayName: "Zig Support",
     version,
-    pluginAPIVersion: 2,
+    pluginAPIVersion: 0,
+    requires: { languageServers: 0, languages: 0 },
     vendor: { displayName: "Lithe Community", signatureRequirement: "none" },
   };
 }
@@ -292,7 +269,7 @@ function zigOrganization() {
 }
 
 test("organization discovery considers only active, unlisted lithe-plugin- repositories", () => {
-  const index = { schemaVersion: 1, plugins: [{ ...validEntry(), repository: "https://github.com/Lithe-IDEA/Lithe-Plugin-Listed" }] };
+  const index = { schemaVersion: 0, plugins: [{ ...validEntry(), repository: "https://github.com/Lithe-IDEA/Lithe-Plugin-Listed" }] };
   const names = unlistedPluginRepositories([
     organizationRepository("lithe-plugin-zig"),
     organizationRepository("lithe-plugin-docs"),
@@ -307,7 +284,7 @@ test("organization discovery considers only active, unlisted lithe-plugin- repos
 
 test("organization discovery lists a new plugin with its stable releases", { timeout: 5_000 }, async () => {
   const { releases, fixture } = zigOrganization();
-  const index = { schemaVersion: 1, plugins: [validEntry(), { ...validEntry(), id: "org.example.zig-tools" }] };
+  const index = { schemaVersion: 0, plugins: [validEntry(), { ...validEntry(), id: "org.example.zig-tools" }] };
   const result = await discoverPlugins(index, fixture);
 
   assert.deepEqual(result.skipped, []);
@@ -333,13 +310,13 @@ test("organization discovery lists a new plugin with its stable releases", { tim
 
 test("organization discovery keeps only the plugin named by --plugin", { timeout: 5_000 }, async () => {
   const other = zigOrganization();
-  const otherIndex = { schemaVersion: 1, plugins: [validEntry()] };
+  const otherIndex = { schemaVersion: 0, plugins: [validEntry()] };
   const skippedRun = await discoverPlugins(otherIndex, { ...other.fixture, onlyPlugin: "io.example.other" });
   assert.deepEqual(skippedRun.added, []);
   assert.equal(otherIndex.plugins.length, 1);
 
   const named = zigOrganization();
-  const namedIndex = { schemaVersion: 1, plugins: [validEntry()] };
+  const namedIndex = { schemaVersion: 0, plugins: [validEntry()] };
   const namedRun = await discoverPlugins(namedIndex, { ...named.fixture, onlyPlugin: ZIG_ID });
   assert.deepEqual(namedRun.newPlugins, [ZIG_ID]);
 });
@@ -367,7 +344,7 @@ test("organization discovery skips repositories that cannot be listed yet", { ti
     [anonymousRelease.assets[0].browser_download_url]: { ...zigManifest("1.0.0"), id: "io.github.lithe-idea.anonymous", vendor: { signatureRequirement: "none" } },
     [officialRelease.assets[0].browser_download_url]: { ...zigManifest("1.0.0"), id: "dev.lithe.official" },
   });
-  const index = { schemaVersion: 1, plugins: [validEntry()] };
+  const index = { schemaVersion: 0, plugins: [validEntry()] };
   const result = await discoverPlugins(index, fixture);
 
   assert.deepEqual(result.added, []);
@@ -405,7 +382,7 @@ function scopedTracking() {
     license: "Apache-2.0",
     versions: [],
   };
-  const index = { schemaVersion: 1, plugins: [validEntry(), organizationEntry] };
+  const index = { schemaVersion: 0, plugins: [validEntry(), organizationEntry] };
   const fixture = organizationFixture({
     [REPOSITORIES_PATH]: [zigRepository],
     "repos/Lithe-IDEA/lithe-plugin-zig/releases?per_page=20": [organizationPluginRelease],
@@ -447,7 +424,7 @@ test("archive verification rechecks changed manifest expectations for the same U
   const manifest = manifestFor(entry);
   const bytes = Buffer.from(JSON.stringify(manifest));
   for (const download of entry.versions[0].downloads) download.sha256 = createHash("sha256").update(bytes).digest("hex");
-  const index = { schemaVersion: 1, plugins: [entry] };
+  const index = { schemaVersion: 0, plugins: [entry] };
   let downloadCount = 0;
   const dependencies = {
     download: async () => { downloadCount += 1; return bytes; },
@@ -457,8 +434,8 @@ test("archive verification rechecks changed manifest expectations for the same U
   assert.deepEqual(await verifyArchives(index, structuredClone(index), dependencies), []);
   assert.equal(downloadCount, 0);
   for (const editBase of [
-    (oldEntry) => { oldEntry.versions[0].requires = { buildSystems: 2 }; },
-    (oldEntry) => { oldEntry.versions[0].pluginAPIVersion = 4; },
+    (oldEntry) => { oldEntry.versions[0].requires = { buildSystems: 1 }; },
+    (oldEntry) => { oldEntry.versions[0].pluginAPIVersion = 1; },
     (oldEntry) => { oldEntry.versions[0].version = "1.0.0"; },
     (oldEntry) => { oldEntry.id = "io.example.other"; },
   ]) {
@@ -469,16 +446,16 @@ test("archive verification rechecks changed manifest expectations for the same U
     assert.equal(downloadCount, entry.versions[0].downloads.length);
   }
   const changed = structuredClone(index);
-  changed.plugins[0].versions[0].requires = { buildSystems: 2 };
+  changed.plugins[0].versions[0].requires = { buildSystems: 1 };
   assert.match((await verifyArchives(changed, index, dependencies)).join(), /requires != index requires/);
 });
 
 test("archive verification compares requires by value and checks hashes before manifests", { timeout: 5_000 }, async () => {
   const entry = capabilityEntry();
-  entry.versions[0].requires = { settings: 1, buildSystems: 1 };
-  const index = { schemaVersion: 1, plugins: [entry] };
+  entry.versions[0].requires = { settings: 0, buildSystems: 0 };
+  const index = { schemaVersion: 0, plugins: [entry] };
   const base = structuredClone(index);
-  base.plugins[0].versions[0].requires = { buildSystems: 1, settings: 1 };
+  base.plugins[0].versions[0].requires = { buildSystems: 0, settings: 0 };
   const forbidden = () => { assert.fail("unchanged archives must not be downloaded or inspected"); };
   assert.deepEqual(await verifyArchives(index, base, { download: forbidden, readManifests: forbidden }), []);
   const problems = await verifyArchives(index, undefined, {
@@ -504,19 +481,22 @@ test("formatting keeps plain arrays inline and round-trips", () => {
   assert.deepEqual(JSON.parse(text), fixtureIndex);
   assert.match(text, /"platforms": \["darwin-arm64"\]/);
   assert.match(text, /"tags": \["Language", "zig"\]/);
-  assert.equal(formatIndex({ schemaVersion: 1, plugins: [] }), '{\n  "schemaVersion": 1,\n  "plugins": []\n}\n');
+  assert.equal(formatIndex({ schemaVersion: 0, plugins: [] }), '{\n  "schemaVersion": 0,\n  "plugins": []\n}\n');
 });
 
 test("duplicate ids and unsorted plugins fail the store policy", () => {
   const second = { ...validEntry(), id: "io.example.another" };
-  assert.match(validateIndex({ schemaVersion: 1, plugins: [validEntry(), validEntry()] }).join("\n"), /plugin\.index\.duplicate/);
-  assert.match(validateIndex({ schemaVersion: 1, plugins: [validEntry(), second] }).join("\n"), /sorted by id/);
-  assert.deepEqual(validateIndex({ schemaVersion: 1, plugins: [second, validEntry()] }), []);
+  assert.match(validateIndex({ schemaVersion: 0, plugins: [validEntry(), validEntry()] }).join("\n"), /plugin\.index\.duplicate/);
+  assert.match(validateIndex({ schemaVersion: 0, plugins: [validEntry(), second] }).join("\n"), /sorted by id/);
+  assert.deepEqual(validateIndex({ schemaVersion: 0, plugins: [second, validEntry()] }), []);
 });
 
 test("a wrong schema version or extra root field is refused", () => {
-  assert.notDeepEqual(validateIndex({ schemaVersion: 2, plugins: [] }), []);
-  assert.notDeepEqual(validateIndex({ schemaVersion: 1, plugins: [], extra: true }), []);
+  for (const schemaVersion of [1, 2, "0", undefined]) {
+    assert.match(validateIndex({ schemaVersion, plugins: [] }).join(), /plugin\.index\.schemaUnsupported/);
+  }
+  assert.deepEqual(validateIndex({ schemaVersion: 0, plugins: [] }), []);
+  assert.notDeepEqual(validateIndex({ schemaVersion: 0, plugins: [], extra: true }), []);
 });
 
 test("asset names map to platforms", () => {
@@ -549,7 +529,10 @@ test("archives must hold one matching community plugin.json", () => {
       execFileSync("zip", ["-qr", archive, entry.id], { cwd: join(workDir, "pkg") });
       return archive;
     };
-    const manifest = { id: entry.id, version: version.version, pluginAPIVersion: 1, vendor: { signatureRequirement: "none" } };
+    const manifest = {
+      schemaVersion: 0, id: entry.id, version: version.version, pluginAPIVersion: 0,
+      requires: structuredClone(version.requires), vendor: { signatureRequirement: "none" },
+    };
     assert.deepEqual(inspectArchive(build(manifest), entry, version), []);
     assert.match(inspectArchive(build({ ...manifest, version: "9.9.9" }), entry, version).join(), /plugin\.package\.mismatch/);
     assert.match(
@@ -570,7 +553,7 @@ test("the overview renders one escaped card per plugin with a default icon", () 
   const entry = validEntry();
   delete entry.icon;
   entry.name = "<Zig>";
-  const html = renderOverview({ schemaVersion: 1, plugins: [entry] });
+  const html = renderOverview({ schemaVersion: 0, plugins: [entry] });
   assert.match(html, /&lt;Zig&gt;/);
   assert.match(html, /assets\/plugin-default\.svg/);
   assert.equal(html.match(/<td /g).length, 2, "the last row is padded to two columns");
