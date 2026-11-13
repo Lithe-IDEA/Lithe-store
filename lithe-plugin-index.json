@@ -1,4 +1,51 @@
 {
   "schemaVersion": 0,
-  "plugins": []
+  "plugins": [
+    {
+      "id": "io.github.lithe-idea.java-navigation",
+      "name": "Java Navigation",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation#readme",
+      "description": "Lightweight Java navigation without JDT LS: go to definition, find references and the document outline, into the JDK and dependency jars, in about 60-90 MiB of memory.",
+      "localizedDescriptions": {
+        "zh-Hans": "不依赖 JDT LS 的轻量 Java 跳转：跳转到定义、查找引用、文档结构，能跳进 JDK 和依赖库，常驻内存约 60–90 MiB。"
+      },
+      "tags": ["java", "language", "navigation"],
+      "license": "Apache-2.0",
+      "versions": [
+        {
+          "version": "0.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "languageServers": 0,
+            "languages": 0
+          },
+          "releaseDate": "2026-11-13",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.1/java-navigation-0.0.1-darwin-arm64.zip",
+              "sha256": "9df3eaa3d4411de57aeae80c2a3541a47325ad29bc117172915523911aaa85d9"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.1/java-navigation-0.0.1-darwin-x64.zip",
+              "sha256": "55cf6c553cafc3940ebb8a90508e3faa7aaf3f86987bceea5d2e9e5181d46fa7"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.1/java-navigation-0.0.1-windows-arm64.zip",
+              "sha256": "a4e8a8abbcfcdee3f6cb3364c50b01ba93c070ecdd519a46b3ac4c98e4704a54"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.1/java-navigation-0.0.1-windows-x64.zip",
+              "sha256": "3a85837618cb31891f17451e3eab25f26d92a238a4337d8a7b916bb6a84a7181"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
