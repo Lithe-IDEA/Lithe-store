@@ -15,6 +15,37 @@
       "license": "Apache-2.0",
       "versions": [
         {
+          "version": "0.0.2",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "languageServers": 0,
+            "languages": 0
+          },
+          "releaseDate": "2026-11-13",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.2/java-navigation-0.0.2-darwin-arm64.zip",
+              "sha256": "12197d2fe104e07773061b8f05f5648b939cdfd0c161e3befd2d20e1ed62fc98"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.2/java-navigation-0.0.2-darwin-x64.zip",
+              "sha256": "69ceaac26eaa618f7210fcefbf285cbd8ce38bb728126a1077b6dc923fb9e39a"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.2/java-navigation-0.0.2-windows-arm64.zip",
+              "sha256": "3309f188d9d72df64c6ffe77a9eb7f5e358305baf6df096010732bfb6a882084"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.0.2/java-navigation-0.0.2-windows-x64.zip",
+              "sha256": "065583f2c2cd40f09baac26b7886babc412e85e658541db07d838d94767183d3"
+            }
+          ]
+        },
+        {
           "version": "0.0.1",
           "pluginAPIVersion": 0,
           "requires": {
