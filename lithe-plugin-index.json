@@ -157,6 +157,39 @@
           ]
         }
       ]
+    },
+    {
+      "id": "io.github.lithe-idea.maven-build",
+      "name": "Maven",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-maven",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-maven#readme",
+      "description": "Maven integration for the Viva preview: project and goal trees, profiles, builds, tests, compiler diagnostics and dependency trees. Install Java Support for Java completion, run and debug.",
+      "localizedDescriptions": {
+        "zh-Hans": "适用于 Viva 预览版的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树。Java 补全、运行与调试请同时安装 Java Support。"
+      },
+      "tags": ["build", "maven", "java", "testing"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg",
+      "versions": [
+        {
+          "version": "0.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "buildSystems": 0,
+            "projectGenerators": 0,
+            "settings": 0
+          },
+          "releaseDate": "2026-11-12",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.0.1/maven-build-0.0.1-darwin.zip",
+              "sha256": "96eb8c4bb11845cdfe41a258aa338bb1f8ef45a37884719c7c306f8768b9fe67"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
