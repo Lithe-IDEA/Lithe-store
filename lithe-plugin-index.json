@@ -2,6 +2,45 @@
   "schemaVersion": 0,
   "plugins": [
     {
+      "id": "io.github.lithe-idea.gradle-build",
+      "name": "Gradle",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-gradle",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-gradle#readme",
+      "description": "Gradle integration for the Viva preview: project and task trees, JavaExec applications, builds, tests, compiler diagnostics and dependency trees. Requires Gradle 7.6+ and Java; install Java Support for Java language features.",
+      "localizedDescriptions": {
+        "zh-Hans": "适用于 Viva 预览版的 Gradle 集成：项目与任务树、JavaExec 应用、构建、测试、编译诊断和依赖树。需要 Gradle 7.6+ 与 Java；Java 语言功能请同时安装 Java Support。"
+      },
+      "tags": ["build", "gradle", "java", "testing"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/6a7f341f92add84c264c5976c234d7dbee6cb6d2/io.github.lithe-idea.gradle-build/icons/gradle.svg",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildSystems": 0,
+            "pluginFunctions": 0,
+            "projectGenerators": 0
+          },
+          "releaseDate": "2026-11-14",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v1.0.0/gradle-build-1.0.0-darwin.zip",
+              "sha256": "91243d046ad3367dd314d998655c681a5f78538d9280c23cba18be7c1f78e4a2"
+            },
+            {
+              "platforms": ["windows-arm64", "windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v1.0.0/gradle-build-1.0.0-windows.zip",
+              "sha256": "91243d046ad3367dd314d998655c681a5f78538d9280c23cba18be7c1f78e4a2"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.java-navigation",
       "name": "Java Support Lite",
       "author": "Lithe Community",
