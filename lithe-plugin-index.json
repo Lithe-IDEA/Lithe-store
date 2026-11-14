@@ -109,6 +109,54 @@
           ]
         }
       ]
+    },
+    {
+      "id": "io.github.lithe-idea.java-support",
+      "name": "Java Support",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-java",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-java#readme",
+      "description": "Full Java support built on Eclipse JDT LS with a bundled JDK: completion, diagnostics, navigation, run and debug, tests, and Spring Boot / MyBatis indexing. The package is about 250 MiB; for navigation only, use Java Support Lite instead. Use either this or Java Support Lite; enabling one turns the other off.",
+      "localizedDescriptions": {
+        "zh-Hans": "基于 Eclipse JDT LS 的完整 Java 支持，自带 JDK：补全、诊断、导航、运行与调试、测试运行，以及 Spring Boot / MyBatis 索引。安装包约 250 MiB；只需要跳转可以改用 Java Support Lite。与 Java Support Lite 二选一，启用其中一个会自动停用另一个。"
+      },
+      "tags": ["java", "language", "debug", "maven", "spring-boot"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg",
+      "versions": [
+        {
+          "version": "1.2.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "debugAdapters": 0,
+            "languages": 0,
+            "languageServers": 0,
+            "pluginFunctions": 0,
+            "settings": 0,
+            "projectGenerators": 0,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-14",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v1.2.0/Lithe-Java-Support-1.2.0-darwin-arm64.zip",
+              "sha256": "53baf7577c212aad85fac3862f559d393e3b3e9079c8953d532518a384ed0979"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v1.2.0/Lithe-Java-Support-1.2.0-darwin-x64.zip",
+              "sha256": "24edc4669679c266d8a77b7ddb30d3b8eb16b8036388e19feaca233565fbc9bd"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v1.2.0/Lithe-Java-Support-1.2.0-windows-x64.zip",
+              "sha256": "e623c4540971997faa5063adaf53efbfa9c57ddeca9bc9162c5cd96b9d83153d"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
