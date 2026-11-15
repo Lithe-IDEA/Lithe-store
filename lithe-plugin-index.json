@@ -90,14 +90,44 @@
       "author": "Lithe Community",
       "repository": "https://github.com/Lithe-IDEA/lithe-plugin-gradle",
       "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-gradle#readme",
-      "description": "Gradle integration for the Viva preview: project and task trees, JavaExec applications, builds, tests, compiler diagnostics and dependency trees. Requires Gradle 7.6+ and Java; install Java Support for Java language features.",
+      "description": "Gradle integration for Lithe Desktop: project and task trees, JavaExec applications, builds, tests, compiler diagnostics and dependency trees, with per-module bytecode and local JAR settings. Requires Gradle 7.6+ and compatible Java; new compiler settings require Lithe Desktop 0.8.0 or a compatible AutoBuild. Install Java Support for Java language features.",
       "localizedDescriptions": {
-        "zh-Hans": "适用于 Viva 预览版的 Gradle 集成：项目与任务树、JavaExec 应用、构建、测试、编译诊断和依赖树。需要 Gradle 7.6+ 与 Java；Java 语言功能请同时安装 Java Support。"
+        "zh-Hans": "适用于 Lithe Desktop 的 Gradle 集成：项目与任务树、JavaExec 应用、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。需要 Gradle 7.6+ 与兼容的 Java；新编译设置需 Lithe Desktop 0.8.0 或兼容的 AutoBuild，Java 语言功能请同时安装 Java Support。"
       },
       "tags": ["build", "gradle", "java", "testing"],
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/6a7f341f92add84c264c5976c234d7dbee6cb6d2/io.github.lithe-idea.gradle-build/icons/gradle.svg",
       "versions": [
+        {
+          "version": "2.0.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildSystems": 0,
+            "pluginFunctions": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 0
+          },
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v2.0.0/gradle-build-2.0.0-darwin.zip",
+              "sha256": "08758cb699d9721416f1283ee40f22a8379eba77f7e7cbb24b8e0e02742ea50e"
+            },
+            {
+              "platforms": ["linux-x64", "linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v2.0.0/gradle-build-2.0.0-linux.zip",
+              "sha256": "08758cb699d9721416f1283ee40f22a8379eba77f7e7cbb24b8e0e02742ea50e"
+            },
+            {
+              "platforms": ["windows-x64", "windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-gradle/releases/download/v2.0.0/gradle-build-2.0.0-windows.zip",
+              "sha256": "08758cb699d9721416f1283ee40f22a8379eba77f7e7cbb24b8e0e02742ea50e"
+            }
+          ],
+          "releaseDate": "2026-11-15"
+        },
         {
           "version": "1.1.0",
           "pluginAPIVersion": 0,
