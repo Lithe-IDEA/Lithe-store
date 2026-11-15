@@ -40,8 +40,8 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/6a7f341f92add84c264c5976c234d7dbee6cb6d2/io.github.lithe-idea.gradle-build/icons/gradle.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-gradle">Gradle</a></h3>
-<p><sub>Lithe Community · v1.1.0 · API 0（需 backend、buildSystems、pluginFunctions、projectGenerators）</sub></p>
-<p>适用于 Viva 预览版的 Gradle 集成：项目与任务树、JavaExec 应用、构建、测试、编译诊断和依赖树。需要 Gradle 7.6+ 与 Java；Java 语言功能请同时安装 Java Support。</p>
+<p><sub>Lithe Community · v2.0.0 · API 0（需 backend、buildSystems、pluginFunctions、projectGenerators、settings、sourceSettings）</sub></p>
+<p>适用于 Lithe Desktop 的 Gradle 集成：项目与任务树、JavaExec 应用、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。需要 Gradle 7.6+ 与兼容的 Java；新编译…</p>
 <p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-gradle?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>gradle</code> <code>java</code> <code>testing</code></p>
 </td>
@@ -49,8 +49,8 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-java">Java Support</a></h3>
-<p><sub>Lithe Community · v1.3.0 · API 0（需 backend、debugAdapters、languageServers、languages、pluginFunctions、projectGenerators、settings、toolDefinitions）</sub></p>
-<p>基于 Eclipse JDT LS 的完整 Java 支持，自带 JDK：补全、诊断、导航、运行与调试、测试运行，以及 Spring Boot / MyBatis 索引。安装包约 250 MiB；只需要跳转可以改用 Ja…</p>
+<p><sub>Lithe Community · v2.0.0 · API 0（需 backend、debugAdapters、languageServers、languages、pluginFunctions、projectGenerators、settings、sourceSettings、toolDefinitions）</sub></p>
+<p>基于 Eclipse JDT LS 的完整 Java 支持，自带 JDK：补全、诊断、导航、运行、调试、测试，以及 Spring Boot / MyBatis 索引。项目/模块字节码和本地 JAR 设置需 Lithe D…</p>
 <p>🏷️ 语言支持 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-java?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>java</code> <code>language</code> <code>debug</code> <code>maven</code> <code>spring-boot</code></p>
 </td>
@@ -72,8 +72,8 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-maven">Maven</a></h3>
-<p><sub>Lithe Community · v0.2.1 · API 0（需 buildSystems、projectGenerators、settings）</sub></p>
-<p>适用于 Viva 预览版的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树。Java 补全、运行与调试请同时安装 Java Support。</p>
+<p><sub>Lithe Community · v1.0.0 · API 0（需 backend、buildSystems、projectGenerators、settings、sourceSettings）</sub></p>
+<p>适用于 Lithe Desktop 的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。新编译设置需 Lithe Desktop 0.8.0 或兼容的…</p>
 <p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
 </td>
