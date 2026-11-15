@@ -379,6 +379,33 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg",
       "versions": [
         {
+          "version": "0.2.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "buildSystems": 0,
+            "projectGenerators": 0,
+            "settings": 0
+          },
+          "releaseDate": "2026-11-15",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.2.1/maven-build-0.2.1-darwin.zip",
+              "sha256": "7b35abf84bb037ccafeb087474d5fc2f14c3b30993d998ad016cc670f5175009"
+            },
+            {
+              "platforms": ["linux-x64", "linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.2.1/maven-build-0.2.1-linux.zip",
+              "sha256": "7b35abf84bb037ccafeb087474d5fc2f14c3b30993d998ad016cc670f5175009"
+            },
+            {
+              "platforms": ["windows-x64", "windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.2.1/maven-build-0.2.1-windows.zip",
+              "sha256": "7b35abf84bb037ccafeb087474d5fc2f14c3b30993d998ad016cc670f5175009"
+            }
+          ]
+        },
+        {
           "version": "0.2.0",
           "pluginAPIVersion": 0,
           "requires": {
