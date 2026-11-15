@@ -65,9 +65,9 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-maven">Maven</a></h3>
-<p><sub>Lithe Community · v0.2.0 · API 0（需 buildSystems、projectGenerators、settings）</sub></p>
+<p><sub>Lithe Community · v0.2.1 · API 0（需 buildSystems、projectGenerators、settings）</sub></p>
 <p>适用于 Viva 预览版的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树。Java 补全、运行与调试请同时安装 Java Support。</p>
-<p>🏷️ 构建工具 · 💻 macOS / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
+<p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
 </td>
 <td width="50%"></td>
