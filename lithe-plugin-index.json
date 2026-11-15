@@ -365,6 +365,39 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.lldb-debug",
+      "name": "LLDB Debugger",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-lldb",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-lldb#readme",
+      "description": "LLDB debugger for the Viva preview: debug C, C++, Objective-C, Swift and Rust through your own lldb-dap, with breakpoints, stepping, variables and an lldb console with completion. macOS only; needs lldb-dap from the Xcode Command Line Tools or LLVM.",
+      "localizedDescriptions": {
+        "zh-Hans": "适用于 Viva 预览版的 LLDB 调试器：通过你电脑上的 lldb-dap 调试 C、C++、Objective-C、Swift 和 Rust，支持断点、单步、变量，以及带补全的 lldb 控制台。仅支持 macOS，需要来自 Xcode 命令行工具或 LLVM 的 lldb-dap。"
+      },
+      "tags": ["tool", "debug", "lldb", "cpp", "rust", "swift"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-lldb/24ac947b5db12dc49414c1933a7af6057d4b1051/assets/lldb.svg",
+      "versions": [
+        {
+          "version": "0.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "debugAdapters": 0,
+            "languages": 0,
+            "settings": 0
+          },
+          "releaseDate": "2026-11-12",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-lldb/releases/download/v0.0.1/lldb-debug-0.0.1-darwin.zip",
+              "sha256": "9ad1e34a51ba0c363553975f55e1285cc1b3fc8731756e052368f22284278578"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.maven-build",
       "name": "Maven",
       "author": "Lithe Community",
