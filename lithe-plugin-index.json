@@ -2,6 +2,62 @@
   "schemaVersion": 0,
   "plugins": [
     {
+      "id": "io.github.lithe-idea.go-support",
+      "name": "Go Support",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-go",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-go#readme",
+      "description": "Go support for the Viva preview: code intelligence through your own gopls, Go Modules build, vet, test and run entries for main packages, Delve debugging, and a Go module in New Project. Missing gopls or dlv can be installed from the plugin details.",
+      "localizedDescriptions": {
+        "zh-Hans": "适用于 Viva 预览版的 Go 支持：用你自己的 gopls 提供代码智能，Go Modules 的构建、检查、测试和 main 包运行入口，Delve 调试，以及「新建项目」里的 Go 模块。缺少 gopls 或 dlv 时可以在插件详情里安装。"
+      },
+      "tags": ["language", "go", "build", "debug", "testing"],
+      "license": "Apache-2.0",
+      "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-go/05abe46097f3e18eeb8a293f79487927a69fb69e/io.github.lithe-idea.go-support/icons/go.svg",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "buildSystems": 0,
+            "commandInstallers": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-15",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.0.0/go-support-1.0.0-darwin.zip",
+              "sha256": "e7089f296aa0e6865ff9e9b85c152f99addb0456807b8df4f0f72663bcadbe9f"
+            }
+          ]
+        },
+        {
+          "version": "0.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "buildSystems": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "settings": 0
+          },
+          "releaseDate": "2026-11-12",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v0.0.1/go-support-0.0.1-darwin.zip",
+              "sha256": "c7e55ce8aefb720ab78860fbb3a4c3d56c441d276c9a2f28d24019b694cecde5"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.gradle-build",
       "name": "Gradle",
       "author": "Lithe Community",
