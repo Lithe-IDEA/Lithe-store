@@ -492,14 +492,43 @@
       "author": "Lithe Community",
       "repository": "https://github.com/Lithe-IDEA/lithe-plugin-maven",
       "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-maven#readme",
-      "description": "Maven integration for the Viva preview: project and goal trees, profiles, builds, tests, compiler diagnostics and dependency trees. Install Java Support for Java completion, run and debug.",
+      "description": "Maven integration for Lithe Desktop: project and goal trees, profiles, builds, tests, compiler diagnostics and dependency trees, with per-module bytecode and local JAR settings. New compiler settings require Lithe Desktop 0.8.0 or a compatible AutoBuild. Install Java Support for Java completion, run and debug.",
       "localizedDescriptions": {
-        "zh-Hans": "适用于 Viva 预览版的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树。Java 补全、运行与调试请同时安装 Java Support。"
+        "zh-Hans": "适用于 Lithe Desktop 的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。新编译设置需 Lithe Desktop 0.8.0 或兼容的 AutoBuild；Java 补全、运行与调试请同时安装 Java Support。"
       },
       "tags": ["build", "maven", "java", "testing"],
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg",
       "versions": [
+        {
+          "version": "1.0.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildSystems": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 0
+          },
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v1.0.0/maven-build-1.0.0-darwin.zip",
+              "sha256": "134785cc22e834bce7b2f162d7f88fd4723dd86a3f0dc38aad15a337e92795b7"
+            },
+            {
+              "platforms": ["linux-x64", "linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v1.0.0/maven-build-1.0.0-linux.zip",
+              "sha256": "134785cc22e834bce7b2f162d7f88fd4723dd86a3f0dc38aad15a337e92795b7"
+            },
+            {
+              "platforms": ["windows-x64", "windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v1.0.0/maven-build-1.0.0-windows.zip",
+              "sha256": "134785cc22e834bce7b2f162d7f88fd4723dd86a3f0dc38aad15a337e92795b7"
+            }
+          ],
+          "releaseDate": "2026-11-15"
+        },
         {
           "version": "0.2.1",
           "pluginAPIVersion": 0,
