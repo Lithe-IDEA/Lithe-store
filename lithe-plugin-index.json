@@ -33,7 +33,7 @@
             {
               "platforms": ["darwin-arm64", "darwin-x64"],
               "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.0.0/go-support-1.0.0-darwin.zip",
-              "sha256": "e7089f296aa0e6865ff9e9b85c152f99addb0456807b8df4f0f72663bcadbe9f"
+              "sha256": "69462f3a4207f0a62477abb469ea849abe4d13c177f125da0dc365b8dd967b22"
             }
           ]
         },
