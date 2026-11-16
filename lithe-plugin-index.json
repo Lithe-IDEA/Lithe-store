@@ -346,6 +346,49 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg",
       "versions": [
         {
+          "version": "3.0.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "pluginFunctions": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 0,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-16",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.0/Lithe-Java-Support-3.0.0-darwin-arm64.zip",
+              "sha256": "2b113fe4702073d0411e43232bae193c9bc30962e6e17b7a7dd1da1bcceaa591"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.0/Lithe-Java-Support-3.0.0-darwin-x64.zip",
+              "sha256": "3433d6e86a3368cbfc9e02d04601d291227f996817f27c6a7e4168d2c1c187ea"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.0/Lithe-Java-Support-3.0.0-linux-arm64.zip",
+              "sha256": "14340e11c876cb5e924aacf8f6cdce56baba35c0e0b961706f219d602dba7c3c"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.0/Lithe-Java-Support-3.0.0-linux-x64.zip",
+              "sha256": "c01dc86388050d27114e8c11e23494c2b8f25d4ca30f633cd8b0909bb9cbb116"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.0/Lithe-Java-Support-3.0.0-windows-x64.zip",
+              "sha256": "a3d94ac5d5f1e7c433a2f74c24c988289300fc922f9a36f1ee23cf321f0b7ad2"
+            }
+          ]
+        },
+        {
           "version": "2.0.1",
           "pluginAPIVersion": 0,
           "requires": {
