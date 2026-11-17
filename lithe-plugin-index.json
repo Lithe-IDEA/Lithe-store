@@ -337,14 +337,57 @@
       "author": "Lithe Community",
       "repository": "https://github.com/Lithe-IDEA/lithe-plugin-java",
       "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-java#readme",
-      "description": "Full Java support on the Eclipse JDT Language Server you install (Homebrew jdtls, mason.nvim, Scoop or the VS Code Java extension), run with a JDK 21 or later: completion, diagnostics, navigation, run, debug, tests and Spring Boot / MyBatis indexing. From 3.0.0 JDT LS and its JDK are no longer bundled; the package is about 12 MiB. Native project/module bytecode and local JAR settings require Lithe Desktop 0.8.0 or a compatible AutoBuild. For navigation only, choose Java Support Lite. Use either this or Lite; enabling one disables the other.",
+      "description": "Full Java support on the Eclipse JDT Language Server you install (Homebrew jdtls, mason.nvim, Scoop or the VS Code Java extension), run with a JDK 21 or later: completion, diagnostics, navigation, run, debug, tests and Spring Boot / MyBatis indexing. From 3.0.0 JDT LS and its JDK are no longer bundled; the package is about 12 MiB. Projects without Maven or Gradle are recognised too: Eclipse WTP/MyEclipse, IntelliJ IDEA modules and libraries, and WEB-INF/lib web folders with a Tomcat servlet container. Native project/module bytecode and local JAR settings require Lithe Desktop 0.8.0 or a compatible AutoBuild. For navigation only, choose Java Support Lite. Use either this or Lite; enabling one disables the other.",
       "localizedDescriptions": {
-        "zh-Hans": "基于你自己安装的 Eclipse JDT 语言服务器（Homebrew jdtls、mason.nvim、Scoop 或 VS Code Java 扩展）的完整 Java 支持，需要 JDK 21 或更新版本来运行它：补全、诊断、导航、运行、调试、测试，以及 Spring Boot / MyBatis 索引。3.0.0 起不再附带 JDT LS 和 JDK，安装包约 12 MiB。项目/模块字节码和本地 JAR 设置需 Lithe Desktop 0.8.0 或兼容的 AutoBuild。只需跳转可选 Java Support Lite，两者二选一，启用其中一个会停用另一个。"
+        "zh-Hans": "基于你自己安装的 Eclipse JDT 语言服务器（Homebrew jdtls、mason.nvim、Scoop 或 VS Code Java 扩展）的完整 Java 支持，需要 JDK 21 或更新版本来运行它：补全、诊断、导航、运行、调试、测试，以及 Spring Boot / MyBatis 索引。3.0.0 起不再附带 JDT LS 和 JDK，安装包约 12 MiB。没有 Maven/Gradle 的项目也能识别：Eclipse WTP/MyEclipse、IntelliJ IDEA 的模块和库，以及带 Tomcat Servlet 容器的 WEB-INF/lib 网页工程。项目/模块字节码和本地 JAR 设置需 Lithe Desktop 0.8.0 或兼容的 AutoBuild。只需跳转可选 Java Support Lite，两者二选一，启用其中一个会停用另一个。"
       },
       "tags": ["java", "language", "debug", "maven", "spring-boot"],
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg",
       "versions": [
+        {
+          "version": "3.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "pluginFunctions": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 0,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-17",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.1/Lithe-Java-Support-3.0.1-darwin-arm64.zip",
+              "sha256": "e19fb2d5ac63484b88c61c4ca222398fafa9cd52e2715213dc36df45b3de1fea"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.1/Lithe-Java-Support-3.0.1-darwin-x64.zip",
+              "sha256": "e48c4657690e2ca49c1c23dbfa7fe75d8b2a344329ef33f76b30e341aa2f573a"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.1/Lithe-Java-Support-3.0.1-linux-arm64.zip",
+              "sha256": "d83b579a8204fa956e1686bb126d5f0c7ac4ddb47731014ffe4d4f8b900c141a"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.1/Lithe-Java-Support-3.0.1-linux-x64.zip",
+              "sha256": "dd2a71b21e51f0de7af2d9f0c15b86ade93cc035d067106829394bc48551f40c"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v3.0.1/Lithe-Java-Support-3.0.1-windows-x64.zip",
+              "sha256": "9eefc2d78e3fc9158764e6f0e0b50938881576e6a6e8ca31d01095c35607cf03"
+            }
+          ]
+        },
         {
           "version": "3.0.0",
           "pluginAPIVersion": 0,
