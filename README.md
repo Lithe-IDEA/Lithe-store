@@ -33,7 +33,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-go/05abe46097f3e18eeb8a293f79487927a69fb69e/io.github.lithe-idea.go-support/icons/go.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-go">Go Support</a></h3>
-<p><sub>Lithe Community · v1.0.1 · API 0（需 buildSystems、commandInstallers、debugAdapters、languageServers、languages、projectGenerators、settings、toolDefinitions）</sub></p>
+<p><sub>Lithe Community · v1.1.0 · API 0（需 buildSystems、commandInstallers、debugAdapters、languageServers、languages、projectGenerators、runConfigurationTypes、settings、toolDefinitions）</sub></p>
 <p>适用于 Viva 预览版的 Go 支持：用你自己的 gopls 提供代码智能，Go Modules 的构建、检查、测试和 main 包运行入口，Delve 调试，以及「新建项目」里的 Go 模块。缺少 gopls 或 d…</p>
 <p>🏷️ 语言支持 · 💻 macOS / Windows · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-go?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>language</code> <code>go</code> <code>build</code> <code>debug</code> <code>testing</code></p>
