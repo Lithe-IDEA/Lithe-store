@@ -346,6 +346,49 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg",
       "versions": [
         {
+          "version": "4.0.2",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "pluginFunctions": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 1,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-18",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.0.2/Lithe-Java-Support-4.0.2-darwin-arm64.zip",
+              "sha256": "c96b098862cbdc1469f0cd80b8e00ae4f5fc0b857f2c5197fe41d5422dffc910"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.0.2/Lithe-Java-Support-4.0.2-darwin-x64.zip",
+              "sha256": "c6439493de2a7a77b211bda45f4ddbfbcb26da6f3c987c8a2972789c8235fc95"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.0.2/Lithe-Java-Support-4.0.2-linux-arm64.zip",
+              "sha256": "3c1aa9c85c7c2eb35a41f0830da6415a76d6a8c0a24ca1985ad5cc1631ca6276"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.0.2/Lithe-Java-Support-4.0.2-linux-x64.zip",
+              "sha256": "e62c7e6c3b74d5dd4cd4c702dfc371881ab309e30e6a4081815a38495b3367d9"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.0.2/Lithe-Java-Support-4.0.2-windows-x64.zip",
+              "sha256": "d0a3d2e49f8755c4bacd1fa6000ba9b11c5e746f79c1a3a85a8dcea08472e3ba"
+            }
+          ]
+        },
+        {
           "version": "4.0.1",
           "pluginAPIVersion": 0,
           "requires": {
@@ -867,6 +910,44 @@
               "platforms": ["darwin-arm64", "darwin-x64"],
               "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-maven/releases/download/v0.0.1/maven-build-0.0.1-darwin.zip",
               "sha256": "96eb8c4bb11845cdfe41a258aa338bb1f8ef45a37884719c7c306f8768b9fe67"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "io.github.lithe-idea.tomcat",
+      "name": "Tomcat",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-tomcat",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-tomcat#readme",
+      "description": "Lithe 的 Tomcat 支持插件 / Tomcat support plugin for Lithe",
+      "license": "Apache-2.0",
+      "versions": [
+        {
+          "version": "0.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "buildProviders": 0,
+            "buildSystems": 0,
+            "settings": 0
+          },
+          "releaseDate": "2026-11-18",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-tomcat/releases/download/v0.0.1/tomcat-0.0.1-darwin.zip",
+              "sha256": "88d5e1f829dafc3b5fb6623f1f812feb9cb6dd2b21b480126d72b093a06eef51"
+            },
+            {
+              "platforms": ["linux-x64", "linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-tomcat/releases/download/v0.0.1/tomcat-0.0.1-linux.zip",
+              "sha256": "88d5e1f829dafc3b5fb6623f1f812feb9cb6dd2b21b480126d72b093a06eef51"
+            },
+            {
+              "platforms": ["windows-x64", "windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-tomcat/releases/download/v0.0.1/tomcat-0.0.1-windows.zip",
+              "sha256": "88d5e1f829dafc3b5fb6623f1f812feb9cb6dd2b21b480126d72b093a06eef51"
             }
           ]
         }
