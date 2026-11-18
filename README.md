@@ -49,7 +49,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-java">Java Support</a></h3>
-<p><sub>Lithe Community · v4.0.0 · API 0（需 backend、debugAdapters、languages、languageServers、pluginFunctions、settings、projectGenerators、toolDefinitions、sourceSettings）</sub></p>
+<p><sub>Lithe Community · v4.0.1 · API 0（需 backend、debugAdapters、languageServers、languages、pluginFunctions、projectGenerators、settings、sourceSettings、toolDefinitions）</sub></p>
 <p>基于你自己安装的 Eclipse JDT 语言服务器（Homebrew jdtls、mason.nvim、Scoop 或 VS Code Java 扩展）的完整 Java 支持，需要 JDK 21 或更新版本来运行它：补…</p>
 <p>🏷️ 语言支持 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-java?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>java</code> <code>language</code> <code>debug</code> <code>maven</code> <code>spring-boot</code></p>
@@ -72,7 +72,7 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-maven">Maven</a></h3>
-<p><sub>Lithe Community · v1.0.0 · API 0（需 backend、buildSystems、projectGenerators、settings、sourceSettings）</sub></p>
+<p><sub>Lithe Community · v1.0.1 · API 0（需 backend、buildProviders、buildSystems、projectGenerators、settings、sourceSettings）</sub></p>
 <p>适用于 Lithe Desktop 的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。新编译设置需 Lithe Desktop 0.8.0 或兼容的…</p>
 <p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
