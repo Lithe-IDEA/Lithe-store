@@ -16,6 +16,69 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-go/05abe46097f3e18eeb8a293f79487927a69fb69e/io.github.lithe-idea.go-support/icons/go.svg",
       "versions": [
         {
+          "version": "1.3.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildSystems": 0,
+            "commandInstallers": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "projectGenerators": 0,
+            "runConfigurationTypes": 0,
+            "settings": 0,
+            "toolDefinitions": 0,
+            "ui": 0
+          },
+          "releaseDate": "2026-11-19",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.3.0/go-support-1.3.0-darwin.zip",
+              "sha256": "ad29f06fd150d4f0035f0330d18f840e68316b486cc91e29e163826c5dc9bf07"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.3.0/go-support-1.3.0-windows-arm64.zip",
+              "sha256": "05ff9597a909993bc9d722ebf18d409d18d4eaae4115e49071036d1f73dedd51"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.3.0/go-support-1.3.0-windows-x64.zip",
+              "sha256": "bf766dbb86b8f43ae17050dc5e0e68ff856b594c2a8a9791c66ad34020bf2c51"
+            }
+          ]
+        },
+        {
+          "version": "1.2.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "buildSystems": 0,
+            "commandInstallers": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "projectGenerators": 0,
+            "runConfigurationTypes": 0,
+            "settings": 0,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-19",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.2.0/go-support-1.2.0-darwin.zip",
+              "sha256": "6178fd2028378f268e012b04b9eb4ac4dedac1348468c9bd35d545905e63c0e5"
+            },
+            {
+              "platforms": ["windows-x64", "windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-go/releases/download/v1.2.0/go-support-1.2.0-windows.zip",
+              "sha256": "6178fd2028378f268e012b04b9eb4ac4dedac1348468c9bd35d545905e63c0e5"
+            }
+          ]
+        },
+        {
           "version": "1.1.0",
           "pluginAPIVersion": 0,
           "requires": {
