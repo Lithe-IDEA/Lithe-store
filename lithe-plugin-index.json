@@ -437,6 +437,50 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg",
       "versions": [
         {
+          "version": "4.2.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "managedRuntimes": 1,
+            "pluginFunctions": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 1,
+            "toolDefinitions": 0
+          },
+          "releaseDate": "2026-11-19",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.2.0/Lithe-Java-Support-4.2.0-darwin-arm64.zip",
+              "sha256": "e0508d12e8449587ec2054a3368155462ac6604dd0d04af5e7794fd41a4110ae"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.2.0/Lithe-Java-Support-4.2.0-darwin-x64.zip",
+              "sha256": "27bbf33dd635c5a40b9d963ff0d368afb3f217e1362394c04a88d9f10cdab0b3"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.2.0/Lithe-Java-Support-4.2.0-linux-arm64.zip",
+              "sha256": "d194dc808b20a7509c3763d91b9646e0250bf79b10f4df5d51f5411eb27e794f"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.2.0/Lithe-Java-Support-4.2.0-linux-x64.zip",
+              "sha256": "6e91414dfd045edcc3534791a8149b35fd0dca34c1acc76f9c75407e33b13477"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.2.0/Lithe-Java-Support-4.2.0-windows-x64.zip",
+              "sha256": "fc54e94e02a9390e78e1d9d57c1e706eba59b8ebac72a7d5d1455f8aa0eba57d"
+            }
+          ]
+        },
+        {
           "version": "4.1.0",
           "pluginAPIVersion": 0,
           "requires": {
