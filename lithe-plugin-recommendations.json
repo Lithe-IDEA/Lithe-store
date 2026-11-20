@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 0,
+  "recommendations": [
+    {
+      "pluginID": "io.github.lithe-idea.go-support",
+      "markers": ["go.mod", "go.work"],
+      "extensions": ["go"]
+    },
+    {
+      "pluginID": "io.github.lithe-idea.gradle-build",
+      "markers": ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"]
+    },
+    {
+      "pluginID": "io.github.lithe-idea.java-support",
+      "markers": ["build.gradle", "build.gradle.kts", "pom.xml"],
+      "extensions": ["java"],
+      "coveredBy": ["io.github.lithe-idea.java-navigation"]
+    },
+    {
+      "pluginID": "io.github.lithe-idea.maven-build",
+      "markers": ["pom.xml"]
+    }
+  ]
+}
