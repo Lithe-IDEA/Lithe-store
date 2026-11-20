@@ -1267,6 +1267,51 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.rust-support",
+      "name": "Rust Support",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-rust",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-rust#readme",
+      "description": "Lithe 的 Rust 支持插件（Lithe Store 社区插件，rust-analyzer、Cargo 构建与 CodeLLDB 调试）",
+      "license": "Apache-2.0",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildProviders": 1,
+            "buildSystems": 0,
+            "commandInstallers": 1,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "toolDefinitions": 1
+          },
+          "releaseDate": "2026-11-20",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-rust/releases/download/v0.1.0/rust-support-0.1.0-darwin.zip",
+              "sha256": "a49dfef5c82b5bef6cb16ab2fcb98e9805ced1dce2f8f71d58bd2f16a3093563"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-rust/releases/download/v0.1.0/rust-support-0.1.0-windows-arm64.zip",
+              "sha256": "f14cbad520156a200d890dedeca8b2666c8334f9a7ece4f46c0da6e869888680"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-rust/releases/download/v0.1.0/rust-support-0.1.0-windows-x64.zip",
+              "sha256": "fd2eb1d67b8bbad310ccf5a430eccd79c68cc3000e0d1e6e531a0621eb2b018f"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.tomcat",
       "name": "Tomcat",
       "author": "Lithe Community",
