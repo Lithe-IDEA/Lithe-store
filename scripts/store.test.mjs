@@ -13,6 +13,7 @@ import {
 import {
   checkManifest, formatIndex, inspectArchive, readPackageManifests, validateEntry, validateIndex, verifyArchives,
 } from "./validate-index.mjs";
+import { validateRecommendations } from "./validate-recommendations.mjs";
 
 // Fixtures are copied from the plugin contract (Lithe-core-rust shared/plugins/contract/v1/fixtures/marketplace)
 // so this validator reports the same code as Lithe's Rust Core for each case.
@@ -572,4 +573,95 @@ test("overview helpers derive category, systems and truncated text", () => {
 
 test("rendering refuses a README without the overview markers", () => {
   assert.throws(() => renderReadme("# Lithe Store\n", { plugins: [] }), /markers/);
+});
+
+test("recommendations validation accepts store catalog and rejects contract/policy errors", () => {
+  const realIndex = JSON.parse(readFileSync(new URL("../lithe-plugin-index.json", import.meta.url)));
+  const realRecommendations = JSON.parse(
+    readFileSync(new URL("../lithe-plugin-recommendations.json", import.meta.url)),
+  );
+  assert.deepEqual(validateRecommendations(realRecommendations, realIndex), []);
+
+  const index = {
+    schemaVersion: 0,
+    plugins: [{ id: "io.example.a" }, { id: "io.example.b" }],
+  };
+  assert.deepEqual(
+    validateRecommendations(
+      {
+        schemaVersion: 0,
+        recommendations: [
+          { pluginID: "io.example.a", markers: ["a.toml"], coveredBy: ["io.example.b"] },
+          { pluginID: "io.example.b", extensions: ["b"] },
+        ],
+      },
+      index,
+    ),
+    [],
+  );
+
+  assert.match(
+    validateRecommendations(
+      { schemaVersion: 0, recommendations: [{ pluginID: "io.example.unknown", markers: ["x"] }] },
+      index,
+    ).join(),
+    /unknown pluginID/,
+  );
+  assert.match(
+    validateRecommendations(
+      {
+        schemaVersion: 0,
+        recommendations: [
+          { pluginID: "io.example.a", markers: ["a"] },
+          { pluginID: "io.example.a", extensions: ["a"] },
+        ],
+      },
+      index,
+    ).join(),
+    /plugin\.recommendations\.duplicate/,
+  );
+  assert.match(
+    validateRecommendations(
+      {
+        schemaVersion: 0,
+        recommendations: [{ pluginID: "io.example.a", markers: ["a"], coveredBy: ["io.example.a"] }],
+      },
+      index,
+    ).join(),
+    /coveredBy/,
+  );
+  assert.match(
+    validateRecommendations(
+      { schemaVersion: 0, recommendations: [{ pluginID: "io.example.a", markers: ["../a"] }] },
+      index,
+    ).join(),
+    /markers/,
+  );
+  assert.match(
+    validateRecommendations(
+      { schemaVersion: 0, recommendations: [{ pluginID: "io.example.a", extensions: [".a"] }] },
+      index,
+    ).join(),
+    /extensions/,
+  );
+  assert.match(
+    validateRecommendations(
+      { schemaVersion: 0, recommendations: [{ pluginID: "io.example.a" }] },
+      index,
+    ).join(),
+    /marker or extension/,
+  );
+  assert.match(
+    validateRecommendations(
+      {
+        schemaVersion: 0,
+        recommendations: [
+          { pluginID: "io.example.b", markers: ["b"] },
+          { pluginID: "io.example.a", markers: ["a"] },
+        ],
+      },
+      index,
+    ).join(),
+    /sorted/,
+  );
 });

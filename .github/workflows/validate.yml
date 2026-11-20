@@ -37,6 +37,9 @@ jobs:
       - name: Validate index
         run: node scripts/validate-index.mjs lithe-plugin-index.json
 
+      - name: Validate recommendations
+        run: node scripts/validate-recommendations.mjs lithe-plugin-recommendations.json lithe-plugin-index.json
+
       - name: Pick the base index
         id: base
         run: |
