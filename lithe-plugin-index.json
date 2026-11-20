@@ -1206,6 +1206,67 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.python-support",
+      "name": "Python Support",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-python",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-python#readme",
+      "description": "Lithe 的 Python 支持插件（Lithe Store 社区插件，Pyrefly、工具链/.venv、pytest 与 debugpy）",
+      "license": "Apache-2.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildProviders": 0,
+            "buildSystems": 1,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "outputLinkMatchers": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "toolDefinitions": 0,
+            "toolchainProviders": 0
+          },
+          "releaseDate": "2026-11-20",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.0.0/python-support-1.0.0-darwin-arm64.zip",
+              "sha256": "b5ee7bab108d944f525b4544bb6828fe822e09403dd86837d2e44d3abf9dbbb4"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.0.0/python-support-1.0.0-darwin-x64.zip",
+              "sha256": "7f4d578562d15a3d6a17407bb45c79abf2ac0dfaeb3788192dad0c2137d0187e"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.0.0/python-support-1.0.0-linux-arm64.zip",
+              "sha256": "becb1088d165c0d648267ccb73fd18147333a5b0f34e668961cf72bd1d79e310"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.0.0/python-support-1.0.0-linux-x64.zip",
+              "sha256": "3d5d9cc558c2ef723103e2c4964dbe69707ea78cfee42d83524da1b0fcda627d"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.0.0/python-support-1.0.0-windows-arm64.zip",
+              "sha256": "eaed2dd44a251a8a8088ee47cab16ca5f79d0c6834d5ca7cf5d45b2a02b62562"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.0.0/python-support-1.0.0-windows-x64.zip",
+              "sha256": "8d84c841a44520e7c42346e2fdeb3c12941b54c66e49c6b27cb5b38692f2ad30"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.tomcat",
       "name": "Tomcat",
       "author": "Lithe Community",
