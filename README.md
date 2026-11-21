@@ -49,7 +49,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-java">Java Support</a></h3>
-<p><sub>Lithe Community · v4.2.1 · API 0（需 backend、debugAdapters、languageServers、languages、managedRuntimes、pluginFunctions、projectGenerators、settings、sourceSettings、toolDefinitions）</sub></p>
+<p><sub>Lithe Community · v4.2.2 · API 0（需 backend、debugAdapters、languageServers、languages、managedRuntimes、pluginFunctions、projectGenerators、settings、sourceSettings、toolDefinitions、ui）</sub></p>
 <p>基于你自己安装的 Eclipse JDT 语言服务器（Homebrew jdtls、mason.nvim、Scoop 或 VS Code Java 扩展）的完整 Java 支持，需要 JDK 21 或更新版本来运行它：补…</p>
 <p>🏷️ 语言支持 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-java?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>java</code> <code>language</code> <code>debug</code> <code>maven</code> <code>spring-boot</code></p>
