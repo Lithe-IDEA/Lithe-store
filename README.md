@@ -40,7 +40,7 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-gradle/6a7f341f92add84c264c5976c234d7dbee6cb6d2/io.github.lithe-idea.gradle-build/icons/gradle.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-gradle">Gradle</a></h3>
-<p><sub>Lithe Community · v2.0.0 · API 0（需 backend、buildSystems、pluginFunctions、projectGenerators、settings、sourceSettings）</sub></p>
+<p><sub>Lithe Community · v2.0.1 · API 0（需 backend、buildProviders、buildSystems、pluginFunctions、projectGenerators、settings、sourceSettings）</sub></p>
 <p>适用于 Lithe Desktop 的 Gradle 集成：项目与任务树、JavaExec 应用、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。需要 Gradle 7.6+ 与兼容的 Java；新编译…</p>
 <p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-gradle?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>gradle</code> <code>java</code> <code>testing</code></p>
@@ -72,7 +72,7 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-maven/2acc9ef62a5942d04c3f7156ad81a6b3f00980b8/io.github.lithe-idea.maven-build/icons/maven.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-maven">Maven</a></h3>
-<p><sub>Lithe Community · v1.0.2 · API 0（需 backend、beforeLaunchTasks、buildProviders、buildSystems、projectGenerators、runConfigurationTypes、settings、sourceSettings）</sub></p>
+<p><sub>Lithe Community · v1.0.3 · API 0（需 backend、beforeLaunchTasks、buildProviders、buildSystems、projectGenerators、runConfigurationTypes、settings、sourceSettings）</sub></p>
 <p>适用于 Lithe Desktop 的 Maven 集成：项目与目标树、Profiles、构建、测试、编译诊断和依赖树，支持模块字节码与本地 JAR 设置。新编译设置需 Lithe Desktop 0.8.0 或兼容的…</p>
 <p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
