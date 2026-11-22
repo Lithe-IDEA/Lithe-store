@@ -1384,6 +1384,41 @@
       "license": "Apache-2.0",
       "versions": [
         {
+          "version": "0.1.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildProviders": 1,
+            "buildSystems": 0,
+            "commandInstallers": 1,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "toolDefinitions": 1,
+            "ui": 0
+          },
+          "releaseDate": "2026-11-22",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-rust/releases/download/v0.1.1/rust-support-0.1.1-darwin.zip",
+              "sha256": "810f57e4b558ce049211c1cea114cfbf1a5768a93714be94bd5a4d62ef6f4db6"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-rust/releases/download/v0.1.1/rust-support-0.1.1-windows-arm64.zip",
+              "sha256": "464a7d34b89a20c192101f847a13fa17e89f68cc75e2cb02ec456b1b0cca8cf9"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-rust/releases/download/v0.1.1/rust-support-0.1.1-windows-x64.zip",
+              "sha256": "e8387086b6cdb03c307611b4d5f451f47bcf999463bec97834ff747e3aaa5dac"
+            }
+          ]
+        },
+        {
           "version": "0.1.0",
           "pluginAPIVersion": 0,
           "requires": {
