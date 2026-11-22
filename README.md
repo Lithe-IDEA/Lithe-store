@@ -87,7 +87,7 @@
 </td>
 <td width="50%" valign="top">
 <h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-rust">Rust Support</a></h3>
-<p><sub>Lithe Community · v0.1.0 · API 0（需 backend、buildProviders、buildSystems、commandInstallers、debugAdapters、languageServers、languages、projectGenerators、settings、toolDefinitions）</sub></p>
+<p><sub>Lithe Community · v0.1.1 · API 0（需 backend、buildProviders、buildSystems、commandInstallers、debugAdapters、languageServers、languages、projectGenerators、settings、toolDefinitions、ui）</sub></p>
 <p>Lithe 的 Rust 支持插件（Lithe Store 社区插件，rust-analyzer、Cargo 构建与 CodeLLDB 调试）</p>
 <p>🏷️ 其他 · 💻 macOS / Windows · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-rust?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 </td>
