@@ -189,6 +189,18 @@ pre-release 的仓库不会被收录。
 不匹配或缺失/畸形的能力表、多个资产声明了不同的版本号、插件 API 版本或能力表、
 版本号已被别的资产占用。单个发布存在分歧时拒绝整个版本，不只保留其中一个平台包。
 
+### 可选的增量包
+
+发布流水线可用上一版同平台的完整 ZIP 生成增量包。两个 ZIP 都必须是发布物的原始字节，大小最多 64 MiB。完整包继续随 Release 发布。
+
+```bash
+node scripts/plugin-deltas.mjs generate previous.zip my-plugin-darwin-arm64.zip 1.2.3
+```
+
+在 Store 检出中运行，传入实际路径和已收录的基线版本。命令使用 Zstandard 的 `--patch-from`，重建核对 SHA-256。成功时输出 `my-plugin-darwin-arm64.from-1.2.3.zip.zst` 的路径，上传到新版 ZIP 所在的同一 Release。补丁超过目标 ZIP 大小的 75% 时，命令跳过输出。
+
+Store 跟踪新版本时，按平台查找最近的旧版和约定资产名，验证基线和重建结果，再与主索引同一次提交更新 `lithe-plugin-deltas.json`。完整包是首次安装和跨过基线版本的下载路径。格式详见 [Core 市场契约](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/contract/v1/README.md#delta-archives)。
+
 ## 5. 修改信息、转移或下架
 
 - 修改名称、描述、标签、主页、图标：直接提 PR 修改条目。

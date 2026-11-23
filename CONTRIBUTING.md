@@ -24,7 +24,7 @@
 
 ## 索引如何工作
 
-这个仓库只存放一份索引文件 [`lithe-plugin-index.json`](lithe-plugin-index.json)，列出插件、
+这个仓库以主索引记录完整包，旁边的增量索引记录可选补丁。主索引文件 [`lithe-plugin-index.json`](lithe-plugin-index.json) 列出插件、
 它们的版本和每个平台的下载包；插件代码和安装包都留在各自作者的 GitHub 仓库里，通过 GitHub Releases 分发。
 
 Lithe 会把仓库地址 `https://github.com/Lithe-IDEA/Lithe-store` 解析为
@@ -66,7 +66,8 @@ Lithe 主仓库仍内置少量迁移前的 `dev.lithe.*` 插件，它们正在�
 ## 仓库结构
 
 ```text
-lithe-plugin-index.json         # 唯一的数据文件，Lithe 客户端读取它
+lithe-plugin-index.json         # 完整包的主索引
+lithe-plugin-deltas.json        # 可选增量包，保持旧版主索引兼容
 scripts/validate-index.mjs      # 与 Lithe Rust Core 同规则的校验 + 下载包校验
 scripts/track-releases.mjs      # 追踪已收录插件和 Lithe-IDEA 组织 lithe-plugin-* 仓库的新 Release，生成索引条目；--scope 区分组织插件与组织外插件
 scripts/render-readme.mjs       # 根据索引生成 README 的插件总览
@@ -77,10 +78,10 @@ assets/                         # README 用到的图片（无图标插件的默
 
 ## 本地校验
 
-需要 Node.js 22+ 与 `unzip`：
+需要 Node.js 22+、`unzip` 和 `zstd`：
 
 ```bash
-node --test scripts/store.test.mjs
+node --test scripts/store.test.mjs scripts/plugin-deltas.test.mjs
 node scripts/validate-index.mjs --verify-archives
 node scripts/render-readme.mjs   # 本地预览 README 插件总览
 ```
