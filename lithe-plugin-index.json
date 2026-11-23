@@ -1323,6 +1323,110 @@
       "license": "Apache-2.0",
       "versions": [
         {
+          "version": "1.2.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildProviders": 1,
+            "buildSystems": 1,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "outputLinkMatchers": 0,
+            "projectGenerators": 0,
+            "runConfigurationTypes": 0,
+            "settings": 0,
+            "toolDefinitions": 0,
+            "toolchainProviders": 0,
+            "ui": 0
+          },
+          "releaseDate": "2026-11-23",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.0/python-support-1.2.0-darwin-arm64.zip",
+              "sha256": "fcbb2e400316723f9943eabf281913aa98999a2fc27e119cba7526df9327e233"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.0/python-support-1.2.0-darwin-x64.zip",
+              "sha256": "8184b9e99e74018ac2254abbb95b66962d8d5dd3e4cc497c840f9a07ea22e550"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.0/python-support-1.2.0-linux-arm64.zip",
+              "sha256": "398b258457b2f26b12efcf522d918f8b21f5204d09e8ee1db4d0d53c09d530eb"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.0/python-support-1.2.0-linux-x64.zip",
+              "sha256": "2111ef73a0e88b1d35bda4e600b6c682a256c7b894f9fa670526f1075757f3ed"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.0/python-support-1.2.0-windows-arm64.zip",
+              "sha256": "122ff5bfde8c1852bf655068d44057ac105595d438a5b5ddc35ff0864909c302"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.0/python-support-1.2.0-windows-x64.zip",
+              "sha256": "88fb51fa6b60b743f0eae369ef305e37d91c8fd7fa88cba1639b7cb852cee45c"
+            }
+          ]
+        },
+        {
+          "version": "1.1.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "buildProviders": 1,
+            "buildSystems": 1,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "outputLinkMatchers": 0,
+            "projectGenerators": 0,
+            "runConfigurationTypes": 0,
+            "settings": 0,
+            "toolDefinitions": 0,
+            "toolchainProviders": 0,
+            "ui": 0
+          },
+          "releaseDate": "2026-11-23",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.1.0/python-support-1.1.0-darwin-arm64.zip",
+              "sha256": "124c37e0f1da2b5515075f22761840c03d7898f878768854005e7ad705debecd"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.1.0/python-support-1.1.0-darwin-x64.zip",
+              "sha256": "8e241fc862b6b56d7ace8a510c85a9af61f13f4a31fc68c8d9a2ea3bed7e07d3"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.1.0/python-support-1.1.0-linux-arm64.zip",
+              "sha256": "e45005abfd847d20e596866553b4d7429cd53838cc7891fe7bf98b3f61e00cbf"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.1.0/python-support-1.1.0-linux-x64.zip",
+              "sha256": "76cfcd365b6d6c18e6df664fdb03ecc3347092fb8ca5eee2145d8b058a8a47cc"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.1.0/python-support-1.1.0-windows-arm64.zip",
+              "sha256": "63b87282f17c2db6c850cf548b539e81d0b6bfddd9622bbcbc4516b637864bf6"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.1.0/python-support-1.1.0-windows-x64.zip",
+              "sha256": "d0d3181e773b7a248e9956f3bba99cf677a1fa17bdcf28dd370af6a66b5c115d"
+            }
+          ]
+        },
+        {
           "version": "1.0.0",
           "pluginAPIVersion": 0,
           "requires": {
