@@ -7,6 +7,7 @@ import { pathToFileURL } from "node:url";
 import { compareVersions } from "./track-releases.mjs";
 
 const maxZIP = 64 * 2 ** 20;
+const maxBaseVersions = 3;
 const timeLimit = 60_000;
 const hex = /^[a-f0-9]{64}$/;
 const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -95,6 +96,35 @@ async function verify(base, patch, p, read) {
   }
 }
 
+async function discoverPatch(entry, known, target, archive, platform, read, report) {
+  let checked = 0;
+  for (const from of known) {
+    if (compareVersions(from.version, target.version) >= 0) continue;
+    const publishedBase = from.downloads.find((download) => download.platforms.includes(platform));
+    const base = archiveFor(entry, from.version, platform);
+    if (!base || base.sha256 !== publishedBase?.sha256) continue;
+    if (checked === maxBaseVersions) break;
+    checked++;
+    const downloadURL = patchURL(archive.downloadURL, from.version);
+    try {
+      const patch = await read(downloadURL, maxZIP * 3 / 4, true);
+      if (!patch) continue;
+      const zip = await read(archive.downloadURL, maxZIP);
+      if (sha(zip) !== archive.sha256) throw new Error(`Target checksum mismatch for ${archive.downloadURL}`);
+      const p = { pluginID: entry.id, platform, fromVersion: from.version, fromSHA256: base.sha256,
+        toVersion: target.version, toSHA256: archive.sha256, toSize: zip.length,
+        format: "zstd-prefix", downloadURL, sha256: sha(patch), size: patch.length };
+      if (p.size > Math.floor(p.toSize * 3 / 4)) continue;
+      await verify(base, patch, p, read);
+      return p;
+    } catch (error) {
+      // An optional bad asset must not prevent publishing the full package.
+      report(error);
+    }
+  }
+  return null;
+}
+
 export async function refreshDeltas(index, market, previous, read = fetchBytes, report = (error) => { throw error; }) {
   // A withdrawn version disappears from both feeds in the same commit.
   const patches = index.patches.filter((p) => {
@@ -102,32 +132,15 @@ export async function refreshDeltas(index, market, previous, read = fetchBytes, 
     return base?.sha256 === p.fromSHA256 && target?.sha256 === p.toSHA256;
   });
   for (const entry of market.plugins) {
+    // The publisher generates the patch against the public index. This scan may
+    // include several new versions or follow a Store index update during release.
     const known = previous.plugins.find((p) => p.id === entry.id)?.versions ?? [];
     for (const target of entry.versions) {
       if (known.some((item) => item.version === target.version)) continue;
       for (const archive of target.downloads) {
         for (const platform of archive.platforms) {
-          const from = entry.versions.find((item) => compareVersions(item.version, target.version) < 0 &&
-            archiveFor(entry, item.version, platform));
-          if (!from) continue;
-          const base = archiveFor(entry, from.version, platform);
-          const downloadURL = patchURL(archive.downloadURL, from.version);
-          try {
-            const patch = await read(downloadURL, maxZIP * 3 / 4, true);
-            if (!patch) continue;
-            const zip = await read(archive.downloadURL, maxZIP);
-            if (sha(zip) !== archive.sha256) throw new Error(`Target checksum mismatch for ${archive.downloadURL}`);
-            const p = { pluginID: entry.id, platform, fromVersion: from.version, fromSHA256: base.sha256,
-              toVersion: target.version, toSHA256: archive.sha256, toSize: zip.length,
-              format: "zstd-prefix", downloadURL, sha256: sha(patch), size: patch.length };
-            // A publisher can include a valid but unhelpful patch. The Store only advertises savings.
-            if (p.size > Math.floor(p.toSize * 3 / 4)) continue;
-            await verify(base, patch, p, read);
-            if (!patches.some((other) => key(other) === key(p))) patches.push(p);
-          } catch (error) {
-            // An optional bad asset must not prevent publishing the full package.
-            report(error);
-          }
+          const patch = await discoverPatch(entry, known, target, archive, platform, read, report);
+          if (patch && !patches.some((other) => key(other) === key(patch))) patches.push(patch);
         }
       }
     }

@@ -199,7 +199,7 @@ node scripts/plugin-deltas.mjs generate previous.zip my-plugin-darwin-arm64.zip 
 
 在 Store 检出中运行，传入实际路径和已收录的基线版本。命令使用 Zstandard 的 `--patch-from`，重建核对 SHA-256。成功时输出 `my-plugin-darwin-arm64.from-1.2.3.zip.zst` 的路径，上传到新版 ZIP 所在的同一 Release。补丁超过目标 ZIP 大小的 75% 时，命令跳过输出。
 
-Store 跟踪新版本时，按平台查找最近的旧版和约定资产名，验证基线和重建结果，再与主索引同一次提交更新 `lithe-plugin-deltas.json`。完整包是首次安装和跨过基线版本的下载路径。格式详见 [Core 市场契约](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/contract/v1/README.md#delta-archives)。
+Store 跟踪新版本时，按平台在本轮追踪前已公开的三个最近旧版本中查找补丁，采用第一个通过基线和重建校验的补丁，并与主索引一同更新 `lithe-plugin-deltas.json`。首次安装和缺少匹配基线的更新走完整包。格式详见 [Core 市场契约](https://github.com/Lithe-IDEA/Lithe-core-rust/blob/main/shared/plugins/contract/v1/README.md#delta-archives)。
 
 ## 5. 修改信息、转移或下架
 

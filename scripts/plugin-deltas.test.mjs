@@ -42,6 +42,11 @@ test("a release delta is generated, verified and bound to both archives", { time
     const index = await refreshDeltas(empty, market, previous, refresh);
     assert.equal(index.patches.length, 1);
     assert.equal(index.patches[0].sha256, digest(patch));
+    const intermediate = version("1.0.1", "intermediate.zip", base);
+    const batch = { plugins: [{ id: "io.example.delta", versions: [next, intermediate, old] }] };
+    assert.deepEqual(await refreshDeltas(empty, batch, previous, refresh), index);
+    const advanced = { plugins: [{ id: "io.example.delta", versions: [intermediate, old] }] };
+    assert.deepEqual(await refreshDeltas(empty, batch, advanced, refresh), index);
     assert.doesNotThrow(() => validateDeltas(index, market));
     assert.throws(() => validateDeltas(index, previous), /invalid marketplace delta/);
     assert.deepEqual(await refreshDeltas(index, previous, market, refresh), empty);
