@@ -1166,6 +1166,59 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.makefile-build",
+      "name": "Makefile",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-makefile",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-makefile#readme",
+      "description": "Makefile build system plugin for Lithe",
+      "license": "Apache-2.0",
+      "versions": [
+        {
+          "version": "0.0.1",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "beforeLaunchTasks": 0,
+            "buildProviders": 0,
+            "buildSystems": 0,
+            "runConfigurationTypes": 0,
+            "settings": 0,
+            "toolDefinitions": 1,
+            "ui": 0
+          },
+          "releaseDate": "2026-11-24",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-makefile/releases/download/v0.0.1/makefile-build-0.0.1-darwin.zip",
+              "sha256": "32797faef64f9906d1bf6f014c20c3a0660c6e6c97a6ab9cc4e7b433e706cab3"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-makefile/releases/download/v0.0.1/makefile-build-0.0.1-linux-arm64.zip",
+              "sha256": "3bb780cfca0000b8ddbdcd0dd78f1bf2b803e17a32b0ea2a2759e7d28c78758b"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-makefile/releases/download/v0.0.1/makefile-build-0.0.1-linux-x64.zip",
+              "sha256": "7e8313a28feb8bcabfb014b1bf65e846e1c332ee428b7bb6c461ec7b012f522c"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-makefile/releases/download/v0.0.1/makefile-build-0.0.1-windows-arm64.zip",
+              "sha256": "201fbcd7f92316f8b6e23347ce90ded7dbe6497e09388d11322b13eb5c11fc89"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-makefile/releases/download/v0.0.1/makefile-build-0.0.1-windows-x64.zip",
+              "sha256": "519fd5bfbed6277e2e54f19769444de3dba1f7af620b2efa1525ca926210f6d1"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.maven-build",
       "name": "Maven",
       "author": "Lithe Community",
