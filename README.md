@@ -96,7 +96,7 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-python">Python Support</a></h3>
-<p><sub>Lithe Community · v1.2.0 · API 0（需 backend、buildProviders、buildSystems、debugAdapters、languageServers、languages、outputLinkMatchers、projectGenerators、runConfigurationTypes、settings、toolDefinitions、toolchainProviders、ui）</sub></p>
+<p><sub>Lithe Community · v1.2.1 · API 0（需 backend、buildProviders、buildSystems、debugAdapters、languageServers、languages、outputLinkMatchers、projectGenerators、runConfigurationTypes、settings、toolDefinitions、toolchainProviders、ui）</sub></p>
 <p>Lithe 的 Python 支持插件（Lithe Store 社区插件，Pyrefly、工具链/.venv、pytest 与 debugpy）</p>
 <p>🏷️ 其他 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-python?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 </td>
