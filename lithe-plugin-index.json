@@ -353,6 +353,48 @@
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java-navigation/d41ae0fb440ce057c4ab6c4796e30d92766512cb/assets/java-support-lite.svg",
       "versions": [
         {
+          "version": "0.2.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "languageServers": 0,
+            "languages": 0
+          },
+          "releaseDate": "2026-11-24",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.2.0/java-navigation-0.2.0-darwin-arm64.zip",
+              "sha256": "813835d5b7e17efc5d4c1b1b4c6c1ad65de2aa5f19e70b1090e4833210dcb116"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.2.0/java-navigation-0.2.0-darwin-x64.zip",
+              "sha256": "ac945473e0e19a422a2bae0b11f7cf2aaf7df60da72d733a1cf508a3ecf94f3b"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.2.0/java-navigation-0.2.0-linux-arm64.zip",
+              "sha256": "10088c3cd82a7562e123ae2363f6ef5a42cd833196061d2b18abef7b7ac23303"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.2.0/java-navigation-0.2.0-linux-x64.zip",
+              "sha256": "1608f5e0c51c3cc749b42612f759bb2a280ec370b6875affe2649cd04f254cd2"
+            },
+            {
+              "platforms": ["windows-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.2.0/java-navigation-0.2.0-windows-arm64.zip",
+              "sha256": "02f94901b732ec804bea26845ff0fb2c9ce04f2112d66ddecf7d38b494bc277e"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java-navigation/releases/download/v0.2.0/java-navigation-0.2.0-windows-x64.zip",
+              "sha256": "e36db3cba8597968bae66a8dc944a7b0095795c7ec65756e54fc71cda3ac22a2"
+            }
+          ]
+        },
+        {
           "version": "0.1.0",
           "pluginAPIVersion": 0,
           "requires": {
@@ -502,6 +544,51 @@
       "license": "Apache-2.0",
       "icon": "https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg",
       "versions": [
+        {
+          "version": "4.3.0",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "backend": 0,
+            "debugAdapters": 0,
+            "languageServers": 0,
+            "languages": 0,
+            "managedRuntimes": 1,
+            "pluginFunctions": 0,
+            "projectGenerators": 0,
+            "settings": 0,
+            "sourceSettings": 1,
+            "toolDefinitions": 1,
+            "ui": 0
+          },
+          "releaseDate": "2026-11-24",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.3.0/Lithe-Java-Support-4.3.0-darwin-arm64.zip",
+              "sha256": "f53b1048f36b29963f422acae497bc31ba039b41780360ce52f5243926190d02"
+            },
+            {
+              "platforms": ["darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.3.0/Lithe-Java-Support-4.3.0-darwin-x64.zip",
+              "sha256": "de77ee15e5db08caaf3c4b4f392a21e0c74c0ecd70fcc7ed23b438d5a9a50c04"
+            },
+            {
+              "platforms": ["linux-arm64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.3.0/Lithe-Java-Support-4.3.0-linux-arm64.zip",
+              "sha256": "dc5b618003fb936c2f4f5741378f056078ce476c919eb122ad2771cd1ab46477"
+            },
+            {
+              "platforms": ["linux-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.3.0/Lithe-Java-Support-4.3.0-linux-x64.zip",
+              "sha256": "aa5ab886357acb27328a85977885d6a005f5008df8891c0de4742b83322a1cdb"
+            },
+            {
+              "platforms": ["windows-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-java/releases/download/v4.3.0/Lithe-Java-Support-4.3.0-windows-x64.zip",
+              "sha256": "8807c5ba6242ec7495858cc693e816b04c51fe16d9256589ee96a25d43ea3761"
+            }
+          ]
+        },
         {
           "version": "4.2.2",
           "pluginAPIVersion": 0,
