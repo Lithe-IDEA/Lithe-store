@@ -49,14 +49,14 @@
 <tr>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java/5c13e96b7aa2488640ad2a6a9e64c933359069db/io.github.lithe-idea.java-support/icons/java.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-java">Java Support</a></h3>
-<p><sub>Lithe Community · v4.2.2 · API 0（需 backend、debugAdapters、languageServers、languages、managedRuntimes、pluginFunctions、projectGenerators、settings、sourceSettings、toolDefinitions、ui）</sub></p>
+<p><sub>Lithe Community · v4.3.0 · API 0（需 backend、debugAdapters、languageServers、languages、managedRuntimes、pluginFunctions、projectGenerators、settings、sourceSettings、toolDefinitions、ui）</sub></p>
 <p>基于你自己安装的 Eclipse JDT 语言服务器（Homebrew jdtls、mason.nvim、Scoop 或 VS Code Java 扩展）的完整 Java 支持，需要 JDK 21 或更新版本来运行它：补…</p>
 <p>🏷️ 语言支持 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-java?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>java</code> <code>language</code> <code>debug</code> <code>maven</code> <code>spring-boot</code></p>
 </td>
 <td width="50%" valign="top">
 <h3><img src="https://raw.githubusercontent.com/Lithe-IDEA/lithe-plugin-java-navigation/d41ae0fb440ce057c4ab6c4796e30d92766512cb/assets/java-support-lite.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-java-navigation">Java Support Lite</a></h3>
-<p><sub>Lithe Community · v0.1.0 · API 0（需 languageServers、languages）</sub></p>
+<p><sub>Lithe Community · v0.2.0 · API 0（需 backend、languageServers、languages）</sub></p>
 <p>Java Support 的轻量版，不依赖 JDT LS：跳转到定义、查找引用、文档结构，能跳进 JDK 和依赖库，常驻内存约 60–90 MiB。与 Java Support 二选一，启用其中一个会自动停用另一个。</p>
 <p>🏷️ 语言支持 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-java-navigation?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>java</code> <code>language</code> <code>navigation</code></p>
