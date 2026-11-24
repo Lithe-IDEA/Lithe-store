@@ -107,6 +107,14 @@ jobs:
         if: steps.track.outputs.added != '0'
         run: node scripts/validate-index.mjs lithe-plugin-index.json --verify-archives --base "$RUNNER_TEMP/base-index.json"
 
+      - name: Verify and record published deltas
+        if: steps.track.outputs.added != '0'
+        run: |
+          if ! command -v zstd && ! sudo apt-get install -y zstd; then
+            echo "::warning::Optional plugin patches cannot be decoded on this runner."
+          fi
+          node scripts/plugin-deltas.mjs refresh "$RUNNER_TEMP/base-index.json"
+
       - name: Open or update the pull request
         id: pr
         if: steps.track.outputs.added != '0'
@@ -121,7 +129,7 @@ jobs:
           # main is protected, so Sync README could only follow up with a second
           # pull request. Render the overview here so one merge covers both.
           node scripts/render-readme.mjs
-          git add lithe-plugin-index.json README.md
+          git add lithe-plugin-index.json lithe-plugin-deltas.json README.md
           git commit -m "chore(index): track $SCOPE plugin releases" -m "$SUMMARY"
           git push --force origin "$BRANCH"
 

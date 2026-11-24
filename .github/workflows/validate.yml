@@ -31,8 +31,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install the delta verifier
+        run: sudo apt-get install -y zstd
+
       - name: Unit tests
-        run: node --test scripts/store.test.mjs
+        run: node --test scripts/store.test.mjs scripts/plugin-deltas.test.mjs
 
       - name: Validate index
         run: node scripts/validate-index.mjs lithe-plugin-index.json
@@ -48,6 +51,9 @@ jobs:
             push) ref="${{ github.event.before }}" ;;
             *) ref="" ;;
           esac
+          if [ -n "$ref" ] && git show "$ref:lithe-plugin-deltas.json" > "$RUNNER_TEMP/base-deltas.json" 2>/dev/null; then
+            echo "deltas=$RUNNER_TEMP/base-deltas.json" >> "$GITHUB_OUTPUT"
+          fi
           if [ -n "$ref" ] && git show "$ref:lithe-plugin-index.json" > "$RUNNER_TEMP/base-index.json" 2>/dev/null; then
             echo "args=--base $RUNNER_TEMP/base-index.json" >> "$GITHUB_OUTPUT"
           else
@@ -56,6 +62,9 @@ jobs:
 
       - name: Verify archives (checksum and plugin.json)
         run: node scripts/validate-index.mjs lithe-plugin-index.json --verify-archives ${{ steps.base.outputs.args }}
+
+      - name: Verify plugin deltas
+        run: node scripts/plugin-deltas.mjs validate ${{ steps.base.outputs.deltas }}
 
       - name: Check the index contract has not changed
         # validate-index.mjs follows the index rules of the Lithe plugin
