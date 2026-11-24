@@ -92,29 +92,26 @@
 <p>🏷️ 构建工具 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-maven?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 <p><code>build</code> <code>maven</code> <code>java</code> <code>testing</code></p>
 </td>
-</tr>
-<tr>
 <td width="50%" valign="top">
 <h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-python">Python Support</a></h3>
 <p><sub>Lithe Community · v1.2.0 · API 0（需 backend、buildProviders、buildSystems、debugAdapters、languageServers、languages、outputLinkMatchers、projectGenerators、runConfigurationTypes、settings、toolDefinitions、toolchainProviders、ui）</sub></p>
 <p>Lithe 的 Python 支持插件（Lithe Store 社区插件，Pyrefly、工具链/.venv、pytest 与 debugpy）</p>
 <p>🏷️ 其他 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-python?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 </td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 <h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-rust">Rust Support</a></h3>
 <p><sub>Lithe Community · v0.1.1 · API 0（需 backend、buildProviders、buildSystems、commandInstallers、debugAdapters、languageServers、languages、projectGenerators、settings、toolDefinitions、ui）</sub></p>
 <p>Lithe 的 Rust 支持插件（Lithe Store 社区插件，rust-analyzer、Cargo 构建与 CodeLLDB 调试）</p>
 <p>🏷️ 其他 · 💻 macOS / Windows · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-rust?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 </td>
-</tr>
-<tr>
 <td width="50%" valign="top">
 <h3><img src="assets/plugin-default.svg" width="28" height="28" alt=""> <a href="https://github.com/Lithe-IDEA/lithe-plugin-tomcat">Tomcat</a></h3>
 <p><sub>Lithe Community · v0.0.1 · API 0（需 buildProviders、buildSystems、settings）</sub></p>
 <p>Lithe 的 Tomcat 支持插件 / Tomcat support plugin for Lithe</p>
 <p>🏷️ 其他 · 💻 macOS / Windows / Linux · <img src="https://img.shields.io/github/stars/Lithe-IDEA/lithe-plugin-tomcat?style=flat&label=stars&logo=github" alt="GitHub stars"></p>
 </td>
-<td width="50%"></td>
 </tr>
 </table>
 
