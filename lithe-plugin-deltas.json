@@ -1,4 +1,83 @@
 {
   "schemaVersion": 0,
-  "patches": []
+  "patches": [
+    {
+      "pluginID": "io.github.lithe-idea.python-support",
+      "platform": "darwin-arm64",
+      "fromVersion": "1.2.0",
+      "fromSHA256": "fcbb2e400316723f9943eabf281913aa98999a2fc27e119cba7526df9327e233",
+      "toVersion": "1.2.1",
+      "toSHA256": "12bf0d7128d4d8cd8c496e0368a3a455bfc2a9ee856a4f5b9424b6f220c3222e",
+      "toSize": 21036345,
+      "format": "zstd-prefix",
+      "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.1/python-support-1.2.1-darwin-arm64.from-1.2.0.zip.zst",
+      "sha256": "ea8cd0f68f84ea8a75133986e7fa5c3ed63f12c3194a3f97909aea4794a0b2fb",
+      "size": 23850
+    },
+    {
+      "pluginID": "io.github.lithe-idea.python-support",
+      "platform": "darwin-x64",
+      "fromVersion": "1.2.0",
+      "fromSHA256": "8184b9e99e74018ac2254abbb95b66962d8d5dd3e4cc497c840f9a07ea22e550",
+      "toVersion": "1.2.1",
+      "toSHA256": "8359cd31ad4f508abc16ed2c322a1dcbcc8e6a2622b4fec64f95adecb0aecc52",
+      "toSize": 21723238,
+      "format": "zstd-prefix",
+      "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.1/python-support-1.2.1-darwin-x64.from-1.2.0.zip.zst",
+      "sha256": "deeaed6b57baa3d8f715e41134212e0e442674b40428eae27876a99c01941013",
+      "size": 24437
+    },
+    {
+      "pluginID": "io.github.lithe-idea.python-support",
+      "platform": "linux-arm64",
+      "fromVersion": "1.2.0",
+      "fromSHA256": "398b258457b2f26b12efcf522d918f8b21f5204d09e8ee1db4d0d53c09d530eb",
+      "toVersion": "1.2.1",
+      "toSHA256": "e61abb2e69898ab6580bcdf2b50a1deb529fc11d5b06b8a9ba5c90ef3da415f7",
+      "toSize": 21595810,
+      "format": "zstd-prefix",
+      "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.1/python-support-1.2.1-linux-arm64.from-1.2.0.zip.zst",
+      "sha256": "a15aea3f1c0d57ab5eeeb9af9215135321b66e43e25dd9a072383f3715f3d46c",
+      "size": 24203
+    },
+    {
+      "pluginID": "io.github.lithe-idea.python-support",
+      "platform": "linux-x64",
+      "fromVersion": "1.2.0",
+      "fromSHA256": "2111ef73a0e88b1d35bda4e600b6c682a256c7b894f9fa670526f1075757f3ed",
+      "toVersion": "1.2.1",
+      "toSHA256": "41a814db593da2c93c86f43d7d5974ca1084859eb992048d4f6c48c39dd99ad5",
+      "toSize": 22229138,
+      "format": "zstd-prefix",
+      "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.1/python-support-1.2.1-linux-x64.from-1.2.0.zip.zst",
+      "sha256": "7312e91d59ac4728795b00819b49f0cfad97a093a7256ab539b66dadee2395d4",
+      "size": 25062
+    },
+    {
+      "pluginID": "io.github.lithe-idea.python-support",
+      "platform": "windows-arm64",
+      "fromVersion": "1.2.0",
+      "fromSHA256": "122ff5bfde8c1852bf655068d44057ac105595d438a5b5ddc35ff0864909c302",
+      "toVersion": "1.2.1",
+      "toSHA256": "b8f4664093c9bbd1e95d5e9bc26ee74eacb78d4aa36f5869e2084dd153d8ac15",
+      "toSize": 21006483,
+      "format": "zstd-prefix",
+      "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.1/python-support-1.2.1-windows-arm64.from-1.2.0.zip.zst",
+      "sha256": "d19b4dc56673349e44f031c94382d38f1daa9629bb59ea1740258582363a9f11",
+      "size": 646645
+    },
+    {
+      "pluginID": "io.github.lithe-idea.python-support",
+      "platform": "windows-x64",
+      "fromVersion": "1.2.0",
+      "fromSHA256": "88fb51fa6b60b743f0eae369ef305e37d91c8fd7fa88cba1639b7cb852cee45c",
+      "toVersion": "1.2.1",
+      "toSHA256": "84a3f012aa3aba3542c38d2f7b934632a10370c992bf64f16c20dc324250fb28",
+      "toSize": 21761904,
+      "format": "zstd-prefix",
+      "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-python/releases/download/v1.2.1/python-support-1.2.1-windows-x64.from-1.2.0.zip.zst",
+      "sha256": "73ee05666c7c97337f0928ca49fa187aeb7670846466bbbb23079ca45be63d4a",
+      "size": 667412
+    }
+  ]
 }
