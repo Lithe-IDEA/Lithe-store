@@ -10,7 +10,7 @@ CI（`Validate index`）已经自动保证：
   `version`、`pluginAPIVersion`、`requires` 与索引一致，
   `vendor.signatureRequirement` 为 `"none"`，没有不安全的路径。
 
-维护者人工确认（Lithe-IDEA 组织插件的 bot PR 由工作流自动合入，不走这份清单，见[自动追踪新版本](#自动追踪新版本)）：
+维护者手动合并 PR 时逐项确认（包括 Store Bot 未能合并的组织插件 PR，见[自动追踪新版本](#自动追踪新版本)）：
 
 - [ ] `repository` 是公开仓库，有 README、许可证，看得出是该作者在维护；
 - [ ] 首次收录：`author` 与仓库所有者对应，名称不冒充其他项目或 Lithe 官方；
@@ -21,7 +21,7 @@ CI（`Validate index`）已经自动保证：
 bot 首次收录的组织插件（组织 PR 描述里的“首次收录”）合入后，维护者补做两件事：
 
 - 检查仓库简介是否适合作为 `description`，仓库 topics 是否适合作为 `tags`，不合适就另提 PR 修改；
-- 另提 PR 补充 `icon`、`localizedDescriptions`。不要直接改 `bot/track-organization-releases`，下一轮扫描会从 main 重建这个分支。
+- 另提 PR 补充 `icon`、`localizedDescriptions`。下一次相同范围的追踪会从 main 重建对应的 bot 分支。
 
 ## 自动追踪新版本
 
@@ -31,17 +31,17 @@ bot 首次收录的组织插件（组织 PR 描述里的“首次收录”）合
 [发布插件的首次收录](publishing.md#3-首次收录)。手动运行时指定的插件 ID 可以是已收录插件，
 也可以是组织中尚未收录的插件。
 
-扫描按插件仓库的所有者分两轮，先组织插件、后组织外插件，每轮维护一个 bot PR：
+扫描按插件仓库的所有者分两轮，先组织插件、后组织外插件：
 
 | | Lithe-IDEA 组织插件 | 组织外插件 |
 | --- | --- | --- |
 | 范围 | `repository` 属于 Lithe-IDEA 组织的已收录插件，以及新发现的组织 `lithe-plugin-*` 仓库 | 其他已收录插件；不会被自动首次收录 |
-| 分支 | `bot/track-organization-releases` | `bot/track-releases` |
-| 合入 | 校验通过后由工作流直接合入 main，不经人工审查 | 维护者按[审查清单](#审查清单)审查后合并 |
+| 全量扫描分支 | `bot/track-organization-releases` | `bot/track-releases` |
+| 合入 | 已配置的 Store Bot 在校验通过后尝试合并；缺少凭据或分支规则阻止合并时，由维护者审查后合并 | 维护者按[审查清单](#审查清单)审查后合并 |
 
-两个 PR 都同时包含索引和重新生成的 README 总览，合入后不需要再等 `Sync README`。每轮扫描从 main 重建
-对应分支并更新 PR；某一轮没有发现 main 尚未收录的版本时，这一轮遗留的 PR 会被自动关闭
-（只指定一个插件的手动运行不会关闭 PR）。
+指定插件 ID 时，分支名会追加该 ID 的 SHA-256，PR 标题会显示插件 ID。重复追踪同一插件会更新其原 PR。
+定向扫描和全量扫描都从 main 重建各自的分支，PR 包含索引和重新生成的 README 总览。
+全量扫描没有发现新版本时会关闭对应的全量 PR。如果某个版本已通过全量 PR 合入，可以关闭相应的定向 PR。
 
 组织插件的自动合入分三步：
 
@@ -50,11 +50,11 @@ bot 首次收录的组织插件（组织 PR 描述里的“首次收录”）合
    （`gh pr merge --match-head-commit`），分支在校验之后被改动过，GitHub 就拒绝合并；
 3. 合并后删除分支。
 
-没有配置 Lithe Store Bot，或者合并失败（例如 main 在扫描期间被更新并与 PR 冲突）时，工作流只给出警告，
-PR 保持打开，由维护者按审查清单审查后合并，下一轮扫描也会基于新的 main 重建它。
+没有配置完整的 Store Bot 凭据，或者合并失败（例如 main 的分支规则拒绝了合并）时，工作流会在合并步骤给出警告。
+PR 保持打开，由维护者按审查清单审查后合并。
 删除仓库变量 `STORE_BOT_APP_CLIENT_ID`，或者卸载 Lithe Store Bot，即可停止自动合入。
 
-信任边界：在任一 Lithe-IDEA 组织插件仓库能发布 Release 的人，以及能在组织里创建公开
+启用并允许自动合并时，在任一 Lithe-IDEA 组织插件仓库能发布 Release 的人，以及能在组织里创建公开
 `lithe-plugin-*` 仓库的人，都可以不经 Store 维护者审查把插件发布到 Lithe Store。组织允许成员创建公开仓库时
 （Organization settings → Member privileges → Repository creation），每个组织成员都在这个范围内。
 授予组织成员身份或插件仓库写权限时按这个标准判断。

@@ -2,8 +2,8 @@
 // Finds GitHub Releases of listed plugins that are not in the index yet and
 // adds them as new versions. The scheduled `track-releases` workflow runs this
 // once per scope and opens one pull request per scope: `organization` covers
-// plugins whose repository belongs to the Lithe-IDEA organization and is merged
-// by the workflow after the archives are verified; `external` covers every other
+// plugins whose repository belongs to the Lithe-IDEA organization and may be merged
+// by the Store Bot after archive verification; `external` covers every other
 // plugin and waits for a maintainer review.
 //
 // Public repositories of the Lithe-IDEA organization whose names start with
@@ -33,7 +33,17 @@ export const DISCOVERY_OWNER = "Lithe-IDEA";
 export const DISCOVERY_PREFIX = "lithe-plugin-";
 // Organization repositories that carry the prefix but do not publish a plugin.
 export const DISCOVERY_EXCLUDED = new Set(["lithe-plugin-docs"]);
-export const SCOPES = ["organization", "external"];
+const TRACKING_BRANCHES = {
+  organization: "bot/track-organization-releases",
+  external: "bot/track-releases",
+};
+export const SCOPES = Object.keys(TRACKING_BRANCHES);
+
+export function trackingBranch(scope, plugin) {
+  const base = TRACKING_BRANCHES[scope];
+  // Even a valid marketplace ID can contain ".." or end in ".lock".
+  return plugin ? `${base}-${createHash("sha256").update(plugin).digest("hex")}` : base;
+}
 
 export const KNOWN_ARCHITECTURES = { darwin: ["arm64", "x64"], windows: ["x64", "arm64"], linux: ["x64", "arm64"] };
 const ASSET_PLATFORM = /-(darwin|windows|linux)(?:-(arm64|x64))?\.zip$/;
@@ -364,6 +374,7 @@ async function main(argv) {
     const summary = added.join(", ");
     const output = `added=${added.length}\nsummary=${summary}\nnew_plugins=${newPlugins.join(", ")}\n`;
     writeFileSync(process.env.GITHUB_OUTPUT, output, { flag: "a" });
+    if (scope) writeFileSync(process.env.GITHUB_OUTPUT, `branch=${trackingBranch(scope, onlyPlugin)}\n`, { flag: "a" });
   }
   return 0;
 }
