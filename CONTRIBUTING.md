@@ -3,7 +3,7 @@
 | 我想… | 怎么做 |
 | --- | --- |
 | 收录自己的插件 | 读 [docs/publishing.md](docs/publishing.md)，提 PR 或开“插件收录申请” issue；Lithe-IDEA 组织的 `lithe-plugin-*` 仓库由 bot 自动收录（见 [首次收录](docs/publishing.md#3-首次收录)） |
-| 发布插件新版本 | 在自己仓库发布 Release 即可，bot 会自动开 PR；Lithe-IDEA 组织插件校验通过后自动合入（见 [发布新版本](docs/publishing.md#4-发布新版本)） |
+| 发布插件新版本 | 在自己仓库发布 Release 即可，bot 会自动开 PR（见 [发布新版本](docs/publishing.md#4-发布新版本)） |
 | 修改插件信息 | 提 PR 修改 `lithe-plugin-index.json` 中自己的条目（含 `icon`） |
 | 报告有问题的插件 | 开“报告插件问题” issue；安全问题请勾选“安全问题”，维护者会优先处理 |
 | 改进脚本、CI 或文档 | 直接提 PR，并运行 `node --test scripts/store.test.mjs` |
@@ -47,7 +47,7 @@ Lithe 不再区分官方插件和普通插件：本仓库收录的每个插件�
 | --- | --- | --- |
 | 范围 | Lithe-IDEA 组织下的公开 `lithe-plugin-*` 仓库（已退役的文档仓库 `lithe-plugin-docs` 除外） | 其他公开 GitHub 仓库 |
 | 首次收录 | bot 发现带插件包的正式 Release 后自动收录，不需要提交 PR | 提 PR 或开“插件收录申请” issue，维护者按[审查清单](docs/maintainers.md#审查清单)审核后合并 |
-| 新版本 | bot 开 PR，校验通过后自动合入 | bot 开 PR，维护者审核后合并 |
+| 新版本 | bot 开 PR，校验通过后由已配置的 Store Bot 尝试合并，仍打开的 PR 由维护者审核后合并 | bot 开 PR，维护者审核后合并 |
 
 两种插件都**由各自的开发者维护**。本仓库的校验和审查只保证：索引格式正确、下载包与 SHA-256 一致、
 包内 `plugin.json` 与索引条目一致、来源仓库真实存在且公开。它不代表对插件代码的安全审计。
@@ -73,7 +73,7 @@ scripts/track-releases.mjs      # 追踪已收录插件和 Lithe-IDEA 组织 lit
 scripts/render-readme.mjs       # 根据索引生成 README 的插件总览
 scripts/store.test.mjs          # 校验脚本的测试（fixtures 复制自 Core 的插件契约）
 assets/                         # README 用到的图片（无图标插件的默认图标）
-.github/workflows/              # validate（PR/推送/每周）、track-releases（每 6 小时，组织插件自动合入、组织外插件开 PR 审查）、sync-readme（main 更新后开 PR 同步 README）
+.github/workflows/              # validate（PR/推送/每周）、track-releases（每 6 小时追踪插件版本）、sync-readme（main 更新后开 PR 同步 README）
 ```
 
 ## 本地校验

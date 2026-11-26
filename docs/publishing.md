@@ -82,7 +82,7 @@ shasum -a 256 zig-support-2.0.0-darwin-arm64.zip
 
 Lithe-IDEA 组织下名为 `lithe-plugin-*` 的公开仓库（已退役的文档仓库 `lithe-plugin-docs` 除外，它不发布插件）
 不需要手工提交首次收录 PR。`Track plugin releases` 发现这类仓库还没收录、并且已经有带插件包的
-正式 Release 时，会把它连同全部正式版本一起放进组织插件的 bot PR，校验通过后自动合入 main，
+正式 Release 时，会把它连同全部正式版本一起放进组织插件的 bot PR。Store Bot 可用且分支规则允许时会自动合入 main，其他情况由维护者合并。
 条目按以下来源生成：
 
 | 字段 | 来源 |
@@ -95,7 +95,7 @@ Lithe-IDEA 组织下名为 `lithe-plugin-*` 的公开仓库（已退役的文档
 
 仓库是私有、已归档或 fork，仓库没有简介，GitHub 识别不出许可证，包内 `plugin.json` 缺字段或 ID 不符合索引规则，
 或者 ID 已经被别的条目占用时，自动收录会跳过该仓库，并在工作流日志里写明原因。自动生成的条目
-没有 `icon` 和 `localizedDescriptions`，自动合入后由维护者另提 PR 补充。和版本追踪一样，只发布过
+没有 `icon` 和 `localizedDescriptions`，合入后由维护者另提 PR 补充。和版本追踪一样，只发布过
 pre-release 的仓库不会被收录。
 
 其他仓库按下面的步骤收录：
@@ -169,7 +169,7 @@ pre-release 的仓库不会被收录。
    把新版本写进索引（版本号、`pluginAPIVersion`、`requires` 取自包内 `plugin.json`，
    能力表按键排序写入；发布日期取 Release 发布时间，SHA-256 由 CI 计算），
    然后按插件仓库的所有者开 PR：Lithe-IDEA 组织插件进 `chore(index): 追踪 Lithe-IDEA 组织插件新版本`，
-   校验通过后由工作流直接合入；其他插件进 `chore(index): 追踪组织外插件新版本`。
+   校验通过后由已配置的 Store Bot 尝试合并，PR 保持打开时由维护者审查后合并；其他插件进 `chore(index): 追踪组织外插件新版本`。
 3. 组织外插件的 PR 由维护者审查后合并。新版本进入 main 后，Lithe 用户刷新插件市场就能看到更新。
 
 想更快上线，可以在 issue 里请维护者手动触发工作流，或者自己提 PR 在 `versions` 里加一项

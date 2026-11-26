@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { END, START, categoryOf, renderOverview, renderReadme, systemsOf, truncate } from "./render-readme.mjs";
 import {
-  addVersion, discoverPlugins, isOrganizationEntry, platformsForAsset, trackIndex, unlistedPluginRepositories,
+  addVersion, discoverPlugins, isOrganizationEntry, platformsForAsset, trackIndex, trackingBranch, unlistedPluginRepositories,
   versionFromRelease,
 } from "./track-releases.mjs";
 import {
@@ -399,6 +399,22 @@ function scopedTracking() {
   };
   return { index, archiveIO: { ...fixture, request }, requests };
 }
+
+test("targeted scans keep separate PR heads across plugins, full scans and scopes", () => {
+  const branches = new Set();
+  for (const scope of ["organization", "external"]) {
+    const full = trackingBranch(scope, "");
+    assert.equal(full, scope === "organization" ? "bot/track-organization-releases" : "bot/track-releases");
+    branches.add(full);
+    for (const id of ["io.example.one", "io.example.two..lock"]) {
+      const branch = trackingBranch(scope, id);
+      assert.equal(trackingBranch(scope, id), branch);
+      execFileSync("git", ["check-ref-format", "--branch", branch], { timeout: 5_000 });
+      branches.add(branch);
+    }
+  }
+  assert.equal(branches.size, 6);
+});
 
 test("scoped tracking separates organization plugins from external plugins", { timeout: 5_000 }, async () => {
   const organization = scopedTracking();

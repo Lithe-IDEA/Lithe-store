@@ -5,12 +5,11 @@ name: Track plugin releases
 # `lithe-plugin-docs`, and adds the versions and plugins not yet in the index.
 # Plugin authors only need to publish a release that follows docs/publishing.md.
 #
-# The scan runs once per scope, and each scope keeps its own pull request:
+# Full scans keep one pull request per scope. Filtered scans keep one per scope and plugin.
 #
 # - organization: plugins whose repository belongs to the Lithe-IDEA organization,
-#   including first listings. After the archives are verified, the workflow
-#   merges the pull request itself with a token of the Lithe Store Bot GitHub
-#   App, the only bot that the "Only owners merge main" ruleset lets through.
+#   including first listings. After verification, the Store Bot attempts a merge
+#   if configured. A maintainer merges when the bot cannot.
 # - external: every other plugin. The pull request waits for a maintainer
 #   review, and this scope never receives the app token.
 on:
@@ -47,21 +46,19 @@ jobs:
       matrix:
         include:
           - scope: organization
-            branch: bot/track-organization-releases
             title: "chore(index): 追踪 Lithe-IDEA 组织插件新版本"
           - scope: external
-            branch: bot/track-releases
             title: "chore(index): 追踪组织外插件新版本"
     env:
       SCOPE: ${{ matrix.scope }}
-      BRANCH: ${{ matrix.branch }}
+      HAS_STORE_BOT_APP: ${{ matrix.scope == 'organization' && vars.STORE_BOT_APP_CLIENT_ID != '' && secrets.STORE_BOT_APP_PRIVATE_KEY != '' }}
       TITLE: ${{ matrix.title }}
     steps:
       # Only the organization scope may merge into main, so only it asks for the
       # app token. Without the app, both scopes fall back to the tokens below.
       - name: Create the Lithe Store Bot token
         id: bot
-        if: matrix.scope == 'organization' && vars.STORE_BOT_APP_CLIENT_ID != ''
+        if: env.HAS_STORE_BOT_APP == 'true'
         uses: actions/create-github-app-token@v3
         with:
           client-id: ${{ vars.STORE_BOT_APP_CLIENT_ID }}
@@ -95,6 +92,7 @@ jobs:
       - name: Close the obsolete pull request
         if: steps.track.outputs.added == '0' && inputs.plugin == ''
         env:
+          BRANCH: ${{ steps.track.outputs.branch }}
           GH_TOKEN: ${{ steps.bot.outputs.token || secrets.STORE_BOT_TOKEN || github.token }}
         run: |
           number=$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')
@@ -119,6 +117,8 @@ jobs:
         id: pr
         if: steps.track.outputs.added != '0'
         env:
+          BRANCH: ${{ steps.track.outputs.branch }}
+          PLUGIN: ${{ inputs.plugin }}
           GH_TOKEN: ${{ steps.bot.outputs.token || secrets.STORE_BOT_TOKEN || github.token }}
           SUMMARY: ${{ steps.track.outputs.summary }}
           NEW_PLUGINS: ${{ steps.track.outputs.new_plugins }}
@@ -135,8 +135,11 @@ jobs:
 
           list=$(echo "$SUMMARY" | tr ',' '\n' | sed 's/^ */- /')
           checks="已校验 SHA-256 与包内 plugin.json（id、version、pluginAPIVersion、signatureRequirement），README 总览已一并重新生成。"
-          if [ "$SCOPE" = organization ]; then
-            review="这些插件的仓库属于 Lithe-IDEA 组织，工作流会在校验通过后直接合入 main。如果这个 PR 仍处于打开状态，说明自动合入没有成功（原因见工作流日志），请维护者按 docs/maintainers.md 的清单审查后合并。"
+          if [ -n "$PLUGIN" ]; then TITLE="$TITLE ($PLUGIN)"; fi
+          if [ "$HAS_STORE_BOT_APP" = true ]; then
+            review="Store Bot 将尝试合并本次校验的提交。若工作流结束后 PR 仍打开，请维护者查看合并步骤的日志，按 docs/maintainers.md 的清单审查后合并。"
+          elif [ "$SCOPE" = organization ]; then
+            review="此仓库未配置完整的 Store Bot 凭据，请维护者按 docs/maintainers.md 的清单审查后合并。"
           else
             review="这些插件来自 Lithe-IDEA 组织以外的仓库，维护者请按 docs/maintainers.md 的清单审查后合并。"
           fi
@@ -159,6 +162,7 @@ jobs:
       - name: Merge the organization pull request
         if: matrix.scope == 'organization' && steps.track.outputs.added != '0'
         env:
+          BRANCH: ${{ steps.track.outputs.branch }}
           # Only the app can pass the ruleset, so this step never falls back to another token.
           GH_TOKEN: ${{ steps.bot.outputs.token }}
           NUMBER: ${{ steps.pr.outputs.number }}
