@@ -1930,6 +1930,32 @@
       ]
     },
     {
+      "id": "io.github.lithe-idea.svn-support",
+      "name": "Subversion",
+      "author": "Lithe Community",
+      "repository": "https://github.com/Lithe-IDEA/lithe-plugin-svn",
+      "homepage": "https://github.com/Lithe-IDEA/lithe-plugin-svn#readme",
+      "description": "Preview Subversion VCS provider plugin for Lithe IDE on macOS",
+      "license": "Apache-2.0",
+      "versions": [
+        {
+          "version": "0.1.4",
+          "pluginAPIVersion": 0,
+          "requires": {
+            "vcsProviders": 0
+          },
+          "releaseDate": "2026-11-28",
+          "downloads": [
+            {
+              "platforms": ["darwin-arm64", "darwin-x64"],
+              "downloadURL": "https://github.com/Lithe-IDEA/lithe-plugin-svn/releases/download/v0.1.4/svn-support-0.1.4-darwin.zip",
+              "sha256": "a7db80464284fcfb70a010e65b77702f79ebf241e8e5757877894960c9c59319"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "io.github.lithe-idea.tomcat",
       "name": "Tomcat",
       "author": "Lithe Community",
